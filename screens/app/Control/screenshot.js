@@ -25,10 +25,15 @@ const ScreenshotScreen = () => {
           >
             How To Use It?
           </Text>
-          <Text style={{ fontSize: 16 }}>
-            Just click on the button on the bottom
+          <Text style={{ fontSize: 16, paddingBottom: 2 }}>
+            - Click on Send Screenshot Request Button.
           </Text>
-
+          <Text style={{ fontSize: 16, paddingBottom: 2 }}>
+            - Your PC Will Take Screenshot and Upload It.
+          </Text>
+          <Text style={{ fontSize: 16 }}>
+            - You Will Receive Notification When Upload Complete.
+          </Text>
           <Text
             style={{
               fontSize: 18,
@@ -43,11 +48,12 @@ const ScreenshotScreen = () => {
             {/* You have never requested screenshot. */}
             Last screenshot you requested was in{" "}
             <Text style={{ fontWeight: "bold" }}>8 June at 8:01PM.</Text> You
-            can found it at Past Requests Button
+            can found it at Past Screenshots Button
           </Text>
         </View>
       </View>
-<Status />
+      <Status w={230} />
+
       <View
         style={{
           height: 150,
@@ -59,6 +65,9 @@ const ScreenshotScreen = () => {
           borderColor: "#d1d1d1",
         }}
       >
+        <Text style={{ fontSize: 12, textAlign: "center" }}>
+          Average Response Time For Screenshot Request is 1.3S
+        </Text>
         <Button block success>
           <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
             Send Screenshot Request

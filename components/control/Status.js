@@ -2,13 +2,12 @@ import React from "react";
 import { View, Text } from "react-native";
 import { ListItem, Badge } from "react-native-elements";
 
-export default function Status() {
+export default function Status({w}) {
   return (
     <View
       style={{
-        height: 300,
+        height: w,
         backgroundColor: "#fff",
-       
       }}
     >
       <ListItem
@@ -18,7 +17,7 @@ export default function Status() {
       />
 
       <ListItem
-        title="Last Request Status Took only 4S"
+        title="Last Request Success Took only 4S"
         subtitle="Last Request status is Success"
         rightIcon={<Badge status="success" />}
       />
