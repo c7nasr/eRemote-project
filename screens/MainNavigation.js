@@ -56,7 +56,7 @@ const MainStack = () => {
         name="Camera"
         component={CameraScreen}
         options={{
-          title: "Take Photo From Cam",
+          title: "Camera PC",
         }}
       />
       <Stack.Screen

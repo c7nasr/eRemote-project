@@ -25,7 +25,7 @@ const LockScreen = () => {
           >
             How To Use It?
           </Text>
-          <Text style={{ fontSize: 16}}>
+          <Text style={{ fontSize: 16 }}>
             - Click on Send Windows Lock Request Button.
           </Text>
           <Text style={{ fontSize: 16 }}>
@@ -68,7 +68,6 @@ const LockScreen = () => {
           Average Response Time For Windows Lock Request is 0.9S
         </Text>
         <Button block danger>
-        
           <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
             Send Windows Lock Request
           </Text>

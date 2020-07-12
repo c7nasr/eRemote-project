@@ -11,15 +11,15 @@ const Control_Item = ({ data , nav }) => {
     po: require("../../assets/po.png"),
   };
   const names = {
-    ss: "Take Screenshot",
-    lock: "Windows Lock",
-    camera: "Take A Photo From Camera",
-    mic: "Record Audio",
+    ss: "Take Screenshot Tool",
+    lock: "Windows Lock Tool",
+    camera: "Photo Camera Tool",
+    mic: "Record Audio Tool",
     nl: "Emergency Locker",
-    po: "Power Options",
+    po: "Power Options Tool",
   };
   const colors = {
-    ss: "#176c13",
+    ss: "#666",
     lock: "#ffc107",
     camera: "#9d66d5",
     mic: "#53b4f6",

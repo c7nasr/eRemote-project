@@ -53,7 +53,7 @@ const MicrophoneScreen = () => {
       <Status w={210} />
       <View
         style={{
-          height: 150,
+          height: 140,
           justifyContent: "space-around",
           flexDirection: "column",
           padding: 10,
@@ -62,6 +62,9 @@ const MicrophoneScreen = () => {
           borderColor: "#d1d1d1",
         }}
       >
+           <Text style={{ fontSize: 12, textAlign: "center" }}>
+          Average Response Time For Windows Lock Request is 1.25M
+        </Text>
         <Button block danger>
           <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
             Send Record Request
