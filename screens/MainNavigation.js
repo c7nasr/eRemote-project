@@ -4,12 +4,12 @@ import * as Network from "expo-network";
 import { createStackNavigator } from "@react-navigation/stack";
 import CodeScreen from "./auth/CodeScreen";
 import ControlScreen from "./app/ControlScreen";
-import ScreenshotScreen from "./app/Control/Screenshot";
-import LockScreen from "./app/Control/Lock";
+import ScreenshotScreen from "./app/Control/screenshot";
+import LockScreen from "./app/Control/lock";
 import MicrophoneScreen from "./app/Control/mic";
 import NLockerScreen from "./app/Control/nl";
 import PowerOptionsScreen from "./app/Control/power";
-import CameraScreen from "./app/Control/Camera";
+import CameraScreen from "./app/Control/camera";
 
 const Stack = createStackNavigator();
 const AuthStack = () => {
@@ -72,15 +72,15 @@ const MainStack = () => {
         options={{
           title: "Emergency Locker",
         }}
-      />   
-      
-         <Stack.Screen
-      name="PowerOptions"
-      component={PowerOptionsScreen}
-      options={{
-        title: "Power Options",
-      }}
-    />
+      />
+
+      <Stack.Screen
+        name="PowerOptions"
+        component={PowerOptionsScreen}
+        options={{
+          title: "Power Options",
+        }}
+      />
     </Stack.Navigator>
   );
 };
