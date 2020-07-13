@@ -6,7 +6,7 @@ export default function Status({w}) {
   return (
     <View
       style={{
-        height: w,
+        // height: w,
         backgroundColor: "#fff",
       }}
     >

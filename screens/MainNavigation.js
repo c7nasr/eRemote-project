@@ -36,7 +36,6 @@ const MainStack = () => {
           title: "Your Control Panel",
         }}
       />
-
       <Stack.Screen
         name="Screenshot"
         component={ScreenshotScreen}
@@ -51,7 +50,6 @@ const MainStack = () => {
           title: "Lock Your PC",
         }}
       />
-
       <Stack.Screen
         name="Camera"
         component={CameraScreen}
