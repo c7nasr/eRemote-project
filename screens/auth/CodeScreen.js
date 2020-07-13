@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+import { connect } from "react-redux";
+import { Button } from "react-native-elements";
 
-const CodeScreen = () => {
+import {
+  check_if_matched,
+  Check_Key_From_Storage,
+  Get_new_key,
+} from "../../redux/actions/auth";
+
+const CodeScreen = ({
+  auth,
+  Check_Key_From_Storage,
+  Get_new_key,
+  check_if_matched,
+}) => {
+  useEffect(() => {
+    Get_new_key();
+  }, []);
+
+  const go = async () =>{
+    await check_if_matched(auth.key)
+  }
   return (
     <View style={style.container}>
       <Image style={style.logo} source={require("../../assets/logo.png")} />
@@ -11,12 +31,24 @@ const CodeScreen = () => {
         </Text>
       </View>
       <View style={style.code_container}>
-        <Text style={style.code_}>n421-4241-1565</Text>
+        <Text style={style.code_}>{auth.key}</Text>
       </View>
       <View style={style.instruction_container}>
+        <Text style={style.instruction_text}>How To Authenticate?</Text>
         <Text style={style.instruction_text}>
-          If You Don't Have Desktop App. Please Go To: ncontrol.io/desktop
+          - Open Desktop App and Enter the Code
         </Text>
+        <Text style={style.instruction_text}>
+          - After Enter Code Press Connect (On Desktop App)
+        </Text>
+        <Text style={style.instruction_text}>
+          - Then Click I Entered Code Button
+        </Text>
+        <Button
+          title="I Entered Code On My PC"
+          onPress={() => go()}
+          type="clear"
+        />
       </View>
     </View>
   );
@@ -56,11 +88,18 @@ const style = StyleSheet.create({
     color: "#3b6978",
   },
   logo: {
-    width: 180,
-    height: 180,
+    width: 150,
+    height: 150,
     alignSelf: "center",
     marginBottom: 20,
   },
 });
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
 
-export default CodeScreen;
+export default connect(mapStateToProps, {
+  check_if_matched,
+  Check_Key_From_Storage,
+  Get_new_key
+})(CodeScreen);

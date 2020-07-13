@@ -29,7 +29,7 @@ const ControlScreen = ({ navigation }) => {
   return (
     <>
       <View style={styles.container}>
-      <PullToRefresh/>
+        <PullToRefresh />
         <Grid
           style={styles.list}
           renderItem={(d, i) => (
@@ -57,7 +57,7 @@ const ControlScreen = ({ navigation }) => {
                   <AntDesign name="windows" size={24} color="#0078D7" />
                 }
               />
-               <ListItem
+              <ListItem
                 title="nxxx-xxx-xxx"
                 subtitle="41.35.89.163"
                 containerStyle={{ backgroundColor: "#f1f1f1" }}
@@ -71,7 +71,7 @@ const ControlScreen = ({ navigation }) => {
               />
               <ListItem
                 title="Camera Detected"
-                subtitle="If it dosn't make sense. Click Faq Button"
+                subtitle="If it doesn't make sense. Click Faq Button"
                 containerStyle={{ backgroundColor: "#f1f1f1" }}
                 leftAvatar={<Entypo name="camera" size={24} color="#08cf04" />}
               />
@@ -79,9 +79,11 @@ const ControlScreen = ({ navigation }) => {
                 title="Microphone NOT Detected"
                 subtitle="If it doesn't make sense. Click Faq Button"
                 containerStyle={{ backgroundColor: "#f1f1f1" }}
-                leftAvatar={<FontAwesome name="microphone" size={24} color="red" />}
+                leftAvatar={
+                  <FontAwesome name="microphone" size={24} color="red" />
+                }
               />
-                 <ListItem
+              <ListItem
                 title="Battery Detected"
                 subtitle="58% - Last Charge at 5:40PM"
                 containerStyle={{ backgroundColor: "#f1f1f1" }}

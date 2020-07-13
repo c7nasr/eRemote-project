@@ -12,6 +12,9 @@ import PowerOptionsScreen from "./app/Control/power";
 import CameraScreen from "./app/Control/camera";
 import PastRequests from "./app/past/PastRequests";
 
+import { connect } from "react-redux";
+
+import { Check_Key_From_Storage } from "../redux/actions/auth";
 const Stack = createStackNavigator();
 const AuthStack = () => {
   return (
@@ -92,11 +95,11 @@ const MainStack = () => {
   );
 };
 
-const Navigation = () => {
+const Navigation = ({ Check_Key_From_Storage, auth }) => {
   useEffect(() => {
     Network.getNetworkStateAsync().then((net) => {
       if (net.isConnected && net.isInternetReachable) {
-        // GetUser();
+        Check_Key_From_Storage();
       } else {
         ToastAndroid.showWithGravity(
           "No Internet Connection. ",
@@ -107,14 +110,20 @@ const Navigation = () => {
       }
     });
   }, []);
-  // if (loading)
-  //     return (
-  //         <ActivityIndicator style={{justifyContent: "center", flex: 1}} size="large"/>
-  //     );
-  // if (auth) {
-  //     return <MainStack />;
-  // }
-  return <MainStack />;
+  if (auth.loading)
+    return (
+      <ActivityIndicator
+        style={{ justifyContent: "center", flex: 1 }}
+        size="large"
+      />
+    );
+  if (auth.matched) {
+    return <MainStack />;
+  }
+  return <AuthStack />;
 };
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
 
-export default Navigation;
+export default connect(mapStateToProps, { Check_Key_From_Storage })(Navigation);
