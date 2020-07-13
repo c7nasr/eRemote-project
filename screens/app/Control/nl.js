@@ -54,7 +54,7 @@ const NLockerScreen = () => {
             - Your PC Will Be Locked. And Unlock Your PC Button Will be Enabled to see the complex Password
           </Text>
           <Text style={{ fontSize: 16 }}>
-            - You Will Receive Notification When Someone Enter Wrong Password.
+            - You Will Receive Notification When Someone Enter Wrong Password with a photo of him.
           </Text>
           <Text
             style={{
@@ -64,10 +64,10 @@ const NLockerScreen = () => {
               paddingTop: 15,
             }}
           >
-            Last Record?
+            Last Emergency Locker?
           </Text>
           <Text style={{ fontSize: 16 }}>
-            Last Record you requested was in{" "}
+            Last Emergency Locker you requested was in{" "}
             <Text style={{ fontWeight: "bold" }}>8 June at 8:01PM.</Text>
           </Text>
         </ScrollView>
