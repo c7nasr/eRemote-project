@@ -2,12 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "native-base";
 import Status from "../../../components/control/Status";
+import { ScrollView } from "react-native-gesture-handler";
 
 const LockScreen = () => {
   return (
     <>
       <View style={styles.container}>
         <View>
+          <ScrollView>
           <Text style={{ fontSize: 18, fontWeight: "bold", paddingBottom: 3 }}>
             What is Windows Lock Tool?
           </Text>
@@ -50,7 +52,9 @@ const LockScreen = () => {
             Last Lock you requested was in{" "}
             <Text style={{ fontWeight: "bold" }}>8 June at 8:01PM.</Text>
           </Text>
+          </ScrollView>
         </View>
+
       </View>
       <Status w={270} />
       <View

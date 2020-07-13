@@ -41,7 +41,7 @@ const ControlScreen = ({ navigation }) => {
           style={{
             backgroundColor: "#f1f1f1",
             height: 160,
-            borderTopWidth: 1,
+            borderTopWidth: 2,
             borderTopColor: "#d5d5d5",
           }}
         >

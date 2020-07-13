@@ -2,12 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "native-base";
 import Status from "../../../components/control/Status";
+import { ScrollView } from "react-native-gesture-handler";
 
 const ScreenshotScreen = () => {
   return (
     <>
       <View style={styles.container}>
         <View>
+          <ScrollView>
           <Text style={{ fontSize: 18, fontWeight: "bold", paddingBottom: 3 }}>
             What is Screenshot Tool?
           </Text>
@@ -50,6 +52,7 @@ const ScreenshotScreen = () => {
             <Text style={{ fontWeight: "bold" }}>8 June at 8:01PM.</Text> You
             can found it at Past Screenshots Button
           </Text>
+          </ScrollView>
         </View>
       </View>
       <Status w={230} />

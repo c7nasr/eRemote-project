@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "native-base";
+import { ScrollView } from "react-native-gesture-handler";
+
 import Status from "../../../components/control/Status";
 
 const PowerOptionsScreen = () => {
@@ -8,6 +10,7 @@ const PowerOptionsScreen = () => {
     <>
       <View style={styles.container}>
         <View>
+          <ScrollView>
           <Text style={{ fontSize: 18, fontWeight: "bold", paddingBottom: 3 }}>
             What is Power Options Tool?
           </Text>
@@ -47,6 +50,7 @@ const PowerOptionsScreen = () => {
             Last Power Request you requested was in{" "}
             <Text style={{ fontWeight: "bold" }}>8 June at 8:01PM.</Text>
           </Text>
+          </ScrollView>
         </View>
       </View>
       <Status w={210} />
