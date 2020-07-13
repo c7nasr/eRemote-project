@@ -10,6 +10,7 @@ import MicrophoneScreen from "./app/Control/mic";
 import NLockerScreen from "./app/Control/nl";
 import PowerOptionsScreen from "./app/Control/power";
 import CameraScreen from "./app/Control/camera";
+import PastRequests from "./app/past/PastRequests";
 
 const Stack = createStackNavigator();
 const AuthStack = () => {
@@ -77,6 +78,14 @@ const MainStack = () => {
         component={PowerOptionsScreen}
         options={{
           title: "Power Options",
+        }}
+      />
+
+      <Stack.Screen
+        name="PastRequests"
+        component={PastRequests}
+        options={{
+          title: "Past Requests",
         }}
       />
     </Stack.Navigator>

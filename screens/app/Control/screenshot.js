@@ -4,7 +4,7 @@ import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 
-const ScreenshotScreen = () => {
+const ScreenshotScreen = ({navigation}) => {
   return (
     <>
       <View style={styles.container}>
@@ -76,7 +76,7 @@ const ScreenshotScreen = () => {
             Send Screenshot Request
           </Text>
         </Button>
-        <Button block info>
+        <Button block info onPress={() => navigation.navigate("PastRequests", {type:"Screenshot"})}>
           <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
             Past Screenshots
           </Text>

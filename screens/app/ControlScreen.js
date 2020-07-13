@@ -5,6 +5,7 @@ import Control_Item from "../../components/app/ControlItem";
 import { ScrollView } from "react-native-gesture-handler";
 import { AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
 import { ListItem } from "react-native-elements";
+import PullToRefresh from "../../components/control/PullToRefresh";
 const ControlScreen = ({ navigation }) => {
   navigation.setOptions({
     headerStyle: {
@@ -28,6 +29,7 @@ const ControlScreen = ({ navigation }) => {
   return (
     <>
       <View style={styles.container}>
+      <PullToRefresh/>
         <Grid
           style={styles.list}
           renderItem={(d, i) => (
@@ -41,7 +43,7 @@ const ControlScreen = ({ navigation }) => {
           style={{
             backgroundColor: "#f1f1f1",
             height: 160,
-            borderTopWidth: 2,
+            borderTopWidth: 1,
             borderTopColor: "#d5d5d5",
           }}
         >
@@ -95,7 +97,6 @@ const ControlScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   list: {
     flex: 1,
-    marginTop: 10,
     padding: 5,
     marginBottom: 5,
     // backgroundColor: "black",

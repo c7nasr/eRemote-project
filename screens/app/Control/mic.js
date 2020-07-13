@@ -4,7 +4,7 @@ import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 
-const MicrophoneScreen = () => {
+const MicrophoneScreen = ({navigation}) => {
   return (
     <>
       <View style={styles.container}>
@@ -68,14 +68,14 @@ const MicrophoneScreen = () => {
         }}
       >
         <Text style={{ fontSize: 12, textAlign: "center" }}>
-          Average Response Time For Windows Lock Request is 1.25M
+          Average Response Time For Record Audio Request is 1.25M
         </Text>
         <Button block danger>
           <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
             Send Record Request
           </Text>
         </Button>
-        <Button block info>
+        <Button block info onPress={() => navigation.navigate("PastRequests", {type:"Records"})}>
           <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
             Past Records
           </Text>
