@@ -5,13 +5,11 @@ import { Button } from "react-native-elements";
 
 import {
   check_if_matched,
-  Check_Key_From_Storage,
   Get_new_key,
 } from "../../redux/actions/auth";
 
 const CodeScreen = ({
   auth,
-  Check_Key_From_Storage,
   Get_new_key,
   check_if_matched,
 }) => {
@@ -19,8 +17,8 @@ const CodeScreen = ({
     Get_new_key();
   }, []);
 
-  const go = async () =>{
-    await check_if_matched(auth.key)
+  const go = () =>{
+    
   }
   return (
     <View style={style.container}>
@@ -46,7 +44,7 @@ const CodeScreen = ({
         </Text>
         <Button
           title="I Entered Code On My PC"
-          onPress={() => go()}
+          onPress={() => check_if_matched(auth.key)}
           type="clear"
         />
       </View>
@@ -100,6 +98,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   check_if_matched,
-  Check_Key_From_Storage,
   Get_new_key
 })(CodeScreen);

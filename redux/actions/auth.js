@@ -1,9 +1,9 @@
 import connect_control from "../../api/api";
-import { CHECK_MATCHED, REFRESH_INFO, GET_KEY } from "./types";
+import { CHECK_MATCHED,  GET_KEY } from "./types";
 import { AsyncStorage } from "react-native";
 export const check_if_matched = (key) => async (dispatch) => {
   try {
-
+    console.log(key)
     const res = await connect_control.get("users/status?key=" + key);
     const { matched } = res.data;
     dispatch({

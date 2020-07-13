@@ -1,12 +1,12 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, AsyncStorage } from "react-native";
 import Grid from "react-native-grid-component";
 import Control_Item from "../../components/app/ControlItem";
-import { ScrollView } from "react-native-gesture-handler";
-import { AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
-import { ListItem } from "react-native-elements";
-import PullToRefresh from "../../components/control/PullToRefresh";
-const ControlScreen = ({ navigation }) => {
+import { AntDesign } from "@expo/vector-icons";
+import {  Button } from "react-native-elements";
+import { connect } from "react-redux";
+const ControlScreen = ({ navigation ,auth}) => {
+  
   navigation.setOptions({
     headerStyle: {
       backgroundColor: "#f9f7f7",
@@ -25,11 +25,22 @@ const ControlScreen = ({ navigation }) => {
         color="black"
       />
     ),
+    headerLeft: () => (
+      <AntDesign
+        name="questioncircle"
+        style={{ padding: 10 }}
+        size={24}
+        color="black"
+        onPress={async () => {
+          await AsyncStorage.clear();
+        }}
+      />
+    ),
   });
   return (
     <>
+
       <View style={styles.container}>
-        <PullToRefresh />
         <Grid
           style={styles.list}
           renderItem={(d, i) => (
@@ -39,60 +50,11 @@ const ControlScreen = ({ navigation }) => {
           data={["ss", "lock", "camera", "mic", "nl", "po"]}
           numColumns={2}
         />
-        <View
-          style={{
-            backgroundColor: "#f1f1f1",
-            height: 160,
-            borderTopWidth: 1,
-            borderTopColor: "#d5d5d5",
-          }}
-        >
-          <ScrollView>
-            <View>
-              <ListItem
-                title="Windows"
-                subtitle="Microsoft Windows 10 Pro"
-                containerStyle={{ backgroundColor: "#f1f1f1" }}
-                leftAvatar={
-                  <AntDesign name="windows" size={24} color="#0078D7" />
-                }
-              />
-              <ListItem
-                title="nxxx-xxx-xxx"
-                subtitle="41.35.89.163"
-                containerStyle={{ backgroundColor: "#f1f1f1" }}
-                leftAvatar={<AntDesign name="key" size={24} color="black" />}
-              />
-              <ListItem
-                title="NASR"
-                subtitle="93047521961034"
-                containerStyle={{ backgroundColor: "#f1f1f1" }}
-                leftAvatar={<AntDesign name="user" size={24} color="#8332a8" />}
-              />
-              <ListItem
-                title="Camera Detected"
-                subtitle="If it doesn't make sense. Click Faq Button"
-                containerStyle={{ backgroundColor: "#f1f1f1" }}
-                leftAvatar={<Entypo name="camera" size={24} color="#08cf04" />}
-              />
-              <ListItem
-                title="Microphone NOT Detected"
-                subtitle="If it doesn't make sense. Click Faq Button"
-                containerStyle={{ backgroundColor: "#f1f1f1" }}
-                leftAvatar={
-                  <FontAwesome name="microphone" size={24} color="red" />
-                }
-              />
-              <ListItem
-                title="Battery Detected"
-                subtitle="58% - Last Charge at 5:40PM"
-                containerStyle={{ backgroundColor: "#f1f1f1" }}
-                leftAvatar={<Entypo name="battery" size={24} color="#444" />}
-              />
-            </View>
-          </ScrollView>
+        <View>
+          <Button title={auth.key}/>
         </View>
       </View>
+
     </>
   );
 };
@@ -108,4 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
   },
 });
-export default ControlScreen;
+const mapStateToProps = (state) =>({
+  auth: state.auth
+})
+export default connect(mapStateToProps)(ControlScreen);
