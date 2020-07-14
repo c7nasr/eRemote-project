@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "native-base";
 import Status from "../../../components/control/Status";
@@ -15,12 +15,13 @@ import { useFocusEffect } from "@react-navigation/native";
 const ScreenshotScreen = ({
   navigation,
   auth,
-  reset_order_status,
-  control,
-  update_status,
   status,
+  control,
+  past,
+
+  reset_order_status,
+  update_status,
   get_past_requests,
-  past
 }) => {
   const [disabled, setDisabled] = useState(false);
   useFocusEffect(

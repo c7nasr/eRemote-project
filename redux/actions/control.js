@@ -4,6 +4,7 @@ import {
   RESET_CURRENT_ORDERS,
   UPDATE_STATUS,
   GET_PAST_REQUESTS,
+  GET_LAST_POWER,
 } from "./types";
 import connect_control from "../../api/api";
 
@@ -142,6 +143,38 @@ export const get_past_requests = (key, type, one = false) => async (
         },
       });
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const get_last_power_request = (key) => async (
+  dispatch
+) => {
+  try {
+    const res = await connect_control.get(
+      "control/last-power-request?key=" + key 
+    );
+
+    const { last_power } = res.data;
+
+    if (last_power == null){
+      dispatch({
+        type: GET_LAST_POWER,
+        payload: {
+          last_power: 0,
+        },
+      });
+    }else{
+      dispatch({
+        type: GET_LAST_POWER,
+        payload: {
+          last_power: last_power,
+        },
+      });
+    }
+    
   } catch (error) {
     console.log(error);
   }

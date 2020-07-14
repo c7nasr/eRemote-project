@@ -1,18 +1,19 @@
 import {
-  CHECK_MATCHED,
   REFRESH_INFO,
   GET_CURRENT_ORDERS,
   RESET_CURRENT_ORDERS,
   UPDATE_STATUS,
   GET_PAST_REQUESTS,
+  GET_LAST_POWER,
 } from "../actions/types";
 const initState = {
   key: "",
   loading: true,
   matched: false,
   order: {},
-  status:{},
-  past:{}
+  status: {},
+  past: {},
+  last_power: {},
 };
 
 export default control = (state = initState, action) => {
@@ -45,14 +46,21 @@ export default control = (state = initState, action) => {
       return {
         ...state,
         loading: false,
-        status: payload.status
-      }
+        status: payload.status,
+      };
     case GET_PAST_REQUESTS:
       return {
         ...state,
         loading: false,
-        past: payload.past
-      }
+        past: payload.past,
+      };
+
+    case GET_LAST_POWER:
+      return {
+        ...state,
+        loading: false,
+        last_power: payload.last_power,
+      };
     default:
       return state;
   }
