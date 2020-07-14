@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "native-base";
 import Status from "../../../components/control/Status";
@@ -26,7 +26,9 @@ const ScreenshotScreen = ({
   const [disabled, setDisabled] = useState(false);
   useFocusEffect(
     React.useCallback(() => {
-      update_status(auth.key).then(() => get_past_requests(auth.key, "screenshot",true));
+      update_status(auth.key).then(() =>
+        get_past_requests(auth.key, "screenshot", true)
+      );
       return () => {
         console.log("BACKED");
         reset_order_status();
@@ -80,18 +82,18 @@ const ScreenshotScreen = ({
                 >
                   Last Screenshot?
                 </Text>
-                {past == "notfound" ? 
-                 <Text style={{ fontSize: 16 }}>
-                You Have never requested Screenshot
-               </Text>
-                :
-                <Text style={{ fontSize: 16 }}>
-                  Last screenshot you requested was{" "}
-                  <Text style={{ fontWeight: "bold" }}>
-                    {status.requested_at}
+                {past == "notfound" ? (
+                  <Text style={{ fontSize: 16 }}>
+                    You Have never requested a Screenshot
                   </Text>
-                </Text>
-                }
+                ) : (
+                  <Text style={{ fontSize: 16 }}>
+                    Last screenshot you requested was{" "}
+                    <Text style={{ fontWeight: "bold" }}>
+                      {status.requested_at}
+                    </Text>
+                  </Text>
+                )}
               </ScrollView>
             </View>
           </View>
@@ -124,9 +126,8 @@ const ScreenshotScreen = ({
               onPress={() =>
                 navigation.navigate("PastRequests", { type: "Screenshot" })
               }
-              disabled={past == "notfound" ? true:false}
+              disabled={past == "notfound" ? true : false}
             >
-
               <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
                 Past Screenshots
               </Text>
@@ -148,7 +149,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   control: state.control,
   status: state.control.status,
-  past: state.control.past
+  past: state.control.past,
 });
 export default connect(mapStateToProps, {
   get_past_requests,
