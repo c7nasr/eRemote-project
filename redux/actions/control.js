@@ -5,6 +5,7 @@ import {
   UPDATE_STATUS,
   GET_PAST_REQUESTS,
   GET_LAST_POWER,
+  GET_LAST_LOCK,
 } from "./types";
 import connect_control from "../../api/api";
 
@@ -179,3 +180,34 @@ export const get_last_power_request = (key) => async (
     console.log(error);
   }
 };
+
+
+export const get_last_lock_request = (key) => async (
+  dispatch
+) => {
+  try {
+    const res = await connect_control.get(
+      "control/last-lock-request?key=" + key 
+    );
+    const { last_lock } = res.data;
+    if (last_lock == null){
+      dispatch({
+        type: GET_LAST_LOCK,
+        payload: {
+          last_lock: 0,
+        },
+      });
+    }else{
+      dispatch({
+        type: GET_LAST_LOCK,
+        payload: {
+          last_lock: last_lock,
+        },
+      });
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+

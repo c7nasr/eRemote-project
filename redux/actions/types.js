@@ -11,4 +11,5 @@ export const GET_PAST_REQUESTS = "GET_PAST_REQUESTS";
 
 
 export const GET_LAST_POWER = "GET_LAST_POWER";
+export const GET_LAST_LOCK = "GET_LAST_LOCK";
 

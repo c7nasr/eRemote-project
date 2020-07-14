@@ -5,6 +5,7 @@ import {
   UPDATE_STATUS,
   GET_PAST_REQUESTS,
   GET_LAST_POWER,
+  GET_LAST_LOCK,
 } from "../actions/types";
 const initState = {
   key: "",
@@ -14,6 +15,7 @@ const initState = {
   status: {},
   past: {},
   last_power: {},
+  last_lock: {},
 };
 
 export default control = (state = initState, action) => {
@@ -60,6 +62,13 @@ export default control = (state = initState, action) => {
         ...state,
         loading: false,
         last_power: payload.last_power,
+      };
+
+    case GET_LAST_LOCK:
+      return {
+        ...state,
+        loading: false,
+        last_lock: payload.last_lock,
       };
     default:
       return state;

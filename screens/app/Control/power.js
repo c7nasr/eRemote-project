@@ -15,7 +15,6 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 
 const PowerOptionsScreen = ({
-  navigation,
   auth,
   status,
   control,
