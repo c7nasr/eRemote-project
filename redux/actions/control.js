@@ -6,6 +6,9 @@ import {
   GET_PAST_REQUESTS,
   GET_LAST_POWER,
   GET_LAST_LOCK,
+  GET_RANSOM_LOCK_STATE,
+  RESET_PAST_STATE,
+  GET_PAST_REQUEST_FOR_EVERY_CONTROL,
 } from "./types";
 import connect_control from "../../api/api";
 
@@ -125,7 +128,7 @@ export const get_past_requests = (key, type, one = false) => async (
         dispatch({
           type: GET_PAST_REQUESTS,
           payload: {
-            past: requests_media.dates[0],
+            past_r: requests_media.dates[0],
           },
         });
       } else {
@@ -149,25 +152,22 @@ export const get_past_requests = (key, type, one = false) => async (
   }
 };
 
-
-export const get_last_power_request = (key) => async (
-  dispatch
-) => {
+export const get_last_power_request = (key) => async (dispatch) => {
   try {
     const res = await connect_control.get(
-      "control/last-power-request?key=" + key 
+      "control/last-power-request?key=" + key
     );
 
     const { last_power } = res.data;
 
-    if (last_power == null){
+    if (last_power == null) {
       dispatch({
         type: GET_LAST_POWER,
         payload: {
           last_power: 0,
         },
       });
-    }else{
+    } else {
       dispatch({
         type: GET_LAST_POWER,
         payload: {
@@ -175,29 +175,25 @@ export const get_last_power_request = (key) => async (
         },
       });
     }
-    
   } catch (error) {
     console.log(error);
   }
 };
 
-
-export const get_last_lock_request = (key) => async (
-  dispatch
-) => {
+export const get_last_lock_request = (key) => async (dispatch) => {
   try {
     const res = await connect_control.get(
-      "control/last-lock-request?key=" + key 
+      "control/last-lock-request?key=" + key
     );
     const { last_lock } = res.data;
-    if (last_lock == null){
+    if (last_lock == null) {
       dispatch({
         type: GET_LAST_LOCK,
         payload: {
           last_lock: 0,
         },
       });
-    }else{
+    } else {
       dispatch({
         type: GET_LAST_LOCK,
         payload: {
@@ -205,9 +201,72 @@ export const get_last_lock_request = (key) => async (
         },
       });
     }
-    
   } catch (error) {
     console.log(error);
   }
 };
 
+export const get_ransom_lock_state = (key) => async (dispatch) => {
+  try {
+    const res = await connect_control.get(
+      "control/check-ransom-locker?key=" + key
+    );
+    const { ransom_state } = res.data;
+    if (ransom_state == null) {
+      dispatch({
+        type: GET_RANSOM_LOCK_STATE,
+        payload: {
+          ransom_lock_state: 0,
+        },
+      });
+    } else {
+      dispatch({
+        type: GET_RANSOM_LOCK_STATE,
+        payload: {
+          ransom_lock_state: ransom_state,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const reset_params_past = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: RESET_PAST_STATE,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const get_one_past = (key, type) => async (dispatch) => {
+  try {
+    const res = await connect_control.get(
+      "control/list-media-of-requests?key=" + key + "&type=" + type
+    );
+
+    const { requests_media } = res.data;
+
+    dispatch({
+      type: GET_PAST_REQUEST_FOR_EVERY_CONTROL,
+      payload: {
+        past: requests_media.dates[0],
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const get_past_screenshot = (key) => async (dispatch) => {
+  try {
+    dispatch({
+      type: RESET_PAST_STATE,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

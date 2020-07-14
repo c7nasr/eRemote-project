@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import {
-  get_past_requests,
+  get_one_past,
   reset_order_status,
   update_status,
+  reset_params_past,
 } from "../../../redux/actions/control";
 
 import { useFocusEffect } from "@react-navigation/native";
@@ -15,26 +16,31 @@ import { useFocusEffect } from "@react-navigation/native";
 const CameraScreen = ({
   navigation,
   update_status,
-  get_past_requests,
+  past_r,
   reset_order_status,
+  reset_params_past,
   status,
   auth,
   past,
+  get_one_past,
 }) => {
   useFocusEffect(
     React.useCallback(() => {
-      update_status(auth.key).then(() =>
-        get_past_requests(auth.key, "camera", true)
+      get_one_past(auth.key, "camera").then(() =>
+        update_status(auth.key).then(() => setloading(false))
       );
+
       return () => {
         console.log("BACKED");
-        reset_order_status();
+        reset_order_status().then(() => reset_params_past());
       };
     }, [])
   );
+  const [loading, setloading] = useState(true);
+
   return (
     <>
-      {control.loading ? (
+      {loading ? (
         <ActivityIndicator />
       ) : (
         <>
@@ -79,15 +85,16 @@ const CameraScreen = ({
                 >
                   Last Camera Request?
                 </Text>
-                {past == "notfound" ? 
-                 <Text style={{ fontSize: 16 }}>
-                You Have never requested a Camera Photo
-               </Text>
-                :
-                <Text style={{ fontSize: 16 }}>
-                  Last Photo you requested was in{" "}
-                  <Text style={{ fontWeight: "bold" }}>{past}</Text>
-                </Text>}
+                {!past_r ? (
+                  <Text style={{ fontSize: 16 }}>
+                    You Have never requested a Camera Photo
+                  </Text>
+                ) : (
+                  <Text style={{ fontSize: 16 }}>
+                    Last Photo you requested was in{" "}
+                    <Text style={{ fontWeight: "bold" }}>{past_r}</Text>
+                  </Text>
+                )}
               </ScrollView>
             </View>
           </View>
@@ -143,9 +150,11 @@ const mapStateToProps = (state) => ({
   control: state.control,
   status: state.control.status,
   past: state.control.past,
+  past_r: state.control.past_r,
 });
 export default connect(mapStateToProps, {
-  get_past_requests,
+  get_one_past,
   reset_order_status,
   update_status,
+  reset_params_past,
 })(CameraScreen);

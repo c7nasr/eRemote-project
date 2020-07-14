@@ -1,12 +1,12 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 import {
-  get_past_requests,
   reset_order_status,
   update_status,
+  get_one_past
 } from "../../../redux/actions/control";
 
 import { useFocusEffect } from "@react-navigation/native";
@@ -15,16 +15,18 @@ import { connect } from "react-redux";
 const MicrophoneScreen = ({
   navigation,
   update_status,
-  get_past_requests,
   reset_order_status,
   status,
   auth,
   past,
+  past_r,
+get_one_past
+
 }) => {
   useFocusEffect(
     React.useCallback(() => {
       update_status(auth.key).then(() =>
-        get_past_requests(auth.key, "microphone", true)
+      get_one_past(auth.key, "microphone").then(() => setloading(false))
       );
       return () => {
         console.log("BACKED");
@@ -32,9 +34,10 @@ const MicrophoneScreen = ({
       };
     }, [])
   );
+  const [loading, setloading] = useState(true)
   return (
     <>
-      {control.loading ? (
+      {loading ? (
         <ActivityIndicator />
       ) : (
         <>
@@ -79,15 +82,15 @@ const MicrophoneScreen = ({
                 >
                   Last Record?
                 </Text>
-                {past == "notfound" ? 
-                 <Text style={{ fontSize: 16 }}>
-                You Have never requested a Audio Record
-               </Text>
-                :
-                <Text style={{ fontSize: 16 }}>
-                  Last Record you requested was in{" "}
-                  <Text style={{ fontWeight: "bold" }}>{past}</Text>
-                </Text>
+                {!past_r ? 
+                  <Text style={{ fontSize: 16 }}>
+                    You Have never requested a Audio Record
+                  </Text>
+                 : 
+                  <Text style={{ fontSize: 16 }}>
+                    Last Record you requested was in{" "}
+                    <Text style={{ fontWeight: "bold" }}>{past_r}</Text>
+                  </Text>
                 }
               </ScrollView>
             </View>
@@ -107,21 +110,20 @@ const MicrophoneScreen = ({
             <Text style={{ fontSize: 12, textAlign: "center" }}>
               Average Response Time For Record Audio Request is 1.25M
             </Text>
-            {!status.active ? (
-
-            <Button block danger>
-              <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                Send Record Request
-              </Text>
-            </Button>
-            ):null}
+            {!status.active ? 
+              <Button block danger>
+                <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
+                  Send Record Request
+                </Text>
+              </Button>
+             : null}
             <Button
               block
-              disabled={past == "notfound" ? true : false}
               info
               onPress={() =>
                 navigation.navigate("PastRequests", { type: "Records" })
               }
+              disabled={!past_r ? true : false}
             >
               <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
                 Past Records
@@ -146,9 +148,11 @@ const mapStateToProps = (state) => ({
   control: state.control,
   status: state.control.status,
   past: state.control.past,
+  past_r: state.control.past_r
+
 });
 export default connect(mapStateToProps, {
-  get_past_requests,
+  get_one_past,
   reset_order_status,
   update_status,
 })(MicrophoneScreen);

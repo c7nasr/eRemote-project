@@ -6,6 +6,10 @@ import {
   GET_PAST_REQUESTS,
   GET_LAST_POWER,
   GET_LAST_LOCK,
+  GET_RANSOM_LOCK_STATE,
+  RESET_PAST_STATE,
+  GET_PAST_SCREENSHOTS,
+  GET_PAST_REQUEST_FOR_EVERY_CONTROL,
 } from "../actions/types";
 const initState = {
   key: "",
@@ -13,9 +17,11 @@ const initState = {
   matched: false,
   order: {},
   status: {},
-  past: {},
+  past: "",
+  past_r: "",
   last_power: {},
   last_lock: {},
+  ransom_lock_state: {},
 };
 
 export default control = (state = initState, action) => {
@@ -69,6 +75,22 @@ export default control = (state = initState, action) => {
         ...state,
         loading: false,
         last_lock: payload.last_lock,
+      };
+    case GET_RANSOM_LOCK_STATE:
+      return {
+        ...state,
+        loading: false,
+        ransom_lock_state: payload.ransom_lock_state,
+      };
+    case RESET_PAST_STATE:
+      return {
+        ...state,
+      };
+    case GET_PAST_REQUEST_FOR_EVERY_CONTROL:
+      return {
+        ...state,
+        past_r: payload.past
+        
       };
     default:
       return state;

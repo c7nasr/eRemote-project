@@ -8,6 +8,8 @@ import {
   get_past_requests,
   reset_order_status,
   update_status,
+  reset_params_past,
+  get_one_past,
 } from "../../../redux/actions/control";
 
 import { useFocusEffect } from "@react-navigation/native";
@@ -18,26 +20,29 @@ const ScreenshotScreen = ({
   status,
   control,
   past,
-
+  reset_params_past,
   reset_order_status,
   update_status,
-  get_past_requests,
+  get_one_past,
+  past_r
 }) => {
   const [disabled, setDisabled] = useState(false);
+  const [loading, setloading] = useState(true);
+
   useFocusEffect(
     React.useCallback(() => {
       update_status(auth.key).then(() =>
-        get_past_requests(auth.key, "screenshot", true)
+      get_one_past(auth.key, "screenshot").then(() => setloading(false))
       );
       return () => {
         console.log("BACKED");
-        reset_order_status();
+        reset_order_status().then(() => reset_params_past());
       };
     }, [])
   );
   return (
     <>
-      {control.loading ? (
+      {loading ? (
         <ActivityIndicator />
       ) : (
         <>
@@ -90,14 +95,14 @@ const ScreenshotScreen = ({
                   <Text style={{ fontSize: 16 }}>
                     Last screenshot you requested was{" "}
                     <Text style={{ fontWeight: "bold" }}>
-                      {status.requested_at}
+                      {past_r}
                     </Text>
                   </Text>
                 )}
               </ScrollView>
             </View>
           </View>
-          <Status status={status} w={230} />
+          <Status status={status}  />
 
           <View
             style={{
@@ -150,9 +155,11 @@ const mapStateToProps = (state) => ({
   control: state.control,
   status: state.control.status,
   past: state.control.past,
+  past_r: state.control.past_r
 });
 export default connect(mapStateToProps, {
-  get_past_requests,
+  get_one_past,
   reset_order_status,
   update_status,
+  reset_params_past
 })(ScreenshotScreen);

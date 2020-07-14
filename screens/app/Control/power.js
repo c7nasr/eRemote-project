@@ -21,7 +21,7 @@ const PowerOptionsScreen = ({
   last_power,
   reset_order_status,
   update_status,
-  get_last_power_request
+  get_last_power_request,
 }) => {
   useFocusEffect(
     React.useCallback(() => {

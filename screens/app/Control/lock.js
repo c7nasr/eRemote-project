@@ -21,7 +21,7 @@ const LockScreen = ({
   reset_order_status,
   update_status,
   get_last_lock_request,
-  last_lock
+  last_lock,
 }) => {
   useFocusEffect(
     React.useCallback(() => {
@@ -81,18 +81,17 @@ const LockScreen = ({
                   Last Lock?
                 </Text>
                 {last_lock.date ? (
-                      <Text style={{ fontSize: 16 }}>
-                      Last Lock you requested was in{" "}
-                      <Text style={{ fontWeight: "bold" }}>8 June at 8:01PM.</Text>
+                  <Text style={{ fontSize: 16 }}>
+                    Last Lock you requested was in{" "}
+                    <Text style={{ fontWeight: "bold" }}>
+                      8 June at 8:01PM.
                     </Text>
-
-): 
-<Text style={{ fontSize: 16 }}>
-You have never made a Lock Request
-</Text>
-}
-
-            
+                  </Text>
+                ) : (
+                  <Text style={{ fontSize: 16 }}>
+                    You have never made a Lock Request
+                  </Text>
+                )}
               </ScrollView>
             </View>
           </View>
