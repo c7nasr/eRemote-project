@@ -22,8 +22,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "android":{
-      "googleServicesFile": "./google-services.json"
+    "android": {
+      "package": "n.eRemote",
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true
+
     }
   }
 }

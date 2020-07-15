@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { get_phone_info } from "../../redux/actions/orders";
 import * as Permissions from "expo-permissions";
+import * as Notifications from 'expo-notifications';
 
 const ControlScreen = ({ navigation, auth, get_phone_info }) => {
   navigation.setOptions({
@@ -37,6 +38,13 @@ const ControlScreen = ({ navigation, auth, get_phone_info }) => {
       return;
     }
     get_phone_info(auth.key);
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      }),
+    });
   };
   create_channel();
   return (
