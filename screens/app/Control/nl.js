@@ -14,6 +14,7 @@ get_ransom_history;
 import { useFocusEffect } from "@react-navigation/native";
 import { get_ransom_history, create_new_order } from "../../../redux/actions/orders";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import Shimmer from "../../../components/app/ShimmerMainScreens";
 const NLockerScreen = ({
   navigation,
   auth,
@@ -45,7 +46,7 @@ const NLockerScreen = ({
   return (
     <>
       {loading ? (
-        <ActivityIndicator />
+       <Shimmer/>
       ) : (
         <>
           <View style={styles.container}>

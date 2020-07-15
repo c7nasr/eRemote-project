@@ -1,12 +1,10 @@
 import React from "react";
-import { StyleSheet, View, AsyncStorage } from "react-native";
+import { StyleSheet, View, AsyncStorage, Text } from "react-native";
 import Grid from "react-native-grid-component";
 import Control_Item from "../../components/app/ControlItem";
 import { AntDesign } from "@expo/vector-icons";
-import {  Button } from "react-native-elements";
 import { connect } from "react-redux";
-const ControlScreen = ({ navigation ,auth}) => {
-  
+const ControlScreen = ({ navigation, auth }) => {
   navigation.setOptions({
     headerStyle: {
       backgroundColor: "#f9f7f7",
@@ -39,7 +37,6 @@ const ControlScreen = ({ navigation ,auth}) => {
   });
   return (
     <>
-
       <View style={styles.container}>
         <Grid
           style={styles.list}
@@ -51,10 +48,15 @@ const ControlScreen = ({ navigation ,auth}) => {
           numColumns={2}
         />
         <View>
-          <Button title={auth.key}/>
+          <Text style={{ fontSize: 8, textAlign: "center" }}>
+            Your PC Identification Number: {auth.key}
+          </Text>
+          <Text style={{ fontSize: 8, textAlign: "center" }}>
+            Made With <AntDesign name="heart" size={8} color="#d61111" /> By
+            NASR
+          </Text>
         </View>
       </View>
-
     </>
   );
 };
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
   },
 });
-const mapStateToProps = (state) =>({
-  auth: state.auth
-})
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
 export default connect(mapStateToProps)(ControlScreen);

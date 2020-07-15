@@ -15,6 +15,7 @@ import {
 
 import { useFocusEffect } from "@react-navigation/native";
 import { create_new_order } from "../../../redux/actions/orders";
+import Shimmer from "../../../components/app/ShimmerMainScreens";
 
 const PowerOptionsScreen = ({
   auth,
@@ -40,7 +41,7 @@ const PowerOptionsScreen = ({
   return (
     <>
       {control.loading ? (
-        <ActivityIndicator />
+        <Shimmer/>
       ) : (
         <>
           <View style={styles.container}>

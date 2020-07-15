@@ -13,6 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { connect } from "react-redux";
 import { create_new_order } from "../../../redux/actions/orders";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
+import Shimmer from "../../../components/app/ShimmerMainScreens";
 
 const MicrophoneScreen = ({
   navigation,
@@ -41,7 +42,7 @@ const MicrophoneScreen = ({
   return (
     <>
       {loading ? (
-        <ActivityIndicator />
+       <Shimmer/>
       ) : (
         <>
           <View style={styles.container}>

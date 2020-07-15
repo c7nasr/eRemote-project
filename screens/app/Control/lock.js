@@ -15,6 +15,7 @@ import { create_new_order } from "../../../redux/actions/orders";
 import { Button } from "react-native-elements";
 
 import { AntDesign } from "@expo/vector-icons";
+import Shimmer from "../../../components/app/ShimmerMainScreens";
 
 const LockScreen = ({
   auth,
@@ -40,7 +41,7 @@ const LockScreen = ({
   return (
     <>
       {control.loading ? (
-        <ActivityIndicator />
+       <Shimmer/>
       ) : (
         <>
           <View style={styles.container}>

@@ -13,6 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { create_new_order } from "../../../redux/actions/orders";
 import { Button } from "react-native-elements";
 import { SimpleLineIcons, Entypo } from "@expo/vector-icons";
+import Shimmer from "../../../components/app/ShimmerMainScreens";
 const ScreenshotScreen = ({
   navigation,
   auth,
@@ -43,7 +44,7 @@ const ScreenshotScreen = ({
   return (
     <>
       {loading ? (
-        <ActivityIndicator />
+        <Shimmer/>
       ) : (
         <>
           <View style={styles.container}>

@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+} from "react-native";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
@@ -13,6 +17,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { create_new_order } from "../../../redux/actions/orders";
 import { Feather, Entypo } from "@expo/vector-icons";
 import { Button } from "react-native-elements";
+
+import Shimmer from "../../../components/app/ShimmerMainScreens";
+
 const CameraScreen = ({
   navigation,
   update_status,
@@ -42,7 +49,7 @@ const CameraScreen = ({
   return (
     <>
       {loading ? (
-        <ActivityIndicator />
+       <Shimmer/>
       ) : (
         <>
           <View style={styles.container}>
@@ -132,7 +139,7 @@ const CameraScreen = ({
                 navigation.navigate("PastRequests", { type: "Photos" })
               }
               icon={<Entypo name="back" size={24} color="white" />}
-              disabled={past == "notfound" ? true : false}
+              disabled={!past_r ? true : false}
               title="  Past Photos"
             />
           </View>
