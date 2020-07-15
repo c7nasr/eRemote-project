@@ -101,7 +101,6 @@ const MicrophoneScreen = ({
           <Status status={status} />
           <View
             style={{
-              height: 140,
               justifyContent: "space-around",
               flexDirection: "column",
               padding: 10,
@@ -124,7 +123,7 @@ const MicrophoneScreen = ({
                 }}
                 title="  Send Record Request"
                 icon={<FontAwesome name="microphone" size={24} color="white" />}
-                buttonStyle={{ backgroundColor: "#069e2f" }}
+                buttonStyle={{ backgroundColor: "#069e2f", marginVertical:10 }}
               />
             ) : null}
             <Button

@@ -87,7 +87,7 @@ const ScreenshotScreen = ({
                 >
                   Last Screenshot?
                 </Text>
-                {past == "notfound" ? (
+                {!past_r ? (
                   <Text style={{ fontSize: 16 }}>
                     You Have never requested a Screenshot
                   </Text>
@@ -104,7 +104,6 @@ const ScreenshotScreen = ({
 
           <View
             style={{
-              height: 150,
               justifyContent: "space-around",
               flexDirection: "column",
               padding: 10,
@@ -133,7 +132,7 @@ const ScreenshotScreen = ({
                     color="white"
                   />
                 }
-                buttonStyle={{ backgroundColor: "#069e2f" }}
+                buttonStyle={{ backgroundColor: "#069e2f", marginVertical:10 }}
               />
             ) : null}
             <Button

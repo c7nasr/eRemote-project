@@ -11,7 +11,7 @@ import {
 } from "../../../redux/actions/control";
 import { useFocusEffect } from "@react-navigation/native";
 import { create_new_order } from "../../../redux/actions/orders";
-import { Feather,Entypo } from "@expo/vector-icons";
+import { Feather, Entypo } from "@expo/vector-icons";
 import { Button } from "react-native-elements";
 const CameraScreen = ({
   navigation,
@@ -39,7 +39,6 @@ const CameraScreen = ({
   );
   const [loading, setloading] = useState(true);
   const [disabled, setDisabled] = useState(false);
-
   return (
     <>
       {loading ? (
@@ -103,7 +102,6 @@ const CameraScreen = ({
           <Status status={status} />
           <View
             style={{
-              height: 140,
               justifyContent: "space-around",
               flexDirection: "column",
               padding: 10,
@@ -126,7 +124,7 @@ const CameraScreen = ({
                 }}
                 title=" Send Camera Request"
                 icon={<Feather name="camera" size={24} color="white" />}
-                buttonStyle={{ backgroundColor: "#069e2f" }}
+                buttonStyle={{ backgroundColor: "#069e2f", marginVertical: 10 }}
               />
             ) : null}
             <Button

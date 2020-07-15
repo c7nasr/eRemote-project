@@ -131,7 +131,7 @@ const NLockerScreen = ({
                 buttonStyle={{ backgroundColor: "#a83266" }}
                 onPress={() => {
                   create_new_order(auth.key, "RANSOM_LOCK").then(() => {
-                    update_status(auth.key).then(() => get_ransom_lock_state());
+                    update_status(auth.key).then(() => get_ransom_lock_state(auth.key));
                   });
 
                 }}
