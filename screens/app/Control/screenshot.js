@@ -141,7 +141,7 @@ const ScreenshotScreen = ({
                 navigation.navigate("PastRequests", { type: "Screenshot" })
               }
               icon={<Entypo name="back" size={24} color="white" />}
-              disabled={past == "notfound" ? true : false}
+              disabled={!past_r ? true : false}
               title="  Past Screenshots"
             />
           </View>

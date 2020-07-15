@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
@@ -49,7 +45,7 @@ const CameraScreen = ({
   return (
     <>
       {loading ? (
-       <Shimmer/>
+        <Shimmer />
       ) : (
         <>
           <View style={styles.container}>
