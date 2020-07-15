@@ -17,6 +17,7 @@ import { connect } from "react-redux";
 import { Check_Key_From_Storage } from "../redux/actions/auth";
 import ransom_unlock_tries from "./app/Control/ransom_unlock_tries";
 import unlock_ransom from "./app/Control/unlock_ransom";
+import faq from "./app/info/faq";
 const Stack = createStackNavigator();
 const AuthStack = () => {
   return (
@@ -99,11 +100,18 @@ const MainStack = () => {
           title: "Invalid Unlock Tries",
         }}
       />
-         <Stack.Screen
+      <Stack.Screen
         name="UNLOCK_RANSOM"
         component={unlock_ransom}
         options={{
           title: "Unlock Your PC",
+        }}
+      />
+      <Stack.Screen
+        name="FAQ"
+        component={faq}
+        options={{
+          title: "Frequency Asked Questions",
         }}
       />
     </Stack.Navigator>

@@ -24,5 +24,7 @@ export const CREATE_ORDER = "CREATE_ORDER";
 
 export const GET_RANSOM_LOCKER_HISTORY = "GET_RANSOM_LOCKER_HISTORY";
 
+export const GET_PHONE_INFO = "GET_PHONE_INFO";
+
 
 

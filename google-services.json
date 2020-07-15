@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "711498947808",
+    "firebase_url": "https://ncontrol-8288b.firebaseio.com",
+    "project_id": "ncontrol-8288b",
+    "storage_bucket": "ncontrol-8288b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711498947808:android:7bf167f3297eebe98f4485",
+        "android_client_info": {
+          "package_name": "n.eRemote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711498947808-ci728flli6aovl22cprue801fh9pi6iv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKt2hmlZsDGe9ReJsK53V_16-n0i8Qg34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711498947808-ci728flli6aovl22cprue801fh9pi6iv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

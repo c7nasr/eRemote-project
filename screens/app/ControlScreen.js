@@ -1,10 +1,14 @@
 import React from "react";
-import { StyleSheet, View, AsyncStorage, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import Grid from "react-native-grid-component";
 import Control_Item from "../../components/app/ControlItem";
 import { AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
-const ControlScreen = ({ navigation, auth }) => {
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { get_phone_info } from "../../redux/actions/orders";
+import * as Permissions from "expo-permissions";
+
+const ControlScreen = ({ navigation, auth, get_phone_info }) => {
   navigation.setOptions({
     headerStyle: {
       backgroundColor: "#f9f7f7",
@@ -16,25 +20,25 @@ const ControlScreen = ({ navigation, auth }) => {
     },
     headerTitleAlign: "center",
     headerRight: () => (
-      <AntDesign
-        name="questioncircle"
-        style={{ padding: 10 }}
-        size={24}
-        color="black"
-      />
-    ),
-    headerLeft: () => (
-      <AntDesign
-        name="questioncircle"
-        style={{ padding: 10 }}
-        size={24}
-        color="black"
-        onPress={async () => {
-          await AsyncStorage.clear();
-        }}
-      />
+      <TouchableOpacity onPress={() => navigation.navigate("FAQ")}>
+        <AntDesign
+          name="questioncircle"
+          style={{ padding: 15 }}
+          size={24}
+          color="#3250a8"
+        />
+      </TouchableOpacity>
     ),
   });
+
+  const create_channel = async () => {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== "granted") {
+      return;
+    }
+    get_phone_info(auth.key);
+  };
+  create_channel();
   return (
     <>
       <View style={styles.container}>
@@ -75,4 +79,4 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
-export default connect(mapStateToProps)(ControlScreen);
+export default connect(mapStateToProps, { get_phone_info })(ControlScreen);

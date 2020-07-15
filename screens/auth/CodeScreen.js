@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { connect } from "react-redux";
 import { Button } from "react-native-elements";
+import { AntDesign } from "@expo/vector-icons";
 
 import {
   check_if_matched,
@@ -17,9 +18,6 @@ const CodeScreen = ({
     Get_new_key();
   }, []);
 
-  const go = () =>{
-    
-  }
   return (
     <View style={style.container}>
       <Image style={style.logo} source={require("../../assets/logo.png")} />
@@ -47,6 +45,10 @@ const CodeScreen = ({
           onPress={() => check_if_matched(auth.key)}
           type="clear"
         />
+         <Text style={{ fontSize: 10, textAlign: "center" }}>
+            Made With <AntDesign name="heart" size={10} color="#d61111" /> By
+            NASR
+          </Text>
       </View>
     </View>
   );
@@ -62,7 +64,7 @@ const style = StyleSheet.create({
     marginTop: 10,
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   code_: {
     marginLeft: 10,

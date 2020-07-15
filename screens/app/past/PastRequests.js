@@ -47,7 +47,7 @@ const PastRequests = ({
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator />
+        <ActivityIndicator size="large" style={{flex:1, justifyContent: "center"}} />
       ) : (
         <ScrollView
           refreshControl={
