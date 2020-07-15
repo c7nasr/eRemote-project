@@ -1,6 +1,4 @@
 import {
-  REFRESH_INFO,
-  GET_CURRENT_ORDERS,
   RESET_CURRENT_ORDERS,
   UPDATE_STATUS,
   GET_PAST_REQUESTS,
@@ -12,75 +10,7 @@ import {
 } from "./types";
 import connect_control from "../../api/api";
 
-export const get_pc_info = (key) => async (dispatch) => {
-  try {
-    const res = await connect_control.post("control/new", {
-      key: key,
-      order: "GET_SKY_INFO",
-      active: true,
-    });
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-export const check_if_info = (key) => async (dispatch) => {
-  try {
-    const res = await connect_control.get("users/sky-info?key=" + key);
-    const { status, find_if_exist } = res.data;
-    if (status === "failed") {
-      await connect_control.post("control/new", {
-        key: key,
-        order: "GET_SKY_INFO",
-        active: true,
-      });
-      dispatch({
-        type: REFRESH_INFO,
-        payload: {
-          info: find_if_exist,
-        },
-      });
-    } else {
-      dispatch({
-        type: REFRESH_INFO,
-        payload: {
-          info: find_if_exist,
-        },
-      });
-    }
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
-export const check_if_order = (key) => async (dispatch) => {
-  try {
-    const res = await connect_control.post("control/check", {
-      key: key,
-    });
-
-    const { status, order } = res.data;
-    if (order === null) {
-      dispatch({
-        type: GET_CURRENT_ORDERS,
-        payload: {
-          info: {},
-        },
-      });
-    } else {
-      dispatch({
-        type: GET_CURRENT_ORDERS,
-        payload: {
-          info: order,
-        },
-      });
-    }
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export const reset_order_status = () => async (dispatch) => {
   try {
@@ -261,12 +191,4 @@ export const get_one_past = (key, type) => async (dispatch) => {
   }
 };
 
-export const get_past_screenshot = (key) => async (dispatch) => {
-  try {
-    dispatch({
-      type: RESET_PAST_STATE,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+

@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { connect } from "react-redux";
 import {
-  get_past_requests,
   reset_order_status,
   update_status,
   get_last_lock_request,
 } from "../../../redux/actions/control";
 
 import { useFocusEffect } from "@react-navigation/native";
+import { create_new_order } from "../../../redux/actions/orders";
+import { Button } from "react-native-elements";
+
+import { AntDesign } from "@expo/vector-icons";
 
 const LockScreen = ({
   auth,
@@ -22,16 +24,19 @@ const LockScreen = ({
   update_status,
   get_last_lock_request,
   last_lock,
+  create_new_order,
 }) => {
   useFocusEffect(
     React.useCallback(() => {
       update_status(auth.key).then(() => get_last_lock_request(auth.key));
       return () => {
-        console.log("BACKED");
+        setDisabled(false);
         reset_order_status();
       };
     }, [])
   );
+  const [disabled, setDisabled] = useState(false);
+
   return (
     <>
       {control.loading ? (
@@ -84,7 +89,7 @@ const LockScreen = ({
                   <Text style={{ fontSize: 16 }}>
                     Last Lock you requested was in{" "}
                     <Text style={{ fontWeight: "bold" }}>
-                      8 June at 8:01PM.
+                      {last_lock.date}
                     </Text>
                   </Text>
                 ) : (
@@ -111,11 +116,18 @@ const LockScreen = ({
               Average Response Time For Windows Lock Request is 0.9S
             </Text>
             {!status.active ? (
-              <Button block danger>
-                <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                  Send Windows Lock Request
-                </Text>
-              </Button>
+              <Button
+                disabled={disabled}
+                onPress={() => {
+                  setDisabled(true);
+                  create_new_order(auth.key, "INSTANT_LOCK").then(() => {
+                    update_status(auth.key);
+                  });
+                }}
+                title=" Send Windows Lock Request"
+                icon={<AntDesign name="lock" size={24} color="white" />}
+                buttonStyle={{ backgroundColor: "#069e2f" }}
+              />
             ) : null}
           </View>
         </>
@@ -137,8 +149,8 @@ const mapStateToProps = (state) => ({
   last_lock: state.control.last_lock,
 });
 export default connect(mapStateToProps, {
-  get_past_requests,
   reset_order_status,
   update_status,
   get_last_lock_request,
+  create_new_order,
 })(LockScreen);

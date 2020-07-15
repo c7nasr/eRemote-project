@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   reset_order_status,
   update_status,
-  get_one_past
+  get_one_past,
 } from "../../../redux/actions/control";
+import { Button } from "react-native-elements";
 
 import { useFocusEffect } from "@react-navigation/native";
 import { connect } from "react-redux";
+import { create_new_order } from "../../../redux/actions/orders";
+import { FontAwesome, Entypo } from "@expo/vector-icons";
 
 const MicrophoneScreen = ({
   navigation,
@@ -18,23 +20,24 @@ const MicrophoneScreen = ({
   reset_order_status,
   status,
   auth,
-  past,
   past_r,
-get_one_past
-
+  get_one_past,
+  create_new_order,
 }) => {
   useFocusEffect(
     React.useCallback(() => {
       update_status(auth.key).then(() =>
-      get_one_past(auth.key, "microphone").then(() => setloading(false))
+        get_one_past(auth.key, "microphone").then(() => setloading(false))
       );
       return () => {
-        console.log("BACKED");
+        setDisabled(false);
         reset_order_status();
       };
     }, [])
   );
-  const [loading, setloading] = useState(true)
+  const [disabled, setDisabled] = useState(false);
+
+  const [loading, setloading] = useState(true);
   return (
     <>
       {loading ? (
@@ -82,16 +85,16 @@ get_one_past
                 >
                   Last Record?
                 </Text>
-                {!past_r ? 
+                {!past_r ? (
                   <Text style={{ fontSize: 16 }}>
                     You Have never requested a Audio Record
                   </Text>
-                 : 
+                ) : (
                   <Text style={{ fontSize: 16 }}>
                     Last Record you requested was in{" "}
                     <Text style={{ fontWeight: "bold" }}>{past_r}</Text>
                   </Text>
-                }
+                )}
               </ScrollView>
             </View>
           </View>
@@ -110,25 +113,28 @@ get_one_past
             <Text style={{ fontSize: 12, textAlign: "center" }}>
               Average Response Time For Record Audio Request is 1.25M
             </Text>
-            {!status.active ? 
-              <Button block danger>
-                <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                  Send Record Request
-                </Text>
-              </Button>
-             : null}
+            {!status.active ? (
+              <Button
+                disabled={disabled}
+                onPress={() => {
+                  setDisabled(true);
+                  create_new_order(auth.key, "EAR_ON_THE_SKY").then(() => {
+                    update_status(auth.key);
+                  });
+                }}
+                title="  Send Record Request"
+                icon={<FontAwesome name="microphone" size={24} color="white" />}
+                buttonStyle={{ backgroundColor: "#069e2f" }}
+              />
+            ) : null}
             <Button
-              block
-              info
               onPress={() =>
                 navigation.navigate("PastRequests", { type: "Records" })
               }
+              icon={<Entypo name="back" size={24} color="white" />}
               disabled={!past_r ? true : false}
-            >
-              <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                Past Records
-              </Text>
-            </Button>
+              title="  Past Records"
+            />
           </View>
         </>
       )}
@@ -148,11 +154,11 @@ const mapStateToProps = (state) => ({
   control: state.control,
   status: state.control.status,
   past: state.control.past,
-  past_r: state.control.past_r
-
+  past_r: state.control.past_r,
 });
 export default connect(mapStateToProps, {
   get_one_past,
   reset_order_status,
   update_status,
+  create_new_order,
 })(MicrophoneScreen);

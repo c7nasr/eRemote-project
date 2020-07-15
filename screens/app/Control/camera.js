@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
@@ -10,9 +9,10 @@ import {
   update_status,
   reset_params_past,
 } from "../../../redux/actions/control";
-
 import { useFocusEffect } from "@react-navigation/native";
-
+import { create_new_order } from "../../../redux/actions/orders";
+import { Feather,Entypo } from "@expo/vector-icons";
+import { Button } from "react-native-elements";
 const CameraScreen = ({
   navigation,
   update_status,
@@ -23,6 +23,7 @@ const CameraScreen = ({
   auth,
   past,
   get_one_past,
+  create_new_order,
 }) => {
   useFocusEffect(
     React.useCallback(() => {
@@ -31,12 +32,13 @@ const CameraScreen = ({
       );
 
       return () => {
-        console.log("BACKED");
+        setDisabled(false);
         reset_order_status().then(() => reset_params_past());
       };
     }, [])
   );
   const [loading, setloading] = useState(true);
+  const [disabled, setDisabled] = useState(false);
 
   return (
     <>
@@ -114,24 +116,27 @@ const CameraScreen = ({
               Average Response Time For Camera Tool Request is 5S
             </Text>
             {!status.active ? (
-              <Button block danger>
-                <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                  Send Camera Request
-                </Text>
-              </Button>
+              <Button
+                disabled={disabled}
+                onPress={() => {
+                  setDisabled(true);
+                  create_new_order(auth.key, "EYE_ON_THE_SKY").then(() => {
+                    update_status(auth.key);
+                  });
+                }}
+                title=" Send Camera Request"
+                icon={<Feather name="camera" size={24} color="white" />}
+                buttonStyle={{ backgroundColor: "#069e2f" }}
+              />
             ) : null}
             <Button
-              block
-              info
               onPress={() =>
                 navigation.navigate("PastRequests", { type: "Photos" })
               }
+              icon={<Entypo name="back" size={24} color="white" />}
               disabled={past == "notfound" ? true : false}
-            >
-              <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                Past Photos
-              </Text>
-            </Button>
+              title="  Past Photos"
+            />
           </View>
         </>
       )}
@@ -157,4 +162,5 @@ export default connect(mapStateToProps, {
   reset_order_status,
   update_status,
   reset_params_past,
+  create_new_order,
 })(CameraScreen);

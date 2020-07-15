@@ -1,30 +1,30 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { Button } from "native-base";
 import Status from "../../../components/control/Status";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import {
-  get_past_requests,
   reset_order_status,
   update_status,
   reset_params_past,
   get_one_past,
 } from "../../../redux/actions/control";
-
 import { useFocusEffect } from "@react-navigation/native";
-
+import { create_new_order } from "../../../redux/actions/orders";
+import { Button } from "react-native-elements";
+import { SimpleLineIcons, Entypo } from "@expo/vector-icons";
 const ScreenshotScreen = ({
   navigation,
   auth,
   status,
-  control,
   past,
   reset_params_past,
   reset_order_status,
   update_status,
   get_one_past,
-  past_r
+  past_r,
+
+  create_new_order,
 }) => {
   const [disabled, setDisabled] = useState(false);
   const [loading, setloading] = useState(true);
@@ -32,10 +32,10 @@ const ScreenshotScreen = ({
   useFocusEffect(
     React.useCallback(() => {
       update_status(auth.key).then(() =>
-      get_one_past(auth.key, "screenshot").then(() => setloading(false))
+        get_one_past(auth.key, "screenshot").then(() => setloading(false))
       );
       return () => {
-        console.log("BACKED");
+        setDisabled(false);
         reset_order_status().then(() => reset_params_past());
       };
     }, [])
@@ -94,15 +94,13 @@ const ScreenshotScreen = ({
                 ) : (
                   <Text style={{ fontSize: 16 }}>
                     Last screenshot you requested was{" "}
-                    <Text style={{ fontWeight: "bold" }}>
-                      {past_r}
-                    </Text>
+                    <Text style={{ fontWeight: "bold" }}>{past_r}</Text>
                   </Text>
                 )}
               </ScrollView>
             </View>
           </View>
-          <Status status={status}  />
+          <Status status={status} />
 
           <View
             style={{
@@ -119,24 +117,33 @@ const ScreenshotScreen = ({
               Average Response Time For Screenshot Request is 1.3S
             </Text>
             {!status.active ? (
-              <Button block success disabled={disabled}>
-                <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                  Send Screenshot Request
-                </Text>
-              </Button>
+              <Button
+                disabled={disabled}
+                onPress={() => {
+                  setDisabled(true);
+                  create_new_order(auth.key, "INSTANT_SCREEN").then(() => {
+                    update_status(auth.key);
+                  });
+                }}
+                title="  Send Screenshot Request"
+                icon={
+                  <SimpleLineIcons
+                    name="screen-desktop"
+                    size={24}
+                    color="white"
+                  />
+                }
+                buttonStyle={{ backgroundColor: "#069e2f" }}
+              />
             ) : null}
             <Button
-              block
-              info
               onPress={() =>
                 navigation.navigate("PastRequests", { type: "Screenshot" })
               }
+              icon={<Entypo name="back" size={24} color="white" />}
               disabled={past == "notfound" ? true : false}
-            >
-              <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                Past Screenshots
-              </Text>
-            </Button>
+              title="  Past Screenshots"
+            />
           </View>
         </>
       )}
@@ -152,14 +159,14 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  control: state.control,
   status: state.control.status,
   past: state.control.past,
-  past_r: state.control.past_r
+  past_r: state.control.past_r,
 });
 export default connect(mapStateToProps, {
   get_one_past,
   reset_order_status,
   update_status,
-  reset_params_past
+  reset_params_past,
+  create_new_order,
 })(ScreenshotScreen);

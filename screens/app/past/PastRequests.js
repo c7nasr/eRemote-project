@@ -10,9 +10,7 @@ import ListViewPast from "../../../components/past/ListView";
 import PullToRefresh from "../../../components/control/PullToRefresh";
 import { connect } from "react-redux";
 import { get_past_requests } from "../../../redux/actions/control";
-import SnackBar from "react-native-snackbar-component";
 
-import { Text } from "react-native-elements";
 
 const PastRequests = ({
   route,
@@ -20,7 +18,6 @@ const PastRequests = ({
   past,
   get_past_requests,
   auth,
-  download,
 }) => {
   const { type } = route.params;
   navigation.setOptions({
@@ -82,7 +79,6 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   auth: state.auth,
   past: state.control.past,
-  download: state.download,
 });
 export default connect(mapStateToProps, {
   get_past_requests,

@@ -1,6 +1,4 @@
 import {
-  REFRESH_INFO,
-  GET_CURRENT_ORDERS,
   RESET_CURRENT_ORDERS,
   UPDATE_STATUS,
   GET_PAST_REQUESTS,
@@ -8,7 +6,6 @@ import {
   GET_LAST_LOCK,
   GET_RANSOM_LOCK_STATE,
   RESET_PAST_STATE,
-  GET_PAST_SCREENSHOTS,
   GET_PAST_REQUEST_FOR_EVERY_CONTROL,
 } from "../actions/types";
 const initState = {
@@ -27,21 +24,6 @@ const initState = {
 export default control = (state = initState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case REFRESH_INFO:
-      return {
-        ...state,
-        loading: false,
-        info: payload.info,
-        matched: true,
-        info_state: "done",
-      };
-    case GET_CURRENT_ORDERS:
-      return {
-        ...state,
-        loading: false,
-        order: payload.info,
-        matched: true,
-      };
     case RESET_CURRENT_ORDERS:
       return {
         ...state,
@@ -49,7 +31,6 @@ export default control = (state = initState, action) => {
         order: {},
         matched: true,
       };
-
     case UPDATE_STATUS:
       return {
         ...state,
@@ -89,8 +70,7 @@ export default control = (state = initState, action) => {
     case GET_PAST_REQUEST_FOR_EVERY_CONTROL:
       return {
         ...state,
-        past_r: payload.past
-        
+        past_r: payload.past,
       };
     default:
       return state;

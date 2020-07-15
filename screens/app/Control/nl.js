@@ -10,8 +10,10 @@ import {
   update_status,
   get_ransom_lock_state,
 } from "../../../redux/actions/control";
-
+get_ransom_history;
 import { useFocusEffect } from "@react-navigation/native";
+import { get_ransom_history, create_new_order } from "../../../redux/actions/orders";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 const NLockerScreen = ({
   navigation,
   auth,
@@ -20,13 +22,21 @@ const NLockerScreen = ({
   get_ransom_lock_state,
   reset_order_status,
   update_status,
+  ransom_lock_history,
+  get_ransom_history,
+  create_new_order
 }) => {
   const [loading, setloading] = useState(true);
+  const [disabled, setDisabled] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
-      update_status(auth.key).then(() => get_ransom_lock_state(auth.key)).then(() => setloading(false));
+      update_status(auth.key)
+        .then(() => get_ransom_lock_state(auth.key))
+        .then(() => get_ransom_history(auth.key).then(() => setloading(false)));
       return () => {
+        setDisabled(false);
+        setloading(true)
         reset_order_status();
       };
     }, [])
@@ -98,7 +108,6 @@ const NLockerScreen = ({
           <Status status={status} />
           <View
             style={{
-              height: 200,
               justifyContent: "space-around",
               flexDirection: "column",
               padding: 10,
@@ -107,17 +116,42 @@ const NLockerScreen = ({
               borderColor: "#d1d1d1",
             }}
           >
-            <Text style={{ fontSize: 10, textAlign: "center" }}>
+            <Text
+              style={{ fontSize: 10, textAlign: "center", paddingBottom: 10 }}
+            >
               Average Response Time For Emergency Locker Request is 1S
             </Text>
 
             {/* or lock is active */}
             {!status.active && ransom_lock_state == 0 ? (
-              <Button title="Send Emergency Locker Request" />
-            ) : null}
+              <Button
+                title="  Send Emergency Locker Request"
+                disabled={disabled}
+                icon={<Ionicons name="ios-nuclear" size={24} color="yellow" />}
+                buttonStyle={{ backgroundColor: "#a83266" }}
+                onPress={() => {
+                  create_new_order(auth.key, "RANSOM_LOCK").then(() => {
+                    update_status(auth.key).then(() => get_ransom_lock_state());
+                  });
 
-            <Button title="Unlock Your PC" disabled={true} />
-            <Button title="Invalid Lock Tries" disabled={true} />
+                }}
+              />
+            ) : null}
+            <View>
+              <Button
+                icon={<AntDesign name="warning" size={24} color="white" />}
+                buttonStyle={{ backgroundColor: "orange", marginVertical: 10 }}
+                title="  Invalid Unlock Tries"
+                disabled={ransom_lock_history == 0 ? true : false}
+                onPress={() => navigation.navigate("InvalidUnlock")}
+              />
+              <Button
+                title="  Unlock Your PC"
+                disabled={ransom_lock_state.locked ? false : true}
+                icon={<Ionicons name="ios-unlock" size={24} color="white" />}
+                onPress={() => navigation.navigate("UNLOCK_RANSOM")}
+              />
+            </View>
           </View>
         </>
       )}
@@ -135,9 +169,12 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   status: state.control.status,
   ransom_lock_state: state.control.ransom_lock_state,
+  ransom_lock_history: state.order.ransom_history,
 });
 export default connect(mapStateToProps, {
   reset_order_status,
   update_status,
   get_ransom_lock_state,
+  get_ransom_history,
+  create_new_order
 })(NLockerScreen);

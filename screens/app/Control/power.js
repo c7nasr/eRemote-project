@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { Button } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+import { Button } from "react-native-elements";
+
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Status from "../../../components/control/Status";
 import { connect } from "react-redux";
 import {
-  get_past_requests,
   reset_order_status,
   update_status,
   get_last_power_request,
 } from "../../../redux/actions/control";
 
 import { useFocusEffect } from "@react-navigation/native";
+import { create_new_order } from "../../../redux/actions/orders";
 
 const PowerOptionsScreen = ({
   auth,
@@ -22,12 +24,15 @@ const PowerOptionsScreen = ({
   reset_order_status,
   update_status,
   get_last_power_request,
+  create_new_order,
 }) => {
+  const [disabled, setDisabled] = useState(false);
+
   useFocusEffect(
     React.useCallback(() => {
       update_status(auth.key).then(() => get_last_power_request(auth.key));
       return () => {
-        console.log("BACKED");
+        setDisabled(false);
         reset_order_status();
       };
     }, [])
@@ -112,16 +117,42 @@ const PowerOptionsScreen = ({
             </Text>
             {!status.active ? (
               <>
-                <Button block danger>
-                  <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                    Send Shutdown Request
-                  </Text>
-                </Button>
-                <Button block info>
-                  <Text style={{ padding: 10, color: "white", fontSize: 18 }}>
-                    Send Restart Request
-                  </Text>
-                </Button>
+                <Button
+                  disabled={disabled}
+                  onPress={() => {
+                    setDisabled(true);
+                    create_new_order(auth.key, "SHUTDOWN_THE_SKY").then(() => {
+                      update_status(auth.key);
+                    });
+                  }}
+                  title=" Send Shutdown Request"
+                  icon={
+                    <MaterialCommunityIcons
+                      name="power-plug-off"
+                      size={24}
+                      color="white"
+                    />
+                  }
+                  buttonStyle={{ backgroundColor: "red" }}
+                />
+                <Button
+                  disabled={disabled}
+                  onPress={() => {
+                    setDisabled(true);
+                    create_new_order(auth.key, "RESTART_THE_SKY").then(() => {
+                      update_status(auth.key);
+                    });
+                  }}
+                  title=" Send Restart Request"
+                  icon={
+                    <MaterialCommunityIcons
+                      name="restart"
+                      size={24}
+                      color="white"
+                    />
+                  }
+                  buttonStyle={{ backgroundColor: "#3842f5" }}
+                />
               </>
             ) : null}
           </View>
@@ -145,8 +176,8 @@ const mapStateToProps = (state) => ({
   last_power: state.control.last_power,
 });
 export default connect(mapStateToProps, {
-  get_past_requests,
   reset_order_status,
   update_status,
   get_last_power_request,
+  create_new_order,
 })(PowerOptionsScreen);
