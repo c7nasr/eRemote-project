@@ -1,23 +1,19 @@
 import React, { useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, ToastAndroid } from "react-native";
 import { Badge, ListItem } from "react-native-elements";
 import { FontAwesome } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
-import { connect } from "react-redux";
-import { set_download_rate } from "../../redux/actions/download";
-import SnackBar from "react-native-snackbar-component";
 
-const ListViewPast = ({ type, media, date, set_download_rate }) => {
+const ListViewPast = ({ type, media, date }) => {
+  const [Downloading, setDownloading] = useState(false);
   const callback = (downloadProgress) => {
     const progress =
       downloadProgress.totalBytesWritten /
       downloadProgress.totalBytesExpectedToWrite;
     const p = { downloadProgress: progress };
-    if (p.downloadProgress.toFixed(2)*100 %20){
+    // if ((p.downloadProgress.toFixed(2) * 100) != 100) {
 
-      set_download_rate(p.downloadProgress.toFixed(2) * 100);
-    } 
-   
+    // }
   };
   {
     return (
@@ -42,6 +38,12 @@ const ListViewPast = ({ type, media, date, set_download_rate }) => {
             rightElement={<Badge status="success" />}
             onPress={async () => {
               try {
+                setDownloading(true);
+                ToastAndroid.show(
+                  "Downloading....",
+                  ToastAndroid.SHORT,
+                  ToastAndroid.CENTER
+                );
                 const { uri } = await FileSystem.createDownloadResumable(
                   l,
                   FileSystem.documentDirectory +
@@ -52,21 +54,28 @@ const ListViewPast = ({ type, media, date, set_download_rate }) => {
                   {},
                   callback
                 ).downloadAsync();
-                set_download_rate(0);
+                ToastAndroid.show(
+                  "Download Complete",
+                  ToastAndroid.SHORT,
+                  ToastAndroid.CENTER
+                );
+                setDownloading(false);
               } catch (e) {
                 console.error(e);
               }
             }}
           />
         ))}
+        {Downloading ? (
+          <ActivityIndicator
+            size="large"
+            color="#00ff00"
+            style={{ flex: 1, justifyContent: "center" }}
+          />
+        ) : null}
       </View>
     );
   }
 };
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-
-  download: state.download,
-});
-export default connect(null, { set_download_rate })(ListViewPast);
+export default ListViewPast;

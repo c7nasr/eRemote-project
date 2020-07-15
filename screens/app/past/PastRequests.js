@@ -46,7 +46,6 @@ const PastRequests = ({
   }, []);
   const [loading, setloading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [showSnake, setshowSnake] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -69,9 +68,6 @@ const PastRequests = ({
         >
           <PullToRefresh />
           <ListViewPast type={type} media={past.media} date={past.dates} />
-          <Text style={{ textAlign: "center", padding: 10 }}>
-            Download Rate: {download.download_rate} %
-          </Text>
         </ScrollView>
       )}
     </View>
