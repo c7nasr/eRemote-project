@@ -1,6 +1,8 @@
 import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
 import { ToastAndroid } from "react-native";
+import * as Permissions from "expo-permissions"
+import * as MediaLibrary from 'expo-media-library';
+
 const callback = (downloadProgress) => {
   const progress =
     downloadProgress.totalBytesWritten /
@@ -13,7 +15,7 @@ const callback = (downloadProgress) => {
 const downloadMedia = async (m) => {
   try {
     media = m;
-    const permission = await MediaLibrary.requestPermissionsAsync();
+    const permission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (!permission.granted) {
       console.log("El PERMISSION ya KSMK");
       return;
@@ -32,34 +34,24 @@ const downloadMedia = async (m) => {
         );
       }
 
-      const { uri } = await FileSystem.createDownloadResumable(
-        l,
-        FileSystem.documentDirectory +
-          "/eRemote/" +
-          "nc_" +
-          l.split(".")[5] +
+      const { uri } = await FileSystem.createDownloadResumable(m,FileSystem.documentDirectory +"/eRemote/" +"ec_" +
+          m.split(".")[5] +
           "." +
-          l.split(".")[6],
+          m.split(".")[6],
         {},
         callback
       ).downloadAsync();
 
-      MediaLibrary.createAssetAsync(
-        FileSystem.documentDirectory +
-          "/eRemote/" +
-          "nc_" +
-          l.split(".")[5] +
-          "." +
-          l.split(".")[6]
-      );
       ToastAndroid.showWithGravity(
-        "Download Complete " + uri,
+        "Download Complete " ,
         ToastAndroid.SHORT,
         ToastAndroid.CENTER
       );
+    console.log("Finished downloading to22 "+ uri);
+    const asset = await MediaLibrary.createAssetAsync(uri)
+    await MediaLibrary.createAlbumAsync("eRemote", asset, false)
     }
 
-    console.log("Finished downloading to ", uri);
   } catch (e) {
     console.error(e);
   }

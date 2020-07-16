@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, ActivityIndicator } from "react-native";
 import { connect } from "react-redux";
 import { Button } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
@@ -19,7 +19,10 @@ const CodeScreen = ({
   }, []);
 
   return (
+    
     <View style={style.container}>
+      {!auth.key ? <ActivityIndicator/> : 
+      <View>
       <Image style={style.logo} source={require("../../assets/logo.png")} />
       <View style={style.welcome_container}>
         <Text style={style.text_welcome}>
@@ -50,6 +53,8 @@ const CodeScreen = ({
             NASR
           </Text>
       </View>
+      </View>
+      }
     </View>
   );
 };
