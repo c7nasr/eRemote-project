@@ -6,11 +6,9 @@ const check_for_updates = async () => {
     const update = await Updates.checkForUpdateAsync();
     if (update.isAvailable) {
       await Updates.fetchUpdateAsync();
-      Alert.alert("A new update is available, app will be restarted");
       await Updates.reloadAsync();
     }
   } catch (e) {
-    Alert.alert("Error occurred checking for app updates");
     console.log(e);
   }
 };

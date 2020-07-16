@@ -18,7 +18,7 @@ const create_channel = async (navigation) => {
     Notifications.addNotificationResponseReceivedListener((response) => {
       const page = response.notification.request.content.data.page;
       const ransom = response.notification.request.content.data.ransom;
-      if (!page == undefined){
+      if (page){
         navigation.navigate("PastRequests",{ type: page })
       }else if(ransom){
         navigation.navigate("InvalidUnlock")

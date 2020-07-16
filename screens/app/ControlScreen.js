@@ -20,16 +20,16 @@ const ControlScreen = ({ navigation, auth, get_phone_info }) => {
       fontWeight: "bold",
     },
     headerTitleAlign: "center",
-    headerRight: () => (
-      <TouchableOpacity onPress={() => navigation.navigate("FAQ")}>
-        <AntDesign
-          name="questioncircle"
-          style={{ padding: 15 }}
-          size={24}
-          color="#3250a8"
-        />
-      </TouchableOpacity>
-    ),
+    // headerRight: () => (
+    //   <TouchableOpacity onPress={() => navigation.navigate("FAQ")}>
+    //     <AntDesign
+    //       name="questioncircle"
+    //       style={{ padding: 15 }}
+    //       size={24}
+    //       color="#3250a8"
+    //     />
+    //   </TouchableOpacity>
+    // ),
   });
   check_for_updates()
 
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     marginBottom: 5,
-    // backgroundColor: "black",
   },
   container: {
     flex: 1,
