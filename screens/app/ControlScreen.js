@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { get_phone_info } from "../../redux/actions/orders";
 import create_channel from "../../functions/notifcations";
+import check_for_updates from "../../functions/updates"
 
 const ControlScreen = ({ navigation, auth, get_phone_info }) => {
   navigation.setOptions({
@@ -30,10 +31,10 @@ const ControlScreen = ({ navigation, auth, get_phone_info }) => {
       </TouchableOpacity>
     ),
   });
+  check_for_updates()
 
   create_channel(navigation);
   get_phone_info(auth.key);
-
   return (
     <>
       <View style={styles.container}>

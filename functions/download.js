@@ -33,7 +33,6 @@ const downloadMedia = async (m) => {
           FileSystem.documentDirectory + "/eRemote"
         );
       }
-
       const { uri } = await FileSystem.createDownloadResumable(m,FileSystem.documentDirectory +"/eRemote/" +"ec_" +
           m.split(".")[5] +
           "." +
@@ -41,13 +40,11 @@ const downloadMedia = async (m) => {
         {},
         callback
       ).downloadAsync();
-
       ToastAndroid.showWithGravity(
         "Download Complete " ,
         ToastAndroid.SHORT,
         ToastAndroid.CENTER
       );
-    console.log("Finished downloading to22 "+ uri);
     const asset = await MediaLibrary.createAssetAsync(uri)
     await MediaLibrary.createAlbumAsync("eRemote", asset, false)
     }
