@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ncontrol",
-    "slug": "ncontrol",
+    "name": "eRemote",
+    "slug": "eremote",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

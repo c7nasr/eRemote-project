@@ -1,13 +1,12 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ToastAndroid } from "react-native";
 import Grid from "react-native-grid-component";
 import Control_Item from "../../components/app/ControlItem";
 import { AntDesign } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { get_phone_info } from "../../redux/actions/orders";
-import * as Permissions from "expo-permissions";
-import * as Notifications from 'expo-notifications';
+import create_channel from "../../functions/notifcations";
 
 const ControlScreen = ({ navigation, auth, get_phone_info }) => {
   navigation.setOptions({
@@ -32,21 +31,9 @@ const ControlScreen = ({ navigation, auth, get_phone_info }) => {
     ),
   });
 
-  const create_channel = async () => {
-    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    if (status !== "granted") {
-      return;
-    }
-    get_phone_info(auth.key);
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-      }),
-    });
-  };
-  create_channel();
+  create_channel(navigation);
+  get_phone_info(auth.key);
+
   return (
     <>
       <View style={styles.container}>
