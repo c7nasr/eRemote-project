@@ -1,5 +1,4 @@
 import * as Updates from "expo-updates";
-import { Alert } from "react-native";
 
 const check_for_updates = async () => {
   try {
