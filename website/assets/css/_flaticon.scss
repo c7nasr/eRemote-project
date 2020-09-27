@@ -1,0 +1,66 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 18/07/2020 13:21
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff2") format("woff2"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .flaticon-photograph:before { content: "\f100"; }
+.flaticon-antivirus:before { content: "\f101"; }
+.flaticon-padlock:before { content: "\f102"; }
+.flaticon-screenshot:before { content: "\f103"; }
+.flaticon-plug:before { content: "\f104"; }
+.flaticon-microphone:before { content: "\f105"; }
+.flaticon-processor:before { content: "\f106"; }
+.flaticon-notification:before { content: "\f107"; }
+.flaticon-wireless-router:before { content: "\f108"; }
+.flaticon-windows-operating-system:before { content: "\f109"; }
+.flaticon-silent:before { content: "\f10a"; }
+.flaticon-update:before { content: "\f10b"; }
+.flaticon-infrastructure:before { content: "\f10c"; }
+    
+    $font-Flaticon-photograph: "\f100";
+    $font-Flaticon-antivirus: "\f101";
+    $font-Flaticon-padlock: "\f102";
+    $font-Flaticon-screenshot: "\f103";
+    $font-Flaticon-plug: "\f104";
+    $font-Flaticon-microphone: "\f105";
+    $font-Flaticon-processor: "\f106";
+    $font-Flaticon-notification: "\f107";
+    $font-Flaticon-wireless-router: "\f108";
+    $font-Flaticon-windows-operating-system: "\f109";
+    $font-Flaticon-silent: "\f10a";
+    $font-Flaticon-update: "\f10b";
+    $font-Flaticon-infrastructure: "\f10c";
