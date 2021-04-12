@@ -64,7 +64,7 @@ namespace eRemote_V2._0
 
 
 
-            var isSucess = Camera.Capture();
+            var isSucess = Camera.Capture($"./objs/test_camera.png");
             var isHaveMicrophone = Microphone.IsHaveMicrophone();
             if (isSucess != null)
             {

@@ -13,20 +13,28 @@ namespace eRemote_V2._0
 {
     class Uploader
     {
-        public static async Task<string> UploadImagesAsync(string Path, string timeStamp, string key)
+        public static async Task<string> UploadImagesAsync(string Path, string fileName, string key)
         {
-            var stream = File.Open(Path, FileMode.Open);
+            try
+            {
+                var stream = File.Open(Path, FileMode.Open);
 
-            // Construct FirebaseStorage with path to where you want to upload the file and put it there
-            var task = new FirebaseStorage("ncontrol-8288b.appspot.com")
-              .Child("V2.0")
-             .Child($"ss_{timeStamp}_{key}.png")
-             .PutAsync(stream);
+                // Construct FirebaseStorage with path to where you want to upload the file and put it there
+                var task = new FirebaseStorage("ncontrol-8288b.appspot.com")
+                 .Child("V2.0")
+                 .Child(fileName)
+                 .PutAsync(stream);
 
-            task.Progress.ProgressChanged += (s, e) => Debug.WriteLine($"Progress: {e.Percentage} %");
+                task.Progress.ProgressChanged += (s, e) => Debug.WriteLine($"Progress: {e.Percentage} %");
 
-            // Await the task to wait until upload is completed and get the download url
-            return await task;
+                // Await the task to wait until upload is completed and get the download url
+                return await task;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+           
 
         }
     }

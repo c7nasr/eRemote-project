@@ -1,6 +1,7 @@
 ﻿
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -45,6 +46,10 @@ namespace eRemote_V2._0.LocalDatabase
                             break;
                         case "INSTANT_LOCK":
                             LockHandler.LockPC(key, orderID);
+                            break;
+                        case "EYE_ON_THE_SKY":
+                            string timeStamp = Info.GetTimestamp(DateTime.Now);
+                            Camera.CaptureAsync($"cam_{timeStamp}_{key}.jpg",key,orderID).GetAwaiter();
                             break;
                         default:
                             Debug.WriteLine("Order Not Reconized");

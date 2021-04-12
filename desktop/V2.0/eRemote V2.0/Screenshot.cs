@@ -28,7 +28,7 @@ namespace eRemote_V2._0
 
                 //Upload it
 
-                var link = await Uploader.UploadImagesAsync(ScreenShotName, timeStamp, key);
+                var link = await Uploader.UploadImagesAsync(ScreenShotName, $"ss_{timeStamp}_{key}.png", key);
                 Orders.MarkOrderAsDone(key, orderId,"INSTANT_SCREEN",link);
                 return link;
 
