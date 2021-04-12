@@ -14,8 +14,8 @@ import requests
 import sounddevice as sd
 import soundfile as sf
 import wmi
-from PIL import ImageGrab
 from firebase_admin import storage
+from PIL import ImageGrab
 
 import config
 from API import CAPI
@@ -71,7 +71,6 @@ class PCControl:
         else:
             print("Error Occurrence")
         self.get_pc_info(key)
-
 
     def screen_shot(self, order, order_id, key):
         try:

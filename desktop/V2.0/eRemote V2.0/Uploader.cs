@@ -1,0 +1,33 @@
+﻿using Firebase.Storage;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+
+namespace eRemote_V2._0
+{
+    class Uploader
+    {
+        public static async Task<string> UploadImagesAsync(string Path, string timeStamp, string key)
+        {
+            var stream = File.Open(Path, FileMode.Open);
+
+            // Construct FirebaseStorage with path to where you want to upload the file and put it there
+            var task = new FirebaseStorage("ncontrol-8288b.appspot.com")
+              .Child("V2.0")
+             .Child($"ss_{timeStamp}_{key}.png")
+             .PutAsync(stream);
+
+            task.Progress.ProgressChanged += (s, e) => Debug.WriteLine($"Progress: {e.Percentage} %");
+
+            // Await the task to wait until upload is completed and get the download url
+            return await task;
+
+        }
+    }
+}
