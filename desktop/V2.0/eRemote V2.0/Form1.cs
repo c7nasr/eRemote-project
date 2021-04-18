@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using eRemote_V2._0.LocalDatabase;
 using System.Collections.Generic;
-using SocketIOClient;
 
 namespace eRemote_V2._0
 {
@@ -20,6 +19,7 @@ namespace eRemote_V2._0
             InitializeComponent();
             LockHandler.StartLockLogger();
             Directory.CreateDirectory("objs");
+                
 
         }
 
@@ -30,42 +30,14 @@ namespace eRemote_V2._0
             // if Not? Beep Beep
             button1.Enabled = false;
 
-
-            var infos = Info.GetOperatingSystemInfo();
-
-            backgroundWorker1.RunWorkerAsync(argument: textBox1.Text);
-            backgroundWorker1.RunWorkerCompleted += (s, check_result) =>
-            {
-                bool is_valid = (bool)check_result.Result;
-
-                if (is_valid)
-                {
-                    PCModel p = new PCModel();
-                    p.Username = infos[0];
-                    p.Ip = infos[1];
-                    p.MacAddress = infos[2];
-                    p.OS = infos[3];
-                    p.Cpu = infos[5];
-                    p.Ram = infos[6];
-                    p.Gpu = infos[7];
-                    p.Camera = int.Parse(infos[8]);
-                    p.Mic = int.Parse(infos[9]);
-                    p.Batttrey = int.Parse(infos[10]);
-                    p.BatteryPercentage = int.Parse(infos[11]);
-                    p.Key = textBox1.Text;
-                    SQLConnetion.RegisterPC(p);
-                }
-                else
-                {
-                    MessageBox.Show("Authentication Key Incorrect. Double Check it");
-                }
-            button1.Enabled = true;
-
-
-            };
+            //backgroundWorker1.RunWorkerAsync();
+            //backgroundWorker1.RunWorkerCompleted += (s, e) => {
+            //    MessageBox.Show(e.Result.ToString());
+            //};
 
 
 
+            //MessageBox.Show(Info.GetOperatingSystemInfo()[7].ToString());
             //logger = SQLConnetion.FetchLogger();
             //foreach (var item in logger)
             //{
@@ -74,26 +46,36 @@ namespace eRemote_V2._0
             //    Debug.WriteLine(item.timestamp);
             //}
 
+            //PCModel p = new PCModel();
+            //p.Username = "c7nasr";
+            //p.Ram = "90GB";
+            //p.MacAddress = "Mac Address is here";
+            //p.Key = "Key is here";
+            //p.Ip = "IP is here";
+            //p.Gpu = "GPU";
+            //p.Cpu = "CPU";
+            //p.Camera = 2;
+            //p.OS = "OS";
+            //p.Mic = 1;
+            //p.Batttrey = 1;
+            //p.BatteryPercentage = 19;
+
+            //SQLConnetion.RegisterPC(p);
 
 
             //Hide();
             //var f = new Form2();
             //f.ShowDialog();
+            Orders.SyncAndCheck();
 
-
-            //Orders.SyncAndCheck();
-
-
-            //Socket.Init_socket();
-
+            button1.Enabled = true;
         }
-
-
+      
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string sVal = textBox1.Text;
 
-            if (!string.IsNullOrEmpty(sVal) && textBox1.Text.Length < 13)
+            if (!string.IsNullOrEmpty(sVal))
             {
                 sVal = sVal.Replace("-", "");
                 string newst = Regex.Replace(sVal, ".{4}", "$0-");
@@ -104,8 +86,8 @@ namespace eRemote_V2._0
 
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            string key = (string)e.Argument;
-            bool API_RESPONSE = LoginAndValidate.check_key_if_valid(key);
+            LoginAndValidate LoginModule = new LoginAndValidate();
+            string API_RESPONSE = LoginModule.apiReq();
             e.Result = API_RESPONSE;
 
             

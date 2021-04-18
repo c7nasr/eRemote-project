@@ -9,16 +9,16 @@ namespace eRemote_V2._0
 {
     class Microphone
     {
-        public static int IsHaveMicrophone()
+        public static bool IsHaveMicrophone()
         {
             int waveInDevices = WaveIn.DeviceCount;
             if (waveInDevices != 0)
             {
-                return 1;
+                return true;
             }
             else
             {
-                return 0;
+                return false;
             }
         }
       
