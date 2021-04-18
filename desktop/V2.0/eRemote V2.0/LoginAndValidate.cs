@@ -1,24 +1,31 @@
 ﻿
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using System.Configuration;
+using System.Diagnostics;
 
 namespace eRemote_V2._0
 {
     class LoginAndValidate
     {
-        public string apiReq()
+        private static string API_LINK = ConfigurationManager.AppSettings["API"];
+
+        public static bool check_key_if_valid(string key)
         {
-            var client = new RestClient("https://api.igdb.com/v4/search");
+
+            var client = new RestClient($"{API_LINK}users/connect");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
-            request.AddHeader("Client-ID", "ikvrxtp1ksuns35wgy9snbbqrzny8s");
-            request.AddHeader("Authorization", "Bearer h9fz8mr7fo403duugbgwaqf1yoz2jx");
-            request.AddHeader("Content-Type", "text/plain");
-            request.AddHeader("Cookie", "__cfduid=d4a3c32bf17ae2113d8d5fe754d2011f41617208886");
-            request.AddParameter("text/plain", "fields game.cover.url,name; search \"gta v\";", ParameterType.RequestBody);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddJsonBody(new { key = key });
             IRestResponse response = client.Execute(request);
+            string content = response.Content;
+            var json = JObject.Parse(content);
 
-            return response.Content;
+            var is_valid = json["valid"];
+
+
+            return (bool)is_valid;
         }
         public static string  IsInternetActive()
         {
