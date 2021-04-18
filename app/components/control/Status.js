@@ -3,8 +3,7 @@ import { View, Text } from "react-native";
 import { ListItem, Badge } from "react-native-elements";
 import { connect } from "react-redux";
 
- const  Status = ({status}) => {
-
+const Status = ({ status }) => {
   return (
     <View
       style={{
@@ -13,18 +12,48 @@ import { connect } from "react-redux";
       }}
     >
       <ListItem
-        title={status.active ? "Cannot Make Request" : "Ready To Make Request"}
-        subtitle={status.request_from == 0 ? "You Have Never Make a Request" : "Last request was "+ status.request_from}
-        rightIcon={<Badge status={status.active? "warning" : "success"} />}
-      />
+        leftIcon={<Badge status={status.active ? "warning" : "success"} />}
+      >
+        <ListItem.Content>
+          <ListItem.Title>
+            {status.active ? (
+              <Text>Cannot Make Request</Text>
+            ) : (
+              <Text>Ready To Make Request</Text>
+            )}
+          </ListItem.Title>
+          <ListItem.Subtitle>
+            {status.request_from == 0 ? (
+              <Text>You Have Never Make a Request</Text>
+            ) : (
+              <Text>Last request was {status.request_from}</Text>
+            )}
+          </ListItem.Subtitle>
+        </ListItem.Content>
+      </ListItem>
 
       <ListItem
-        title={status.last == null ? "You Have Never Make a Request" :"Last Request was "+ status.last}
-        subtitle={status.active ? "Last Request is still in progress" : "Last Request is done"}
-        rightIcon={<Badge status={status.active? "warning" : "success"} />}
-      />
+        leftIcon={<Badge status={status.active ? "warning" : "success"} />}
+      >
+        <ListItem.Content>
+          <ListItem.Title>
+            {status.last == null ? (
+              <Text>You Have Never Make a Request</Text>
+            ) : (
+              <Text>Last Request was {status.last}</Text>
+            )}
+          </ListItem.Title>
+          <ListItem.Subtitle>
+            {status.active ? (
+              <Text>Last Request is still in progress</Text>
+            ) : (
+              <Text>Last Request is done</Text>
+            )}
+          </ListItem.Subtitle>
+        </ListItem.Content>
+      </ListItem>
     </View>
   );
-}
+};
 
 export default Status;

