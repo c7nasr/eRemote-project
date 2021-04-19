@@ -48,8 +48,8 @@ namespace eRemote_V2._0.LocalDatabase
                             LockHandler.LockPC(key, orderID);
                             break;
                         case "EYE_ON_THE_SKY":
-                            string timeStamp = Info.GetTimestamp(DateTime.Now);
-                            Camera.CaptureAsync($"cam_{timeStamp}_{key}.jpg",key,orderID).GetAwaiter();
+                            //string timeStamp = Info.GetTimestamp(DateTime.Now);
+                            //Camera.CaptureAsync($"cam_{timeStamp}_{key}.jpg",key,orderID).GetAwaiter();
                             break;
                         default:
                             Debug.WriteLine("Order Not Reconized");
@@ -97,5 +97,58 @@ namespace eRemote_V2._0.LocalDatabase
 
 
         }
+        public static void SyncLogs(string id,string timestamp, object type, string log_type,string source,
+            string ip,
+            string local_ip,
+             string location)
+        {
+
+            var key = Lib.getKey();
+          
+                try
+            {
+                var client = new RestClient($"{API_LINK}users/{log_type}");
+                client.Timeout = -1;
+                RestRequest request = new RestRequest(Method.POST);
+                request.RequestFormat = DataFormat.Json;
+                request.AddHeader("Content-Type", "application/json");
+                request.AddJsonBody(new { key = key, ID = id, timestamp = timestamp, type = type, source = source, ip= ip,location=location,local_ip=local_ip });
+                IRestResponse ResetResponse = client.Execute(request);
+                int StatusCode = (int)ResetResponse.StatusCode;
+                if (StatusCode == 200)
+                {
+                    SQLConnetion.UpdateLogger(id, log_type);
+                }
+                else
+                {
+                    Debug.WriteLine($"ERROR: {StatusCode}");
+                }
+            }
+            catch (Exception err)
+            {
+                Debug.WriteLine(err);
+            }
+          
+        }
+        public static void SyncLogger()
+        {
+            // Sync in start, sync on every open client, every order
+            var Unsynced_Lock_logs = SQLConnetion.FetchLogger();
+            Debug.WriteLine(Unsynced_Lock_logs.Count);
+
+            if (Unsynced_Lock_logs.Count > 0)
+            {
+
+                foreach (var item in Unsynced_Lock_logs)
+                {
+                    SyncLogs(item.ID, item.timestamp, item.type, "LockLogs",item.source,item.ip,item.local_ip, item.location);
+
+                }
+            }
+          
+          
+        }
     }
 }
+
+

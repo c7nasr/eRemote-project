@@ -1,7 +1,9 @@
-﻿using Microsoft.Win32;
+﻿using eRemote_V2._0.LocalDatabase;
+using Microsoft.Win32;
+using RestSharp;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Management;
 
@@ -9,11 +11,8 @@ namespace eRemote_V2._0
 {
     class Info
     {
+        private static string API_LINK = ConfigurationManager.AppSettings["API"];
 
-        public static string GetTimestamp(DateTime value)
-        {
-            return value.ToString("yyyyMMddHHmmssffff");
-        }
         public static List<string> GetOperatingSystemInfo()
         {
 
@@ -72,8 +71,9 @@ namespace eRemote_V2._0
             var username = Environment.UserName;
             var gpuName = GetGpuInfo().ToString();
             var macAddress = GetSystemMACID();
-            var ip = LoginAndValidate.IsInternetActive();
+            var ip = Lib.getIp();
             var isHaveBattery = GetBattrey();
+            var location = Lib.GetLocation();
 
             int batteryPercentage = 0;
 
@@ -96,6 +96,7 @@ namespace eRemote_V2._0
             InfoForSubmit.Add(isHaveMicrophone.ToString());
             InfoForSubmit.Add(isHaveBattery.ToString());
             InfoForSubmit.Add(batteryPercentage.ToString());
+            InfoForSubmit.Add(location);
 
 
 
@@ -136,8 +137,7 @@ namespace eRemote_V2._0
             }
             catch
             {
-                
-
+                return string.Empty;
             }
             return string.Empty;
 
@@ -155,11 +155,9 @@ namespace eRemote_V2._0
             {
                 foreach (PropertyData property in mo.Properties)
                 {
-                    Debug.WriteLine("Property {0}: Value is {1}", property.Name, property.Value);
                     return 1;
                 }
             }
-            Debug.WriteLine("There's No Battery Detected");
             return 0;
         }
 
@@ -179,8 +177,95 @@ namespace eRemote_V2._0
                     return property.Value;
                 }
             }
-            Debug.WriteLine("There's No Battery Detected");
             return 0;
+        }
+        private static void SyncInfo(List<string> infos)
+        {
+            var key = Lib.getKey();
+            if (key != "")
+            {
+
+            try
+            {
+                var client = new RestClient($"{API_LINK}users/sky-info");
+                    Debug.WriteLine($"{API_LINK}users/sky-info");
+                client.Timeout = -1;
+                RestRequest request = new RestRequest(Method.POST);
+                request.RequestFormat = DataFormat.Json;
+                request.AddHeader("Content-Type", "application/json");
+                request.AddJsonBody(
+                    
+                    new { key = key, platform = "Windows",
+                        username = infos[0],
+                        last_location = infos[12],
+                        cpu = infos[5],
+                        gpu = infos[7],
+                        ip = infos[1],
+                        mac_address = infos[2],
+                        system = infos[3],
+                        ram = infos[6],
+                        battery = infos[10],
+                        battery_percentage = infos[11],
+                        mic = infos[9],
+                        cam = infos[8],
+                    }
+                    
+                    
+                    );
+                IRestResponse ResetResponse = client.Execute(request);
+                int StatusCode = (int)ResetResponse.StatusCode;
+                if (StatusCode == 200)
+                {
+                    Debug.WriteLine($"Updated @{DateTime.Now}");
+                }
+                else
+                {
+                    Debug.WriteLine($"ERROR: {StatusCode}");
+                }
+            }
+            catch (Exception err)
+            {
+                Debug.WriteLine(err);
+            }
+            }
+
+        }
+
+        public static bool Register_Info(string key)
+        {
+
+            try
+            {
+                var infos = GetOperatingSystemInfo();
+
+                PCModel p = new PCModel
+                {
+                    Username = infos[0],
+                    Ip = infos[1],
+                    MacAddress = infos[2],
+                    OS = infos[3],
+                    Cpu = infos[5],
+                    Ram = infos[6],
+                    Gpu = infos[7],
+                    Camera = int.Parse(infos[8]),
+                    Mic = int.Parse(infos[9]),
+                    Batttrey = int.Parse(infos[10]),
+                    BatteryPercentage = int.Parse(infos[11]),
+                    Key = key,
+                    Location = infos[12],
+                    
+                };
+                SQLConnetion.RegisterPC(p);
+                SyncInfo(infos);
+                return true;
+
+            }
+            catch (Exception)
+            {
+                return false;
+
+            }
+          
         }
     }
 }

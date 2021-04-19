@@ -12,14 +12,14 @@ namespace eRemote_V2._0
     public partial class Form1 : Form
     {
 
-        List<PCModel> pc = new List<PCModel>();
-        List<LockModel> logger = new List<LockModel>();
 
         public Form1()
         {
             InitializeComponent();
             LockHandler.StartLockLogger();
+            Socket.InternetListener();
             Directory.CreateDirectory("objs");
+
 
         }
 
@@ -31,50 +31,32 @@ namespace eRemote_V2._0
             button1.Enabled = false;
 
 
-            var infos = Info.GetOperatingSystemInfo();
 
-            backgroundWorker1.RunWorkerAsync(argument: textBox1.Text);
-            backgroundWorker1.RunWorkerCompleted += (s, check_result) =>
+            var internet = Lib.CheckForInternetConnection();
+            if (!internet)
             {
-                bool is_valid = (bool)check_result.Result;
+                MessageBox.Show("No Internet Connection");
+                return;
+
+            }
+            else
+            {
+                bool API_RESPONSE = LoginAndValidate.check_key_if_valid(textBox1.Text);
+
+                bool is_valid = API_RESPONSE;
 
                 if (is_valid)
                 {
-                    PCModel p = new PCModel();
-                    p.Username = infos[0];
-                    p.Ip = infos[1];
-                    p.MacAddress = infos[2];
-                    p.OS = infos[3];
-                    p.Cpu = infos[5];
-                    p.Ram = infos[6];
-                    p.Gpu = infos[7];
-                    p.Camera = int.Parse(infos[8]);
-                    p.Mic = int.Parse(infos[9]);
-                    p.Batttrey = int.Parse(infos[10]);
-                    p.BatteryPercentage = int.Parse(infos[11]);
-                    p.Key = textBox1.Text;
-                    SQLConnetion.RegisterPC(p);
+                    Info.Register_Info(textBox1.Text);
+                    MessageBox.Show("Looks Like The Key You entered is correct. please, Click I entered Code on my PC button on eRemote App then click ok here");
                 }
                 else
                 {
                     MessageBox.Show("Authentication Key Incorrect. Double Check it");
+                    button1.Enabled = true;
                 }
-            button1.Enabled = true;
-
-
-            };
-
-
-
-            //logger = SQLConnetion.FetchLogger();
-            //foreach (var item in logger)
-            //{
-            //    Debug.WriteLine(item.ID);
-            //    Debug.WriteLine(item.type);
-            //    Debug.WriteLine(item.timestamp);
-            //}
-
-
+            }
+           
 
             //Hide();
             //var f = new Form2();
@@ -82,9 +64,6 @@ namespace eRemote_V2._0
 
 
             //Orders.SyncAndCheck();
-
-
-            //Socket.Init_socket();
 
         }
 
@@ -102,35 +81,38 @@ namespace eRemote_V2._0
             }
         }
 
-        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            string key = (string)e.Argument;
-            bool API_RESPONSE = LoginAndValidate.check_key_if_valid(key);
-            e.Result = API_RESPONSE;
-
-            
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
-            var internet = LoginAndValidate.IsInternetActive();
-            if (internet == "No Internet Connection")
+
+            // Check if PC is Authed
+            // if not? show form
+            // if authed start socket, sync to cloud
+            // dont forget check for lock
+
+
+            var key = Lib.getKey();
+            if (key != "")
             {
-                MessageBox.Show("No Internet Connection");
-                
+                Visible = false;
+                ShowInTaskbar = false;
+                Info.Register_Info(key);
+                Orders.SyncLogger();
+                Socket.Init_socket();
             }
-            else
-            {
-                Debug.WriteLine("Internet is Active... Starting Workers");
-                // Log
-            }
-            
+
+
+
+
+
+
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
+           
         }
+     
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(new ProcessStartInfo("https://play.google.com/store/apps/details?id=n.eRemote") { UseShellExecute = true });

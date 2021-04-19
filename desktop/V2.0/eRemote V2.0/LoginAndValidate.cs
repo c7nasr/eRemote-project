@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Configuration;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace eRemote_V2._0
 {
@@ -12,39 +13,38 @@ namespace eRemote_V2._0
 
         public static bool check_key_if_valid(string key)
         {
-
-            var client = new RestClient($"{API_LINK}users/connect");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddJsonBody(new { key = key });
-            IRestResponse response = client.Execute(request);
-            string content = response.Content;
-            var json = JObject.Parse(content);
-
-            var is_valid = json["valid"];
-
-
-            return (bool)is_valid;
-        }
-        public static string  IsInternetActive()
-        {
             try
             {
-                var client = new RestClient("https://api.ipify.org/?format=json");
+                Debug.WriteLine($"{API_LINK}users/connect");
+                var client = new RestClient($"{API_LINK}users/connect");
                 client.Timeout = -1;
-                var request = new RestRequest(Method.GET);
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddJsonBody(new { key = key });
                 IRestResponse response = client.Execute(request);
-                JObject json = JObject.Parse(response.Content);
-                string ip = json.GetValue("ip").ToString();
+                string content = response.Content;
+                var json = JObject.Parse(content);
 
+                var is_valid = json["matched"];
 
-                return ip;
+                if (is_valid != null)
+                {
+                    return (bool)is_valid;
+
+                }
+                else
+                {
+                    return false;
+                }
             }
-            catch
+            catch (System.Exception)
             {
-                return "No Internet Connection";
+                MessageBox.Show("our server seems down! try again in a mintue. we sorry for that");
+                return false;
             }
+          
+
         }
+     
     }
 }

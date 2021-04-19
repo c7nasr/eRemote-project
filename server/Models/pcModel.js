@@ -39,10 +39,6 @@ const PCSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    installedPrograms: {
-      type: Array,
-      default: [],
-    },
     cam: {
       type: Boolean,
       default: false,

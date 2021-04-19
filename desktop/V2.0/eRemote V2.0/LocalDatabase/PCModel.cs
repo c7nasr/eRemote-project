@@ -15,14 +15,8 @@ namespace eRemote_V2._0.LocalDatabase
         public int Camera { get; set; }
         public int Batttrey { get; set; }
         public int BatteryPercentage { get; set; }
+        public string Location { get; set; }
 
 
-        public string gePC
-        {
-            get
-            {
-                return $"{ Username } { MacAddress }";
-            }
-        }
     }
 }

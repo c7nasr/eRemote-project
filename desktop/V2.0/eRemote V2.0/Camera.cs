@@ -45,6 +45,7 @@ public static class Camera
             using (MemoryStream stream = new MemoryStream())
             {
                 bitmap.Save(filePath, ImageFormat.Jpeg);    // get bitmap bytes
+                Clipboard.Clear();
                 return stream.ToArray();
             }
         }

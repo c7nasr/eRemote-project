@@ -22,7 +22,7 @@ namespace eRemote_V2._0
                 {
                     g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
                 }
-                string timeStamp = Info.GetTimestamp(DateTime.Now);
+                string timeStamp = Lib.GetTimestamp(DateTime.Now);
                 string ScreenShotName = $"./objs/ss_{timeStamp}_{key}.png";
                 bitmap.Save(ScreenShotName, ImageFormat.Png);
 
