@@ -10,6 +10,10 @@ const PCSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    last_location: {
+      type: String,
+      default: null,
+    },
     cpu: {
       type: String,
       default: null,
@@ -57,7 +61,6 @@ const PCSchema = new mongoose.Schema(
     },
     battery_percentage: {
       type: String,
-
       default: null,
     },
   },

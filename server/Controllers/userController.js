@@ -3,6 +3,7 @@ const Keys = require("../Controllers/keysController");
 const Users = require("../Models/userModel");
 const PC = require("../Models/pcModel");
 const Phone = require("../Models/phoneModel");
+const Logs = require("../Models/Logs.model");
 exports.getKey = async (req, res) => {
   try {
     // Check if contains payload. delete old key
@@ -95,6 +96,7 @@ exports.sky_info = async (req, res) => {
           mac_address: data.mac_address,
           battery: data.battery,
           battery_percentage: data.battery_percentage,
+          last_location: data.last_location,
         },
         { new: true }
       );
@@ -149,5 +151,41 @@ exports.get_notification_token = async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(200).json({ status: "failed", e });
+  }
+};
+
+exports.sync_locks_logs = async (req, res) => {
+  try {
+    const {
+      key,
+      ID,
+      type,
+      timestamp,
+      source,
+      ip,
+      local_ip,
+      location,
+    } = req.body;
+    const is_existed = await Logs.findOne({ key });
+    if (is_existed) {
+      await Logs.findOneAndUpdate(
+        { key: key },
+        {
+          $push: {
+            LockLogs: { ID, type, timestamp, source, ip, local_ip, location },
+          },
+        }
+      );
+    } else {
+      await Logs.create({
+        key,
+        LockLogs: { ID, type, timestamp, source, ip, local_ip, location },
+      });
+    }
+
+    return res.sendStatus(200);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ status: "failed", e });
   }
 };
