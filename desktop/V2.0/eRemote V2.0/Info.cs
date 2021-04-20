@@ -20,7 +20,7 @@ namespace eRemote_V2._0
             string architecture = "";
             string processname = "";
             string memory = "";
-            int isHaveCamera = 0;
+            int isHaveCamera = Camera.isHaveCamera();
 
             ManagementObjectSearcher mos = new ManagementObjectSearcher("select * from Win32_OperatingSystem");
             foreach (ManagementObject managementObject in mos.Get())
@@ -62,12 +62,8 @@ namespace eRemote_V2._0
             }
 
 
-            var isSucess = Camera.Capture($"./objs/test_camera.png");
             var isHaveMicrophone = Microphone.IsHaveMicrophone();
-            if (isSucess != null)
-            {
-                isHaveCamera = 1;
-            }
+       
             var username = Environment.UserName;
             var gpuName = GetGpuInfo().ToString();
             var macAddress = GetSystemMACID();
@@ -149,14 +145,11 @@ namespace eRemote_V2._0
             ObjectQuery query = new ObjectQuery("Select * FROM Win32_Battery");
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
 
-            ManagementObjectCollection collection = searcher.Get();
+            var battery_count = searcher.Get().Count;
 
-            foreach (ManagementObject mo in collection)
+           if (battery_count > 0)
             {
-                foreach (PropertyData property in mo.Properties)
-                {
-                    return 1;
-                }
+                return 1;
             }
             return 0;
         }
@@ -173,7 +166,7 @@ namespace eRemote_V2._0
             {
                 foreach (PropertyData property in mo.Properties)
                 {
-                    
+                    // Issue in Returning Value
                     return property.Value;
                 }
             }

