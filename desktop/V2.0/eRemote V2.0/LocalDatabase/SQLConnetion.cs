@@ -31,6 +31,25 @@ namespace eRemote_V2._0.LocalDatabase
             }
         }
 
+        public static void RegisterOrder(OrderModel Order)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+
+                cnn.Execute("INSERT OR REPLACE into Orders (id,order_name,is_done,media,timestamp) values (@id,@order,@is_done,@media,@timestamp) ", Order);
+            }
+        }
+
+        public static List<OrderModel> FetchUndoneOrders()
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+
+                var output = cnn.Query<OrderModel>("SELECT * from Orders WHERE is_done=0", new DynamicParameters());
+                return output.ToList();
+            }
+        }
+
         private static string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;

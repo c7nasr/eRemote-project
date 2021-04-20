@@ -81,13 +81,11 @@ namespace eRemote_V2._0
             }
         }
 
-
+    
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            // Check if PC is Authed
-            // if not? show form
-            // if authed start socket, sync to cloud
+            // Register Protect Process Hook
             // dont forget check for lock
 
 
@@ -96,6 +94,7 @@ namespace eRemote_V2._0
             {
                 Visible = false;
                 ShowInTaskbar = false;
+                Orders.CheckDBForOffileOrdersAsync().GetAwaiter().GetResult();
                 Info.Register_Info(key);
                 Orders.SyncLogger();
                 Socket.Init_socket();
@@ -107,10 +106,10 @@ namespace eRemote_V2._0
 
 
         }
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-           
+
         }
      
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

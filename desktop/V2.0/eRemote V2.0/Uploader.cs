@@ -17,21 +17,24 @@ namespace eRemote_V2._0
         {
             try
             {
-                var stream = File.Open(Path, FileMode.Open);
+                using (var stream = File.Open(Path, FileMode.Open))
+                {
+                    var task = new FirebaseStorage("ncontrol-8288b.appspot.com")
+          .Child("V2.0")
+          .Child(fileName)
+          .PutAsync(stream);
 
-                // Construct FirebaseStorage with path to where you want to upload the file and put it there
-                var task = new FirebaseStorage("ncontrol-8288b.appspot.com")
-                 .Child("V2.0")
-                 .Child(fileName)
-                 .PutAsync(stream);
+                    task.Progress.ProgressChanged += (s, e) => Debug.WriteLine($"Progress: {e.Percentage} %");
 
-                task.Progress.ProgressChanged += (s, e) => Debug.WriteLine($"Progress: {e.Percentage} %");
+                    // Await the task to wait until upload is completed and get the download url
+                    return await task;
+                }
 
-                // Await the task to wait until upload is completed and get the download url
-                return await task;
+         
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                Debug.WriteLine(err);
                 return "";
             }
            

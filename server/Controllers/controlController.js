@@ -1,25 +1,31 @@
 const Order = require("../Models/controlModel");
 const Lock = require("../Models/lockModel");
-const unlock_code = require("../funcations/genrate_lock_key")
+const unlock_code = require("../funcations/genrate_lock_key");
 exports.createOrder = async (req, res) => {
   try {
-    const {key,order} = req.body;
+    const { key, order } = req.body;
     await Order.create({
       key,
       order,
-      active:true
+      active: true,
     });
-    if (order === "RANSOM_LOCK"){
-      const unlock_code_array = Math.random().toString(20).substr(2, 12).match(/.{1,4}/g)
+    if (order === "RANSOM_LOCK") {
+      const unlock_code_array = Math.random()
+        .toString(20)
+        .substr(2, 12)
+        .match(/.{1,4}/g);
 
       Lock.create({
         locked: true,
         key,
-        code: unlock_code_array[0] + "-" + unlock_code_array[1] + "-" + unlock_code_array[2]
+        code:
+          unlock_code_array[0] +
+          "-" +
+          unlock_code_array[1] +
+          "-" +
+          unlock_code_array[2],
       });
-
     }
-
 
     res.sendStatus(200);
   } catch (error) {
@@ -63,7 +69,7 @@ exports.updateOrder = async (req, res) => {
 
     return res.sendStatus(400);
   } catch (error) {
-    if (error) res.status(200).json({ status: "failed", error });
+    if (error) res.status(400).json({ status: "failed", error });
   }
 };
 exports.lock_the_sky = async (req, res) => {

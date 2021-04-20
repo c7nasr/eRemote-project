@@ -14,11 +14,11 @@ namespace eRemote_V2._0
 {
     class Lib
     {
-        public static byte[] ImageToByteArray(string imageIn)
+        public static byte[] ImageToByteArray(string imagePath)
         {
             using (var ms = new MemoryStream())
             {
-                Image img = Image.FromFile(imageIn);
+                Image img = Image.FromFile(imagePath);
 
                 img.Save(ms, img.RawFormat);
                 return ms.ToArray();
@@ -143,6 +143,6 @@ namespace eRemote_V2._0
 
             return key;
         }
-       
+
     }
 }

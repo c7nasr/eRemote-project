@@ -81,16 +81,11 @@ namespace eRemote_V2._0
         {
             try
             {
-                Debug.WriteLine("Socket_OnConnected");
+                Debug.WriteLine("Socket Connected");
                 var socket = sender as SocketIO;
                 // Get Stored Key in DB
                 await socket.EmitAsync("turn_on", key);
-                var b = Lib.ImageToByteArray(@"./objs/2.png");
-                //    await socket.EmitAsync("screenshot", new {
-                //        image = true,
-                //        buffer = b,
-                //        room = "nasr-pc-phone-website",
-                //});
+
                 Register_Listener();
 
 
@@ -105,12 +100,16 @@ namespace eRemote_V2._0
 
         private static void Register_Listener()
         {
-            socket.On("order", response =>
+            socket.On("order", async response =>
             {
+                // Recive Order and Send it to handlers
                 try
                 {
-                    // Recive Order and Send it to handlers
-                    Debug.WriteLine(response.GetValue());
+
+                    var orderId = response.GetValue()["orderid"].ToString();
+                    var order = response.GetValue()["order"].ToString();
+                    var source = response.GetValue()["source"].ToString();
+                    await Orders.OrderHandlerAsync(order, orderId, key, source);
                 }
                 catch (Exception err)
                 {
@@ -119,6 +118,29 @@ namespace eRemote_V2._0
             });
         }
 
+
+
+        public static async Task<bool> emittingEventAsync(string eventname, string orderId, string order, object data)
+        {
+            var key = Lib.getKey();
+
+            await socket.EmitAsync(eventname, new
+            {
+                data = data,
+                room = key,
+                order_id = orderId,
+                order = order,
+            });
+
+
+            Info.Register_Info(key);
+            Orders.SyncLogger();
+
+            //Sync Clipoard and Active Window
+
+            return true;
+
+        }
         public static void InternetListener()
         {
             NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChangeHandler;

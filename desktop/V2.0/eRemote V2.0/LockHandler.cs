@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using eRemote_V2._0.LocalDatabase;
 using Microsoft.Win32;
 namespace eRemote_V2._0
 {
     class LockHandler
     {
-        private static string source = "Manaul";
+        public static string source = "Manaul";
         public static void LogLockAndUnlockEvents(object sender, SessionSwitchEventArgs e)
         {
             LockModel LockLogger = new LockModel();
@@ -34,16 +35,25 @@ namespace eRemote_V2._0
                 SQLConnetion.RegisterLockUnlockEvents(LockLogger);
             
             }
+            source = "Manaul";
             Orders.SyncLogger();
         }
-        public static void LockPC(string key, string orderId)
+        public static void LockPC(string key, string orderId,string LockSource = "")
+
         {
-            source = "From Application";
-            Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
-            source = "Manaul";
-            Orders.MarkOrderAsDone(key, orderId, "INSTANT_LOCK");
+            if (LockSource != "")
+            {
+                source = LockSource;
+            }
+            if (LockWorkStation())
+            {
+                Orders.MarkOrderAsDone(key, orderId, "INSTANT_LOCK");
+
+            }
 
         }
+        [DllImport("user32.dll")]
+        public static extern bool LockWorkStation();
 
         public static void StartLockLogger()
         {

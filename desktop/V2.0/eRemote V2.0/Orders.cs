@@ -4,28 +4,24 @@ using RestSharp;
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace eRemote_V2._0.LocalDatabase
 {
     class Orders
     {
         private static string API_LINK = ConfigurationManager.AppSettings["API"];
-        public static void SyncAndCheck()
+        public static async Task CheckDBForOffileOrdersAsync()
         {
-            // Check if New Orders Recived?
-            // Sync Local DB
-
-            // Inquriy for the Saved kay in Local DB
-            var pc = SQLConnetion.LoadPC().Count;
-            if (pc > 0)
+            var key = Lib.getKey();
+            if (key != "")
             {
-                var key = "n79f-7e21-72b8";
+
                 var client = new RestClient($"{API_LINK}control/check");
                 client.Timeout = -1;
                 RestRequest request = new RestRequest(Method.POST);
                 request.RequestFormat = DataFormat.Json;
                 request.AddHeader("Content-Type", "application/json");
-                // Key Will be from saved in DB
                 request.AddJsonBody(new { key = key });
                 IRestResponse ResetResponse = client.Execute(request);
                 string response = ResetResponse.Content;
@@ -33,34 +29,38 @@ namespace eRemote_V2._0.LocalDatabase
                 var json = JObject.Parse(response);
                 var is_order = json["order"].ToString();
 
-
+                var Undone_Orders = SQLConnetion.FetchUndoneOrders();
                 if (is_order != "")
                 {
+
                     var orderID = (string)json["order"]["_id"];
                     var order = (string)json["order"]["order"];
                     Debug.WriteLine(order, orderID);
-                    switch (order)
+                    await OrderHandlerAsync(order, orderID, key);
+
+                }
+                else if (Undone_Orders.Count > 0)
+                {
+                    foreach (var order in Undone_Orders)
                     {
-                        case "INSTANT_SCREEN":
-                            Screenshot.TakeScreenShotAsync(key, orderID).GetAwaiter();
-                            break;
-                        case "INSTANT_LOCK":
-                            LockHandler.LockPC(key, orderID);
-                            break;
-                        case "EYE_ON_THE_SKY":
-                            //string timeStamp = Info.GetTimestamp(DateTime.Now);
-                            //Camera.CaptureAsync($"cam_{timeStamp}_{key}.jpg",key,orderID).GetAwaiter();
-                            break;
-                        default:
-                            Debug.WriteLine("Order Not Reconized");
-                            break;
+                        if(MarkOrderAsDone(order.order, order.id, key,order.media))
+                        {
+                            OrderModel orderModel = new OrderModel
+                            {
+                                id = order.id,
+                                is_done = 1,
+                                timestamp = DateTime.Now.ToString(),
+                                media = order.media,
+                                order = order.order
+                            };
+                            SQLConnetion.RegisterOrder(orderModel);
+                        }
+                     
                     }
-
-
                 }
                 else
                 {
-                    Debug.WriteLine("No Orders.");
+                    Debug.WriteLine("Good, There's No Pervious or Undone Orders");
                 }
 
             }
@@ -69,9 +69,37 @@ namespace eRemote_V2._0.LocalDatabase
                 Debug.WriteLine("No Confing Found!");
             }
         }
-          
 
-        public static bool MarkOrderAsDone(string key, string orderId, string order, string media= "")
+        public static async Task OrderHandlerAsync(string order, string orderID, string key,string source ="")
+        {
+
+            switch (order)
+            {
+                case "INSTANT_SCREEN":
+                    var screenshotPath = Screenshot.TakeScreenShot(key);
+                    // Convert Image to array of bytes
+                    var screenshot_bytes = Lib.ImageToByteArray(screenshotPath);
+                    // Socket Emiting 
+                    var screenshot_emiited = await Socket.emittingEventAsync("SCREENSHOT_REPLAY", orderID, order, screenshot_bytes);
+                    // Upload Image and Mark Order for Done
+                    if (screenshot_emiited) await Screenshot.ScreenShotUploader(screenshotPath, key, orderID);
+                    break;
+                case "INSTANT_LOCK":
+                    LockHandler.LockPC(key, orderID, source);
+                    break;
+                case "EYE_ON_THE_SKY":
+                    //string timeStamp = Info.GetTimestamp(DateTime.Now);
+                    //Camera.CaptureAsync($"cam_{timeStamp}_{key}.jpg",key,orderID).GetAwaiter();
+                    break;
+                default:
+                    Debug.WriteLine("Order Not Reconized");
+                    break;
+            }
+
+        }
+
+
+        public static bool MarkOrderAsDone(string key, string orderId, string order, string media = "")
         {
             var client = new RestClient($"{API_LINK}control/done");
             client.Timeout = -1;
@@ -91,28 +119,37 @@ namespace eRemote_V2._0.LocalDatabase
             else
             {
                 // Register in LocalDB for Retry
+                OrderModel orderModel = new OrderModel
+                {
+                    id = orderId,
+                    is_done = 0,
+                    timestamp = DateTime.Now.ToString(),
+                    media = media,
+                    order = order
+                };
+                SQLConnetion.RegisterOrder(orderModel);
                 return false;
 
             }
 
 
         }
-        public static void SyncLogs(string id,string timestamp, object type, string log_type,string source,
+        public static void SyncLogs(string id, string timestamp, object type, string log_type, string source,
             string ip,
             string local_ip,
              string location)
         {
 
             var key = Lib.getKey();
-          
-                try
+
+            try
             {
                 var client = new RestClient($"{API_LINK}users/{log_type}");
                 client.Timeout = -1;
                 RestRequest request = new RestRequest(Method.POST);
                 request.RequestFormat = DataFormat.Json;
                 request.AddHeader("Content-Type", "application/json");
-                request.AddJsonBody(new { key = key, ID = id, timestamp = timestamp, type = type, source = source, ip= ip,location=location,local_ip=local_ip });
+                request.AddJsonBody(new { key = key, ID = id, timestamp = timestamp, type = type, source = source, ip = ip, location = location, local_ip = local_ip });
                 IRestResponse ResetResponse = client.Execute(request);
                 int StatusCode = (int)ResetResponse.StatusCode;
                 if (StatusCode == 200)
@@ -128,7 +165,7 @@ namespace eRemote_V2._0.LocalDatabase
             {
                 Debug.WriteLine(err);
             }
-          
+
         }
         public static void SyncLogger()
         {
@@ -141,12 +178,12 @@ namespace eRemote_V2._0.LocalDatabase
 
                 foreach (var item in Unsynced_Lock_logs)
                 {
-                    SyncLogs(item.ID, item.timestamp, item.type, "LockLogs",item.source,item.ip,item.local_ip, item.location);
+                    SyncLogs(item.ID, item.timestamp, item.type, "LockLogs", item.source, item.ip, item.local_ip, item.location);
 
                 }
             }
-          
-          
+
+
         }
     }
 }
