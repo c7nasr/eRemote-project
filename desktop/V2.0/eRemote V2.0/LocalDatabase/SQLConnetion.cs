@@ -26,8 +26,8 @@ namespace eRemote_V2._0.LocalDatabase
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
 
-                cnn.Execute("INSERT OR REPLACE into PC (username, cpu,gpu,ip,mac_address,key,os,ram,mic,cam,battery,battery_percentage,location) " +
-                    "values (@Username, @Cpu,@Gpu,@Ip,@MacAddress,@Key,@OS,@Ram,@Mic,@Camera,@Batttrey,@BatteryPercentage,@Location) ", PC);
+                cnn.Execute("INSERT OR REPLACE into PC (username, cpu,gpu,ip,mac_address,key,os,ram,mic,cam,battery,battery_percentage,location,is_desktop_locked) " +
+                    "values (@Username, @Cpu,@Gpu,@Ip,@MacAddress,@Key,@OS,@Ram,@Mic,@Camera,@Batttrey,@BatteryPercentage,@Location,@is_desktop_locked) ", PC);
             }
         }
 

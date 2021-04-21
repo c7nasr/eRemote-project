@@ -52,7 +52,7 @@ namespace eRemote_V2._0
                 try
                 {
                     await socket.ConnectAsync();
-                    if (!socket.Connected) await Task.Delay(3000);
+                    if (!socket.Connected) System.Threading.Thread.Sleep(3000);
 
                 }
                 catch (Exception)
@@ -122,23 +122,33 @@ namespace eRemote_V2._0
 
         public static async Task<bool> emittingEventAsync(string eventname, string orderId, string order, object data)
         {
-            var key = Lib.getKey();
-
-            await socket.EmitAsync(eventname, new
+            try
             {
-                data = data,
-                room = key,
-                order_id = orderId,
-                order = order,
-            });
+                var key = Lib.getKey();
+
+                await socket.EmitAsync(eventname, new
+                {
+                    data = data,
+                    room = key,
+                    order_id = orderId,
+                    order = order,
+                });
 
 
-            Info.Register_Info(key);
-            Orders.SyncLogger();
+                Info.Register_Info(key);
+                Orders.SyncLogger();
+                return true;
 
-            //Sync Clipoard and Active Window
 
-            return true;
+                //Sync Clipoard and Active Window
+            }
+            catch (Exception error)
+            {
+                Debug.WriteLine(error);
+                throw;
+            }
+
+
 
         }
         public static void InternetListener()

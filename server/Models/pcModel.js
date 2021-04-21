@@ -14,6 +14,11 @@ const PCSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    is_desktop_locked: {
+      type: Boolean,
+      default: false,
+    },
+
     cpu: {
       type: String,
       default: null,

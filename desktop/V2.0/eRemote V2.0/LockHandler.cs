@@ -38,7 +38,7 @@ namespace eRemote_V2._0
             source = "Manaul";
             Orders.SyncLogger();
         }
-        public static void LockPC(string key, string orderId,string LockSource = "")
+        public static bool LockPC(string LockSource = "")
 
         {
             if (LockSource != "")
@@ -47,8 +47,12 @@ namespace eRemote_V2._0
             }
             if (LockWorkStation())
             {
-                Orders.MarkOrderAsDone(key, orderId, "INSTANT_LOCK");
+                return true;
 
+            }
+            else
+            {
+                return false;
             }
 
         }
@@ -58,6 +62,56 @@ namespace eRemote_V2._0
         public static void StartLockLogger()
         {
             SystemEvents.SessionSwitch +=  new SessionSwitchEventHandler(LogLockAndUnlockEvents);
+        }
+
+
+        [DllImport("user32", EntryPoint = "OpenDesktopA",
+               CharSet = CharSet.Ansi,
+               SetLastError = true,
+               ExactSpelling = true)]
+        private static extern Int32 OpenDesktop(string lpszDesktop,
+                                  Int32 dwFlags,
+                                  bool fInherit,
+                                  Int32 dwDesiredAccess);
+
+        [DllImport("user32", CharSet = CharSet.Ansi,
+                             SetLastError = true,
+                             ExactSpelling = true)]
+        private static extern Int32 CloseDesktop(Int32 hDesktop);
+
+        [DllImport("user32", CharSet = CharSet.Ansi,
+                             SetLastError = true,
+                             ExactSpelling = true)]
+        private static extern Int32 SwitchDesktop(Int32 hDesktop);
+
+        public static int is_desktop_locked()
+        {
+            const int DESKTOP_SWITCHDESKTOP = 256;
+            int hwnd = -1;
+            int rtn = -1;
+
+            hwnd = OpenDesktop("Default", 0, false, DESKTOP_SWITCHDESKTOP);
+
+            if (hwnd != 0)
+            {
+                rtn = SwitchDesktop(hwnd);
+                if (rtn == 0)
+                {
+                    // Locked
+                    CloseDesktop(hwnd);
+                    return 1;
+                }
+                else
+                {
+                    // Not locked
+                    CloseDesktop(hwnd);
+                }
+            }
+            else
+            {
+                // Error: "Could not access the desktop..."
+            }
+            return 0;
         }
     }
 }

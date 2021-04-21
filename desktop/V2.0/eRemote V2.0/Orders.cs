@@ -82,11 +82,18 @@ namespace eRemote_V2._0.LocalDatabase
                     var screenshot_bytes = Lib.ImageToByteArray(screenshotPath);
                     // Socket Emiting 
                     var screenshot_emiited = await Socket.emittingEventAsync("SCREENSHOT_REPLAY", orderID, order, screenshot_bytes);
+                    if (!screenshot_emiited) Debug.WriteLine("Can't Emiit ");
                     // Upload Image and Mark Order for Done
                     if (screenshot_emiited) await Screenshot.ScreenShotUploader(screenshotPath, key, orderID);
                     break;
                 case "INSTANT_LOCK":
-                    LockHandler.LockPC(key, orderID, source);
+                    // Send Lock to PC
+                    LockHandler.LockPC(source);
+                    // Socket Emitting
+                    await Socket.emittingEventAsync("LOCKER_REPLAY", orderID, order,true);
+                    // Mark as Done 
+                    MarkOrderAsDone(key, orderID, "INSTANT_LOCK");
+
                     break;
                 case "EYE_ON_THE_SKY":
                     if (Camera.isHaveCamera() == 1)

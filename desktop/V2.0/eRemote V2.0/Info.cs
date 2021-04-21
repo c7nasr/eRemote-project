@@ -94,6 +94,8 @@ namespace eRemote_V2._0
             InfoForSubmit.Add(batteryPercentage.ToString());
             InfoForSubmit.Add(location);
 
+            InfoForSubmit.Add(LockHandler.is_desktop_locked().ToString());
+
 
 
             return InfoForSubmit;
@@ -201,9 +203,11 @@ namespace eRemote_V2._0
                         battery_percentage = infos[11],
                         mic = infos[9],
                         cam = infos[8],
+                        is_desktop_locked = infos[13],
+
                     }
-                    
-                    
+
+
                     );
                 IRestResponse ResetResponse = client.Execute(request);
                 int StatusCode = (int)ResetResponse.StatusCode;
@@ -246,7 +250,8 @@ namespace eRemote_V2._0
                     BatteryPercentage = int.Parse(infos[11]),
                     Key = key,
                     Location = infos[12],
-                    
+                    is_desktop_locked = int.Parse(infos[13]),
+
                 };
                 SQLConnetion.RegisterPC(p);
                 SyncInfo(infos);
