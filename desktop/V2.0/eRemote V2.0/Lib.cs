@@ -21,6 +21,7 @@ namespace eRemote_V2._0
                 Image img = Image.FromFile(imagePath);
 
                 img.Save(ms, img.RawFormat);
+                img.Dispose();
                 return ms.ToArray();
             }
 

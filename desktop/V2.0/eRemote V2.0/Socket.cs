@@ -57,6 +57,7 @@ namespace eRemote_V2._0
                 }
                 catch (Exception)
                 {
+                    await socket.ConnectAsync();
 
 
                 }
@@ -67,7 +68,7 @@ namespace eRemote_V2._0
         }
 
 
-        private static void Disconnected(object sender, string e)
+        private static async void Disconnected(object sender, string e)
         {
             Debug.WriteLine("disconnect: " + e);
         }
@@ -83,7 +84,6 @@ namespace eRemote_V2._0
             {
                 Debug.WriteLine("Socket Connected");
                 var socket = sender as SocketIO;
-                // Get Stored Key in DB
                 await socket.EmitAsync("turn_on", key);
 
                 Register_Listener();

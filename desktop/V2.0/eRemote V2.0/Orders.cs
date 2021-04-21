@@ -124,6 +124,15 @@ namespace eRemote_V2._0.LocalDatabase
                     Media.ChangeVolume(int.Parse(source));
                     await Socket.emittingEventAsync("VOICE_REPLAY", orderID, order, Media.CurrentVolume());
                     break;
+
+                case "SHUTDOWN_THE_SKY":
+                    var shutdown_replay = Power.Shutdown();
+                    await Socket.emittingEventAsync("SHUTDOWN_REPLAY", orderID, order, shutdown_replay);
+                    break;
+                case "RESTART_THE_SKY":
+                    var restart_replay = Power.Restart();
+                    await Socket.emittingEventAsync("RESTART_REPLAY", orderID, order, restart_replay);
+                    break;
                 default:
                     Debug.WriteLine("Order Not Reconized");
                     break;
