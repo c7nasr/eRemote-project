@@ -18,7 +18,14 @@ const PCSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
+    is_have_speakers: {
+      type: Boolean,
+      default: false,
+    },
+    current_volume: {
+      type: String,
+      default: "0",
+    },
     cpu: {
       type: String,
       default: null,

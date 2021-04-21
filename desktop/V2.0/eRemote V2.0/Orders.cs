@@ -115,9 +115,14 @@ namespace eRemote_V2._0.LocalDatabase
                         //// Socket Emiting 
                         //var camera_emiited = await Socket.emittingEventAsync("CAMERA_REPLAY", orderID, order, camera_bytes);
                     }
-                 
-
-
+                    break;
+                case "MUTE_THE_SKY":
+                    Media.Mute_pc();
+                    await Socket.emittingEventAsync("MUTE_REPLAY", orderID, order, Media.CurrentVolume());
+                    break;
+                case "VOICE_THE_SKY":
+                    Media.ChangeVolume(int.Parse(source));
+                    await Socket.emittingEventAsync("VOICE_REPLAY", orderID, order, Media.CurrentVolume());
                     break;
                 default:
                     Debug.WriteLine("Order Not Reconized");

@@ -17,6 +17,8 @@ namespace eRemote_V2._0.LocalDatabase
         public int BatteryPercentage { get; set; }
         public string Location { get; set; }
         public int is_desktop_locked { get; set; }
+        public int is_have_speakers { get; set; }
+        public string current_volume { get; set; }
         public string is_ransom_locked { get; set; }
 
 

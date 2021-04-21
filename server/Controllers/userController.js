@@ -98,6 +98,8 @@ exports.sky_info = async (req, res) => {
           battery_percentage: data.battery_percentage,
           last_location: data.last_location,
           is_desktop_locked: data.is_desktop_locked,
+          is_have_speakers: data.is_have_speakers,
+          current_volume: data.current_volume,
         },
         { new: true }
       );

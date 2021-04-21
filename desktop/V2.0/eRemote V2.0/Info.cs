@@ -62,7 +62,7 @@ namespace eRemote_V2._0
             }
 
 
-            var isHaveMicrophone = Microphone.IsHaveMicrophone();
+            var isHaveMicrophone = Media.IsHaveMicrophone();
        
             var username = Environment.UserName;
             var gpuName = GetGpuInfo().ToString();
@@ -70,10 +70,6 @@ namespace eRemote_V2._0
             var ip = Lib.getIp();
             var isHaveBattery = GetBattrey();
             var location = Lib.GetLocation();
-
-            int batteryPercentage = 0;
-
-            batteryPercentage = (int)BatteryPercentage();
 
  
             var InfoForSubmit = new List<string>();
@@ -91,10 +87,12 @@ namespace eRemote_V2._0
             InfoForSubmit.Add(isHaveCamera.ToString());
             InfoForSubmit.Add(isHaveMicrophone.ToString());
             InfoForSubmit.Add(isHaveBattery.ToString());
-            InfoForSubmit.Add(batteryPercentage.ToString());
+            InfoForSubmit.Add(BatteryPercentage().ToString());
             InfoForSubmit.Add(location);
 
             InfoForSubmit.Add(LockHandler.is_desktop_locked().ToString());
+            InfoForSubmit.Add(Media.IsHaveSpeakers().ToString());
+            InfoForSubmit.Add(Media.CurrentVolume().ToString());
 
 
 
@@ -203,7 +201,9 @@ namespace eRemote_V2._0
                         battery_percentage = infos[11],
                         mic = infos[9],
                         cam = infos[8],
+                        is_have_speakers = infos[14],
                         is_desktop_locked = infos[13],
+                        current_volume = infos[15],
 
                     }
 
@@ -251,6 +251,8 @@ namespace eRemote_V2._0
                     Key = key,
                     Location = infos[12],
                     is_desktop_locked = int.Parse(infos[13]),
+                    is_have_speakers = int.Parse(infos[14]),
+                    current_volume = infos[15],
 
                 };
                 SQLConnetion.RegisterPC(p);
