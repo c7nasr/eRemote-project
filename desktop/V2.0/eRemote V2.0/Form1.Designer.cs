@@ -31,14 +31,14 @@ namespace eRemote_V2._0
         {
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.validation_bg = new System.ComponentModel.BackgroundWorker();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -123,6 +123,10 @@ namespace eRemote_V2._0
             this.label1.TabIndex = 0;
             this.label1.Text = "Download The eRemote Application From";
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -149,14 +153,14 @@ namespace eRemote_V2._0
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.ComponentModel.BackgroundWorker validation_bg;
     }
 }
 
