@@ -19,7 +19,6 @@ namespace eRemote_V2._0
     {
         private static string API_LINK = ConfigurationManager.AppSettings["API"];
         private static string key = Lib.getKey();
-        private static JavaScriptSerializer jss = new JavaScriptSerializer();
 
 
         public static bool emergencyLock(string m_id)
@@ -175,12 +174,12 @@ namespace eRemote_V2._0
 
         }
 
-        private static void SyncRetries()
+        public static void SyncRetries()
         {
-                    var tries_table = emergencySQL.GetAllRetries();
+            var tries_table = emergencySQL.GetAllRetries();
 
 
-            if (tries_table.Count > 0)
+            if (tries_table.Count > 0 && Lib.CheckForInternetConnection())
             {
                 foreach (var item in tries_table)
                 {
@@ -202,7 +201,6 @@ namespace eRemote_V2._0
                     }
                     );
                     IRestResponse ResetResponse = client.Execute(request);
-                    string response = ResetResponse.Content;
                     int responseCode = (int)ResetResponse.StatusCode;
 
                     if (responseCode == 200)
@@ -290,10 +288,14 @@ namespace eRemote_V2._0
             {
                 Debug.WriteLine("Oh, How it Even Possible O.o. Maybe Unreachable");
                 return true;
-            }else if (!online_locked && offline_locked)
+            }else if (!online_locked && offline_locked && Lib.CheckForInternetConnection())
             {
                 emergencySQL.emergencyUnlocker();
                 return false;
+            }else if (offline_locked && !Lib.CheckForInternetConnection())
+            {
+                return true;
+
             }
             else
             {
@@ -301,8 +303,6 @@ namespace eRemote_V2._0
 
             }
           
-
-
 
         }
     }

@@ -45,9 +45,11 @@ public partial class ProtectClosingHook
                         (lParam.vkCode == 0x09 && lParam.flags == 32) || // Alt+Tab
                         (lParam.vkCode == 0x1b && lParam.flags == 32) || // Alt+Esc
                         (lParam.vkCode == 0x73 && lParam.flags == 32) || // Alt+F4
-                        (lParam.vkCode == 0x1b && lParam.flags == 0) || // Ctrl+Esc
-                        (lParam.vkCode == 0x5b && lParam.flags == 1) || // Left Windows Key 
-                        (lParam.vkCode == 0x5c && lParam.flags == 1))    // Right Windows Key 
+                        (lParam.vkCode == 0x1b && lParam.flags == 0)  || // Ctrl+Esc
+                        (lParam.vkCode == 0x5b && lParam.flags == 1)  || // Left Windows Key 
+                        (lParam.vkCode == 0x5C && lParam.flags == 1) || // Left Windows Key 
+                        (lParam.vkCode == 0xA2)  || // Left CONTROL key
+                        (lParam.vkCode == 0xA3 ))  // Right CONTROL key
                     {
                         return 1; //Do not handle key events
                     }

@@ -114,20 +114,28 @@ namespace eRemote_V2._0
                 try
                 {
 
-                    var orderId = response.GetValue()["orderid"].ToString();
+                    var orderId = response.GetValue();
                     var order = response.GetValue()["order"].ToString();
                     var source = response.GetValue();
 
+                    if (orderId["orderid"] != null)
+                    {
+                        orderId = orderId.ToString();
+                    }
+                    else
+                    {
+                        orderId = "";
+                    }
                     if (source["source"] != null)
                     {
 
-                        await Orders.OrderHandlerAsync(order, orderId, key, source["source"].ToString());
+                        await Orders.OrderHandlerAsync(order, orderId.ToString(), key, source["source"].ToString());
 
                     }
                     else
                     {
                         source = "";
-                        await Orders.OrderHandlerAsync(order, orderId, key);
+                        await Orders.OrderHandlerAsync(order, orderId.ToString(), key);
 
                     }
                 }
@@ -181,9 +189,10 @@ namespace eRemote_V2._0
 
         }
 
+
         private static void NetworkAvailabilityChangeHandler(object sender, NetworkAvailabilityEventArgs e)
         {
-            if (e.IsAvailable)
+            if (e.IsAvailable && Lib.CheckForInternetConnection())
             {
                 try
                 {
@@ -192,7 +201,9 @@ namespace eRemote_V2._0
                     {
                         Info.Register_Info(key);
                         Orders.SyncLogger();
+                        if (!socket.Connected) socket.ConnectAsync();
                     }
+                   
 
                 }
                 catch (Exception)

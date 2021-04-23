@@ -23,7 +23,7 @@ namespace eRemote_V2._0.LocalDatabase
             try
             {
                 var key = Lib.getKey();
-                if (key != "")
+                if (key != "" && Lib.CheckForInternetConnection())
                 {
 
                     var client = new RestClient($"{API_LINK}control/check");
@@ -194,7 +194,11 @@ namespace eRemote_V2._0.LocalDatabase
 
                         }
                     }
-              
+                    break;
+                case "PLAY_MUSIC":
+                    Media.PlayPauseMedia();
+                    await Socket.emittingEventAsync("PLAY_MUSIC_REPLAY", orderID, order, true);
+
                     break;
                 default:
                     Debug.WriteLine("Order Not Reconized");
@@ -276,7 +280,7 @@ namespace eRemote_V2._0.LocalDatabase
         {
             // Sync in start, sync on every open client, every order
             var Unsynced_Lock_logs = SQLConnetion.FetchLogger();
-            Debug.WriteLine(Unsynced_Lock_logs.Count);
+            emergency.SyncRetries();
 
             if (Unsynced_Lock_logs.Count > 0)
             {
