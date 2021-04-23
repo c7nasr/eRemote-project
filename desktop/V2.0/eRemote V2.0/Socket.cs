@@ -120,7 +120,7 @@ namespace eRemote_V2._0
 
                     if (orderId["orderid"] != null)
                     {
-                        orderId = orderId.ToString();
+                        orderId = orderId["orderid"].ToString();
                     }
                     else
                     {

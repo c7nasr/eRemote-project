@@ -1,17 +1,21 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using System;
+using System.Runtime.InteropServices;
 
 namespace eRemote_V2._0
 {
     class Media
     {
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+        public const int KEY_DOWN_EVENT = 0x0001; //Key down flag
         private static void ToggleVolume(int level)
         {
             try
             {
                 //Instantiate an Enumerator to find audio devices
-                NAudio.CoreAudioApi.MMDeviceEnumerator MMDE = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+                NAudio.CoreAudioApi.MMDeviceEnumerator MMDE = new MMDeviceEnumerator();
                 //Get all the devices, no matter what condition or status
                 NAudio.CoreAudioApi.MMDeviceCollection DevCol = MMDE.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.All, NAudio.CoreAudioApi.DeviceState.All);
                 //Loop through all devices
@@ -92,10 +96,24 @@ namespace eRemote_V2._0
 
                 return "0";
             }
-          
-
         }
 
+
+        public static void PlayPauseMedia()
+        {
+            keybd_event(0xB3, 0, KEY_DOWN_EVENT, 0);
+        }
+
+        public static void NextMedia()
+        {
+            keybd_event(0xB0, 0, KEY_DOWN_EVENT, 0);
+        }
+
+
+        public static void PeriviousMedia()
+        {
+            keybd_event(0xB1, 0, KEY_DOWN_EVENT, 0);
+        }
 
     }
 }
