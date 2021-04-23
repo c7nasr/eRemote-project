@@ -41,8 +41,12 @@ namespace eRemote_V2._0
 
 
         }
-        public static async void Init_socket()
+        public static async Task Init_socket()
         {
+            try
+            {
+
+           
             socket.OnConnected += Connect;
             socket.OnDisconnected += Disconnected;
             socket.OnError += Socket_OnError;
@@ -58,22 +62,26 @@ namespace eRemote_V2._0
                 catch (Exception)
                 {
                     await socket.ConnectAsync();
-
-
                 }
 
             }
 
+            }
+            catch (Exception)
+            {
 
+               
+            }
         }
 
 
-        private static async void Disconnected(object sender, string e)
+        private static void Disconnected(object sender, string e)
         {
             Debug.WriteLine("disconnect: " + e);
         }
-        private static void Socket_OnError(object sender, string e)
+        private static async void Socket_OnError(object sender, string e)
         {
+            await socket.ConnectAsync();
             Debug.WriteLine("Socket_OnError: " + e);
         }
 
@@ -108,8 +116,20 @@ namespace eRemote_V2._0
 
                     var orderId = response.GetValue()["orderid"].ToString();
                     var order = response.GetValue()["order"].ToString();
-                    var source = response.GetValue()["source"].ToString();
-                    await Orders.OrderHandlerAsync(order, orderId, key, source);
+                    var source = response.GetValue();
+
+                    if (source["source"] != null)
+                    {
+
+                        await Orders.OrderHandlerAsync(order, orderId, key, source["source"].ToString());
+
+                    }
+                    else
+                    {
+                        source = "";
+                        await Orders.OrderHandlerAsync(order, orderId, key);
+
+                    }
                 }
                 catch (Exception err)
                 {
@@ -150,6 +170,10 @@ namespace eRemote_V2._0
 
 
 
+        }
+        public static bool IsSocketConnected()
+        {
+            return socket.Connected;
         }
         public static void InternetListener()
         {

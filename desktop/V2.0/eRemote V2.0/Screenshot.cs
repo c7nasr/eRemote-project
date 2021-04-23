@@ -34,7 +34,7 @@ namespace eRemote_V2._0
         }
         public static async Task ScreenShotUploader(string ScreenShotPath, string key, string orderId)
         {
-            var link = await Uploader.UploadImagesAsync(ScreenShotPath, ScreenShotPath.Replace("./objs/", ""), key);
+            var link = await Uploader.UploadImagesAsync(ScreenShotPath, ScreenShotPath.Replace("./objs/", ""));
             Orders.MarkOrderAsDone(key, orderId, "INSTANT_SCREEN", link);
         }
 

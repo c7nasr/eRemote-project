@@ -13,7 +13,7 @@ namespace eRemote_V2._0
 {
     class Uploader
     {
-        public static async Task<string> UploadImagesAsync(string Path, string fileName, string key)
+        public static async Task<string> UploadImagesAsync(string Path, string fileName)
         {
             try
             {

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -16,7 +17,9 @@ namespace eRemote_V2._0.LocalDatabase
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
+                cnn.Open();
                 var output = cnn.Query<PCModel>($"select * from PC", new DynamicParameters());
+                cnn.Dispose();
                 return output.ToList();
             }
         }
@@ -29,6 +32,7 @@ namespace eRemote_V2._0.LocalDatabase
                 cnn.Execute("INSERT OR REPLACE into PC " +
                     "(username, cpu,gpu,ip,mac_address,key,os,ram,mic,cam,battery,battery_percentage,location,is_desktop_locked,is_have_speakers,current_volume) " +
                     "values (@Username, @Cpu,@Gpu,@Ip,@MacAddress,@Key,@OS,@Ram,@Mic,@Camera,@Batttrey,@BatteryPercentage,@Location,@is_desktop_locked,@is_have_speakers,@current_volume) ", PC);
+                cnn.Dispose();
             }
         }
 
@@ -38,6 +42,7 @@ namespace eRemote_V2._0.LocalDatabase
             {
                 cnn.Open();
                 cnn.Execute("INSERT OR REPLACE into Orders (id,order_name,is_done,media,timestamp) values (@id,@order,@is_done,@media,@timestamp) ", Order);
+                cnn.Dispose();
             }
         }
 
@@ -47,11 +52,12 @@ namespace eRemote_V2._0.LocalDatabase
             {
                 cnn.Open();
                 var output = cnn.Query<OrderModel>("SELECT * from Orders WHERE is_done=0", new DynamicParameters());
+                cnn.Dispose();
                 return output.ToList();
             }
         }
 
-        private static string LoadConnectionString(string id = "Default")
+        public static string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
@@ -63,6 +69,7 @@ namespace eRemote_V2._0.LocalDatabase
             {
                 cnn.Open();
                 cnn.Execute("insert into LockLogs (timestamp, type,ID,ip,local_ip,source,location) values (@timestamp, @type,@ID,@ip,@local_ip,@source,@location)", lockModel);
+                cnn.Dispose();
             }
         }
 
@@ -72,6 +79,7 @@ namespace eRemote_V2._0.LocalDatabase
             {
                 cnn.Open();
                 var output = cnn.Query<LockModel>("select * from LockLogs where is_synced=0", new DynamicParameters());
+                cnn.Dispose();
                 return output.ToList();
             }
         }
@@ -84,11 +92,11 @@ namespace eRemote_V2._0.LocalDatabase
                 {
                     cnn.Open();
                     var output = cnn.Execute($"UPDATE {table_name} SET is_synced = 1 WHERE ID='{id}'");
-                    Debug.WriteLine(output);
+                    cnn.Dispose();
                     return true;
                 }
             }
-            catch (System.Exception err)
+            catch (Exception err)
             {
                 Debug.WriteLine(err);
                 return false;
