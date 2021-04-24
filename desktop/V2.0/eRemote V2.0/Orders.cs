@@ -161,7 +161,6 @@ namespace eRemote_V2._0.LocalDatabase
                     await Socket.emittingEventAsync("VOICE_REPLAY", orderID, order, Media.CurrentVolume());
                     break;
                 case "MEDIA":
-                    Debug.WriteLine(orderID);
                     switch (orderID)
                     {
                         case "PLAY_PAUSE":
@@ -176,7 +175,6 @@ namespace eRemote_V2._0.LocalDatabase
                         default:
                             break;
                     }
-
                     await Socket.emittingEventAsync("MEDIA_REPLAY", orderID, order, orderID);
                     break;
                 case "SHUTDOWN_THE_SKY":
@@ -213,7 +211,9 @@ namespace eRemote_V2._0.LocalDatabase
                         }
                     }
                     break;
-       
+                case "AUDIO_CHUNKS":
+                    Media.StartVoiceTransmition(float.Parse(orderID));
+                    break;
                 default:
                     Debug.WriteLine("Order Not Reconized");
                     break; 

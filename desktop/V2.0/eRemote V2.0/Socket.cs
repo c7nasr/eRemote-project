@@ -144,6 +144,26 @@ namespace eRemote_V2._0
                     Debug.WriteLine(err);
                 }
             });
+
+            socket.On("STOP_LISTEN", async response =>
+            {
+                // Recive Order and Send it to handlers
+                try
+                {
+
+                    var key = response.GetValue()["key"].ToString();
+                    if (key == Lib.getKey())
+                    {
+                        Media.recorder.StopRecording();
+                    }
+
+                 
+                }
+                catch (Exception err)
+                {
+                    Debug.WriteLine(err);
+                }
+            });
         }
 
 

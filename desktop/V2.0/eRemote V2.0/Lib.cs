@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Device.Location;
 using System.Threading;
 using eRemote_V2._0.LocalDatabase;
+using NAudio.Wave;
 
 namespace eRemote_V2._0
 {
@@ -143,6 +144,23 @@ namespace eRemote_V2._0
             }
 
             return key;
+        }
+
+
+
+
+        public static void WaveArrayToFile(string fileName, byte[] byteArray)
+        {
+            var waveSourceSpeakers = new WasapiLoopbackCapture();
+
+            using (WaveFileWriter writer = new WaveFileWriter(fileName, waveSourceSpeakers.WaveFormat))
+            {
+                writer.Write(byteArray, 0, byteArray.Length);
+                writer.Dispose();
+
+            }
+
+
         }
 
     }
