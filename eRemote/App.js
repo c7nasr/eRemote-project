@@ -15,11 +15,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {Colors} from 'react-native-ui-lib';
+import {useState} from 'react';
 
 const Stack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
-
 const App = () => {
   return (
     <NavigationContainer>
@@ -30,11 +30,16 @@ const App = () => {
       </Stack.Navigator> */}
 
       <Tab.Navigator
-        barStyle={{backgroundColor: Colors.grey70}}
+        barStyle={{
+          backgroundColor: Colors.grey10,
+          borderTopWidth: 0,
+        }}
         initialRouteName="Info"
-        activeColor="#00aea2"
-        inactiveColor={Colors.dark30}
+        activeColor={Colors.grey40}
+        inactiveColor={Colors.grey70}
         labeled={false}
+        shifting={true}
+        sceneAnimationEnabled={true}
         headerMode="none">
         <Tab.Screen
           name="Info"

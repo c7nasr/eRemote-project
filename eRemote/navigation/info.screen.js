@@ -41,7 +41,7 @@ function InfoScreen() {
           style={{
             padding: 20,
             flex: 1,
-            paddingTop: 25,
+            paddingTop: 40,
             borderBottomColor: '#206a5d',
             borderBottomWidth: 1,
             shadowColor: '#000',
