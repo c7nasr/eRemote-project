@@ -16,9 +16,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {Colors} from 'react-native-ui-lib';
 import {useState} from 'react';
+import SecurityControl from './navigation/control/security.screen';
 
 const Stack = createStackNavigator();
-
+function Control() {
+  return (
+    <Stack.Navigator headerMode={false} initialRouteName={'Control'}>
+      <Stack.Screen name="Control" component={ControlScreen} />
+      <Stack.Screen name="Security" component={SecurityControl}></Stack.Screen>
+    </Stack.Navigator>
+  );
+}
 const Tab = createMaterialBottomTabNavigator();
 const App = () => {
   return (
@@ -52,7 +60,7 @@ const App = () => {
         />
         <Tab.Screen
           name="Control"
-          component={ControlScreen}
+          component={Control}
           options={{
             tabBarIcon: ({color}) => (
               <Icon name="notification" size={24} color={color} />

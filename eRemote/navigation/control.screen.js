@@ -3,10 +3,11 @@ import {ScrollView} from 'react-native';
 import {Card, Colors, View} from 'react-native-ui-lib';
 import CardDetails from '../components/control/details';
 
-function ControlScreen() {
+function ControlScreen({navigation}) {
   return (
     <ScrollView>
       <Card
+        onPress={() => navigation.navigate('Security')}
         elevation={2}
         row
         style={{
