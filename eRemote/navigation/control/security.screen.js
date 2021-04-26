@@ -10,6 +10,9 @@ export default function SecurityControl() {
           padding: 10,
           paddingTop: 25,
         }}>
+        <Text text50 style={{color: 'white'}}>
+          Security Control
+        </Text>
         <Text text70H style={{marginBottom: 10, color: 'white'}}>
           - Security Control is fast, secure way to lock your system if you left
           it behind you.

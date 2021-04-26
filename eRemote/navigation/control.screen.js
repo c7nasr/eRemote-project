@@ -30,10 +30,11 @@ function ControlScreen({navigation}) {
       </Card>
 
       <Card
+        onPress={() => navigation.navigate('Power')}
         elevation={2}
         row
         style={{
-          backgroundColor: Colors.orange20,
+          backgroundColor: Colors.violet20,
           borderRadius: 0,
           paddingTop: 5,
         }}>
@@ -52,6 +53,7 @@ function ControlScreen({navigation}) {
       </Card>
 
       <Card
+        onPress={() => navigation.navigate('ScreenAndCamera')}
         elevation={2}
         row
         style={{
@@ -74,6 +76,7 @@ function ControlScreen({navigation}) {
       </Card>
 
       <Card
+        onPress={() => navigation.navigate('Media')}
         elevation={2}
         row
         style={{
