@@ -3,8 +3,10 @@ import {ScrollView, TouchableOpacity} from 'react-native';
 import {View, Colors, Text} from 'react-native-ui-lib';
 import SecurityLogsList from '../../components/control/logs/security.logs.list';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import FilterModel from '../../components/control/logs/filter.model';
 
 const SecurityLogs = () => {
+  const [sortModel, setSortModel] = React.useState(false);
   return (
     <View style={{flex: 1, backgroundColor: Colors.dark10}}>
       <View
@@ -17,6 +19,7 @@ const SecurityLogs = () => {
             Security Reports
           </Text>
           <TouchableOpacity
+            onPress={() => setSortModel(true)}
             style={{
               backgroundColor: Colors.grey10,
               borderRadius: 50,
@@ -25,6 +28,7 @@ const SecurityLogs = () => {
             <Icon name="sort" size={32} color="white" />
           </TouchableOpacity>
         </View>
+        <FilterModel isOpen={sortModel} toggle={setSortModel} />
         <ScrollView style={{marginBottom: 50}}>
           <SecurityLogsList
             type="windows"

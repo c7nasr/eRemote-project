@@ -1,9 +1,11 @@
 import React from 'react';
 import {Image, ScrollView, TouchableOpacity} from 'react-native';
-import {Card, Colors, Slider, View} from 'react-native-ui-lib';
+import {Card, Colors, View} from 'react-native-ui-lib';
+import Slider from '@react-native-community/slider';
 import CardDetails from '../components/control/details';
 
 function ControlScreen({navigation}) {
+  const [currentVolume, setCurrentVolume] = React.useState(57);
   return (
     <ScrollView>
       <Card
@@ -168,17 +170,15 @@ function ControlScreen({navigation}) {
           />
         </TouchableOpacity>
       </View>
-      <Slider
-        onValueChange={e => console.log(e)}
-        value={1}
-        minimumValue={0}
-        maximumValue={100}
-        containerStyle={{
-          backgroundColor: Colors.green10,
-          flex: 1,
-        }}
-        step={1}
-      />
+      <View style={{backgroundColor: Colors.green10, paddingHorizontal: 20}}>
+        <Slider
+          style={{flex: 1, height: 40}}
+          minimumValue={0}
+          maximumValue={100}
+          minimumTrackTintColor="#FFFFFF"
+          maximumTrackTintColor="#000000"
+        />
+      </View>
     </ScrollView>
   );
 }

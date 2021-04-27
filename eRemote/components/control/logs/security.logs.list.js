@@ -40,12 +40,9 @@ const SecurityLogsList = ({
           <Card.Section
             centerV
             imageSource={images[type]}
-            imageStyle={{
-              marginLeft: 10,
-              width: 48,
-              height: 48,
-              tintColor: type === 'windows' ? 'red' : '',
-            }}
+            imageStyle={
+              type === 'windows' ? styles.imageWindows : styles.imageEmergency
+            }
           />
           {colorsHandler(type, time, uuid, ip, action, source)}
         </Card>
@@ -107,6 +104,17 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  imageWindows: {
+    marginLeft: 10,
+    width: 48,
+    height: 48,
+    tintColor: 'red',
+  },
+  imageEmergency: {
+    marginLeft: 10,
+    width: 48,
+    height: 48,
   },
 });
 export default SecurityLogsList;

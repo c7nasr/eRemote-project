@@ -1,10 +1,39 @@
+import {useFocusEffect} from '@react-navigation/core';
 import React from 'react';
+import {useState} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
-import {Colors, Text} from 'react-native-ui-lib';
+import {ActionSheet, Colors, Text} from 'react-native-ui-lib';
+import {
+  AuthPrompt,
+  is_biometric_available,
+} from '../../lib/secuirty.unlock.handler';
 
 export default function SecurityControl({navigation}) {
+  const [isELocked, setIsELocked] = useState(false);
+  const [isAuth, setIsAuth] = React.useState(false);
+  const [unlockModel, setUnlockModel] = React.useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsAuth(false);
+
+      return () => setIsAuth(false);
+    }, [isAuth]),
+  );
   return (
     <View style={{backgroundColor: Colors.grey10, flex: 1}}>
+      {isELocked && (
+        <ActionSheet
+          onDismiss={_ => {
+            setIsAuth(false);
+            setUnlockModel(false);
+          }}
+          options={[{label: 'Done', onPress: () => setUnlockModel(false)}]}
+          title="Unlock Code: ngwr-tr35-mbo1"
+          visible={unlockModel}
+        />
+      )}
+
       <View
         style={{
           padding: 10,
@@ -74,23 +103,59 @@ export default function SecurityControl({navigation}) {
             }}
           />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{
-            marginHorizontal: 10,
-            padding: 8,
-            backgroundColor: Colors.dark80,
-            borderRadius: 5,
-            elevation: 2,
-            borderColor: Colors.grey70,
-            borderWidth: 2,
-            flex: 1,
-          }}>
-          <Image
-            source={require('../../assets/icons/emergency.png')}
-            style={{width: 48, height: 48, alignSelf: 'center'}}
-          />
-        </TouchableOpacity>
+        {!isELocked ? (
+          <>
+            <TouchableOpacity
+              style={{
+                marginHorizontal: 10,
+                padding: 8,
+                backgroundColor: Colors.dark80,
+                borderRadius: 5,
+                elevation: 2,
+                borderColor: Colors.grey70,
+                borderWidth: 2,
+                flex: 1,
+              }}>
+              <Image
+                source={require('../../assets/icons/emergency.png')}
+                style={{width: 48, height: 48, alignSelf: 'center'}}
+              />
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity
+            onPress={async () => {
+              if (await is_biometric_available()) {
+                AuthPrompt().then(Auth => {
+                  if (Auth) {
+                    setUnlockModel(true);
+                  }
+                });
+              } else if (!(await is_biometric_available())) {
+                setUnlockModel(true);
+              }
+            }}
+            style={{
+              marginHorizontal: 10,
+              padding: 8,
+              backgroundColor: Colors.dark80,
+              borderRadius: 5,
+              elevation: 2,
+              borderColor: Colors.grey70,
+              borderWidth: 2,
+              flex: 1,
+            }}>
+            <Image
+              source={require('../../assets/icons/unlock.png')}
+              style={{
+                width: 48,
+                height: 48,
+                alignSelf: 'center',
+                tintColor: '#2b2e4a',
+              }}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       <TouchableOpacity
         onPress={() => navigation.navigate('SLogs')}
@@ -103,6 +168,7 @@ export default function SecurityControl({navigation}) {
           alignSelf: 'center',
           paddingVertical: 10,
           borderRadius: 10,
+          marginBottom: 5,
         }}>
         <Text text50H center grey80>
           Tracking Logs
