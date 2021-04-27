@@ -1,6 +1,6 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
-import {Card, Colors, View} from 'react-native-ui-lib';
+import {Image, ScrollView, TouchableOpacity} from 'react-native';
+import {Card, Colors, Slider, View} from 'react-native-ui-lib';
 import CardDetails from '../components/control/details';
 
 function ControlScreen({navigation}) {
@@ -76,25 +76,109 @@ function ControlScreen({navigation}) {
       </Card>
 
       <Card
-        onPress={() => navigation.navigate('Media')}
-        elevation={2}
         row
         style={{
           backgroundColor: Colors.green10,
           borderRadius: 0,
           paddingTop: 5,
+          flex: 1,
         }}>
         <CardDetails
           title="Media Control"
-          text={
-            'Change system volume, mute system and control your music (Forward, Back, Start, Pause) with one click.'
-          }
+          text={'Change system volume, mute system and control your music'}
         />
         <Card.Section
           imageSource={require('../assets/icons/music.png')}
           imageStyle={{marginTop: 35, marginRight: 5}}
         />
       </Card>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: Colors.green10,
+          paddingBottom: 5,
+        }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#fff',
+            height: 40,
+            borderRadius: 50,
+            padding: 5,
+            marginHorizontal: 5,
+          }}>
+          <Image
+            style={{
+              width: 32,
+              height: 32,
+              tintColor: Colors.blue20,
+            }}
+            source={require('../assets/icons/media/backward.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#fff',
+            height: 40,
+            borderRadius: 50,
+            padding: 5,
+            marginHorizontal: 5,
+          }}>
+          <Image
+            style={{
+              width: 32,
+              height: 32,
+              tintColor: Colors.blue20,
+            }}
+            source={require('../assets/icons/media/pause_play.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#fff',
+            height: 40,
+            borderRadius: 50,
+            padding: 5,
+            marginHorizontal: 5,
+          }}>
+          <Image
+            style={{
+              width: 32,
+              height: 32,
+              tintColor: Colors.blue20,
+            }}
+            source={require('../assets/icons/media/forward.png')}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#fff',
+            height: 40,
+            borderRadius: 50,
+            padding: 5,
+          }}>
+          <Image
+            style={{
+              width: 32,
+              height: 32,
+              tintColor: Colors.blue20,
+            }}
+            source={require('../assets/icons/media/mute.png')}
+          />
+        </TouchableOpacity>
+      </View>
+      <Slider
+        onValueChange={e => console.log(e)}
+        value={1}
+        minimumValue={0}
+        maximumValue={100}
+        containerStyle={{
+          backgroundColor: Colors.green10,
+          flex: 1,
+        }}
+        step={1}
+      />
     </ScrollView>
   );
 }

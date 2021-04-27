@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
 import {Colors, Text} from 'react-native-ui-lib';
 
-export default function SecurityControl() {
+export default function SecurityControl({navigation}) {
   return (
     <View style={{backgroundColor: Colors.grey10, flex: 1}}>
       <View
@@ -93,6 +93,7 @@ export default function SecurityControl() {
         </TouchableOpacity>
       </View>
       <TouchableOpacity
+        onPress={() => navigation.navigate('SLogs')}
         style={{
           backgroundColor: Colors.blue10,
           paddingHorizontal: 10,

@@ -18,7 +18,7 @@ import {Colors} from 'react-native-ui-lib';
 import SecurityControl from './navigation/control/security.screen';
 import PowerScreen from './navigation/control/power.screen';
 import ScreenAndCameraScreen from './navigation/control/screen.screen';
-import MediaScreen from './navigation/control/media.screen';
+import SecurityLogs from './navigation/control/security.logs.screen';
 
 const Stack = createStackNavigator();
 function Control() {
@@ -27,10 +27,10 @@ function Control() {
       <Stack.Screen name="Control" component={ControlScreen} />
       <Stack.Screen name="Security" component={SecurityControl}></Stack.Screen>
       <Stack.Screen name="Power" component={PowerScreen}></Stack.Screen>
+      <Stack.Screen name="SLogs" component={SecurityLogs}></Stack.Screen>
       <Stack.Screen
         name="ScreenAndCamera"
         component={ScreenAndCameraScreen}></Stack.Screen>
-      <Stack.Screen name="Media" component={MediaScreen}></Stack.Screen>
     </Stack.Navigator>
   );
 }
