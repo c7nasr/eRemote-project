@@ -9,6 +9,7 @@ import {
 } from 'react-native-ui-lib';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import {colorsHandler} from '../../../lib/security.logs.handler';
+import {openInMaps} from '../../../lib/maps.handler';
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoiYzduYXNyIiwiYSI6ImNrNG4zOHludTByYzgzbG1pbHMxeWpleGQifQ.aVGDM-f4GZeKtcG2CLT7VA',
@@ -49,6 +50,8 @@ const SecurityLogsList = ({
         <ExpandableSection expanded={openCard}>
           <View style={styles.container}>
             <MapboxGL.MapView
+              onPress={() => openInMaps(29.9490615, 31.2100585)}
+              scrollEnabled={false}
               style={{
                 width: Dimensions.get('screen').width,
                 height: 200,
