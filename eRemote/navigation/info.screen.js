@@ -1,23 +1,16 @@
-import {
-  View,
-  Text,
-  Card,
-  ListItem,
-  Colors,
-  Image,
-  Chip,
-} from 'react-native-ui-lib';
-import React from 'react';
+import {View, Text, Card} from 'react-native-ui-lib';
+import React, {useEffect} from 'react';
 import {StyleSheet, SafeAreaView, ScrollView, Dimensions} from 'react-native';
 import InfoList from '../components/info/info.list';
 import InfoChips from '../components/info/info.chips';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 
-MapboxGL.setAccessToken(
-  'pk.eyJ1IjoiYzduYXNyIiwiYSI6ImNrNG4zOHludTByYzgzbG1pbHMxeWpleGQifQ.aVGDM-f4GZeKtcG2CLT7VA',
-);
-
 function InfoScreen() {
+  useEffect(() => {
+    MapboxGL.setAccessToken(
+      'pk.eyJ1IjoiYzduYXNyIiwiYSI6ImNrNG4zOHludTByYzgzbG1pbHMxeWpleGQifQ.aVGDM-f4GZeKtcG2CLT7VA',
+    );
+  }, []);
   return (
     <SafeAreaView>
       <ScrollView>
