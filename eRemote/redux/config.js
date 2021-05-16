@@ -4,5 +4,6 @@ export const CREATE_TOAST = 'CREATE_TOAST';
 export const HIDE_TOAST = 'HIDE_TOAST';
 
 export const GET_PC_INFO = 'GET_PC_INFO';
+export const UPDATE_PC_CONNECTION = 'UPDATE_PC_CONNECTION';
 
 export const UPDATE_LOADING_STATE = 'UPDATE_LOADING_STATE';

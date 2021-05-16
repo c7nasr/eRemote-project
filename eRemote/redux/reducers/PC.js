@@ -1,4 +1,8 @@
-import {GET_PC_INFO, UPDATE_LOADING_STATE} from '../config.js';
+import {
+  GET_PC_INFO,
+  UPDATE_LOADING_STATE,
+  UPDATE_PC_CONNECTION,
+} from '../config.js';
 
 const initialState = {
   pc_info: {},
@@ -13,7 +17,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         pc_info: action.payload.pc,
-        is_connected: action.payload.is_connected,
         last_update: action.payload.last_update,
         is_loading: false,
       };
@@ -21,6 +24,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         is_loading: action.payload.is_loading,
+      };
+    case UPDATE_PC_CONNECTION:
+      return {
+        ...state,
+        is_connected: action.payload.is_connected,
       };
     default:
       return state;

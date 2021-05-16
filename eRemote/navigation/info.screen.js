@@ -1,4 +1,4 @@
-import {View, Text, Card} from 'react-native-ui-lib';
+import {View, Text, Card, Colors} from 'react-native-ui-lib';
 import React, {useEffect} from 'react';
 import {
   StyleSheet,
@@ -11,13 +11,51 @@ import {
 import InfoList from '../components/info/info.list';
 import InfoChips from '../components/info/info.chips';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import {convertToAgo, formatTime} from '../lib/time.lib';
-import {updatePCInfo} from '../redux/actions/PC.Action';
+import {formatTime} from '../lib/time.lib';
+import {getConnectionText} from '../lib/texts';
+import {
+  updatePcConnectionState,
+  updatePCInfo,
+} from '../redux/actions/PC.Action';
 import {connect} from 'react-redux';
+import {initSocket} from '../lib/socket.handler';
 
-function InfoScreen({updatePCInfo, pcInfo, is_loading}) {
-  React.useEffect(async () => {
-    await updatePCInfo();
+function InfoScreen({
+  updatePCInfo,
+  pcInfo,
+  is_loading,
+  is_connected,
+  updatePcConnectionState,
+}) {
+  React.useEffect(() => {
+    try {
+      updatePCInfo().then(async e => {
+        let socket = await initSocket();
+        if (socket != false) {
+          socket.on('connect', function () {
+            console.log(socket.connected);
+          });
+          socket.on('turn_on', function (object) {
+            updatePcConnectionState(true);
+          });
+          socket.on('emitIsActive', async function (data) {
+            if (data.key == pcInfo.key && !data.isActive) {
+              updatePcConnectionState(false);
+              console.log('Offline');
+            } else {
+              updatePcConnectionState(true);
+              console.log('Online');
+            }
+          });
+          socket.emit('isActive', {
+            key: pcInfo.key,
+            source: 'Mobile',
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
   useEffect(() => {
     MapboxGL.setAccessToken(
@@ -42,14 +80,11 @@ function InfoScreen({updatePCInfo, pcInfo, is_loading}) {
           />
         }>
         <Card.Section
-          // Determine According to Online State
-          backgroundColor={'#1e6f5c'}
+          backgroundColor={is_connected ? '#1e6f5c' : Colors.red20}
           content={[
             {text: pcInfo.username, text60: true, grey80: true},
             {
-              text: `Your PC is online and reachable by us you can start controlling it. First connect was from: ${convertToAgo(
-                pcInfo.createdAt,
-              )}.`,
+              text: getConnectionText(is_connected, pcInfo.createdAt),
               text80: true,
               grey60: true,
             },
@@ -153,6 +188,10 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   pcInfo: state.PC.pc_info,
   is_loading: state.PC.is_loading,
+  is_connected: state.PC.is_connected,
 });
 
-export default connect(mapStateToProps, {updatePCInfo})(InfoScreen);
+export default connect(mapStateToProps, {
+  updatePCInfo,
+  updatePcConnectionState,
+})(InfoScreen);
