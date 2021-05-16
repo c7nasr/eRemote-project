@@ -25,6 +25,8 @@ import configureStore from './redux/store';
 import {authHandler, check_if_key_existed} from './lib/auth.handler';
 import {Provider} from 'react-redux';
 import {setAuthState} from './redux/actions/Auth.Action';
+
+import ToastMessage from './components/toast';
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
@@ -51,6 +53,7 @@ const App = () => {
     const token = await check_if_key_existed();
 
     authHandler().then(async result => {
+      console.log(result);
       switch (result) {
         case 'Matched':
           setAppState('Auth');
@@ -91,6 +94,8 @@ const AuthStack = (
   <Provider store={store}>
     <NavigationContainer>
       <StatusBar translucent backgroundColor="transparent" />
+      <ToastMessage />
+
       <Tab.Navigator
         barStyle={{
           backgroundColor: Colors.grey10,

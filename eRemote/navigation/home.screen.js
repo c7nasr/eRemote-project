@@ -1,33 +1,44 @@
-import {View, Text, Image, Button, Colors} from 'react-native-ui-lib';
+import {View, Text, Image, Button, Colors, Toast} from 'react-native-ui-lib';
 
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Linking} from 'react-native';
 import {connect} from 'react-redux';
-import {apiHandler} from '../lib/api';
+import {tryToConnect, getNewKey} from '../lib/api';
 import {check_if_key_existed, setToken} from '../lib/auth.handler';
 import {setAuthState} from '../redux/actions/Auth.Action';
+import {showNewError} from '../redux/actions/Toast.Action';
+import ToastMessage from './../components/toast';
 
-function HomeScreen({auth, setAuthState}) {
+function HomeScreen({auth, setAuthState, showNewError, navigation}) {
   const [Key, setKey] = useState(null);
-  // Check State for Token. if found decrypt it.
-  // if not request new key
+
   useEffect(() => {
-    check_if_key_existed().then(token => {
+    check_if_key_existed().then(async token => {
       if (token) {
-        apiHandler('post', 'keys/connect/phone', {}, token).then(result => {
-          if (result === false) {
-            setToken('');
-            console.log('!result', result);
-          } else {
-            setKey(result.key);
-            console.log(result);
-          }
-        });
+        const res = await tryToConnect(token);
+        if (res !== 'Network Error') {
+          setKey(res.key);
+        } else {
+          showNewError(
+            "Can't connect to the internet please check your internet connection and try again.",
+            Colors.red10,
+          );
+        }
+
+        if (res.matched) {
+          navigation.navigate('Control', {screen: 'Control'});
+        }
       } else {
-        apiHandler('get', 'keys', {}).then(result => {
-          setToken(result.token);
-          setAuthState(false, true, result.token);
-        });
+        const data = await getNewKey();
+        if (data != 'Network Error') {
+          setToken(data.token);
+          setAuthState(false, true, data.token);
+        } else {
+          showNewError(
+            "Can't connect to the internet please check your internet connection and try again.",
+            Colors.red10,
+          );
+        }
       }
     });
   }, []);
@@ -40,6 +51,7 @@ function HomeScreen({auth, setAuthState}) {
         justifyContent: 'center',
         paddingHorizontal: 10,
       }}>
+      <ToastMessage />
       <Image
         source={require('./../assets/logo.png')}
         width={200}
@@ -55,7 +67,38 @@ function HomeScreen({auth, setAuthState}) {
       <Text text70H dark30 center>
         Enter Code Above in the PC Client to Start Authentication Process
       </Text>
-      <Button outline label="I've entered the Code on PC Client" marginT-10 />
+      <Button
+        disabled={!Key ? true : false}
+        outline
+        label="I've entered the Code on PC Client"
+        marginT-10
+        onPress={async () => {
+          const is_matched = await tryToConnect(auth.token);
+          if (is_matched === 'Network Error') {
+            showNewError(
+              "Something Went Error. We Can't Reach the server",
+              Colors.red10,
+            );
+          } else {
+            switch (is_matched.matched) {
+              case true:
+                showNewError(
+                  'Key is Matched... we logging you in now',
+                  Colors.green10,
+                );
+                break;
+              case false:
+                showNewError(
+                  'Key is Not Matched. Please Enter the code on PC Client and Click Connect on PC Client and try again.',
+                  Colors.red10,
+                );
+              default:
+                break;
+            }
+          }
+          console.log(is_matched);
+        }}
+      />
       <Text
         text80H
         green10
@@ -70,4 +113,6 @@ function HomeScreen({auth, setAuthState}) {
 const mapStateToProps = state => ({
   auth: state.Auth,
 });
-export default connect(mapStateToProps, {setAuthState})(HomeScreen);
+export default connect(mapStateToProps, {setAuthState, showNewError})(
+  HomeScreen,
+);

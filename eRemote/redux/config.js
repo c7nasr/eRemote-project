@@ -1,2 +1,8 @@
 export const GET_AUTH_STATUS = 'GET_AUTH_STATUS';
 export const UPDATE_AUTH_STATE = 'UPDATE_AUTH_STATE';
+export const CREATE_TOAST = 'CREATE_TOAST';
+export const HIDE_TOAST = 'HIDE_TOAST';
+
+export const GET_PC_INFO = 'GET_PC_INFO';
+
+export const UPDATE_LOADING_STATE = 'UPDATE_LOADING_STATE';

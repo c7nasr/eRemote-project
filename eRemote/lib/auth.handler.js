@@ -1,5 +1,6 @@
+import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {apiHandler} from './api';
+import {tryToConnect} from './api';
 export const check_if_key_existed = async () => {
   try {
     const token = await EncryptedStorage.getItem('user_token');
@@ -17,8 +18,7 @@ export const authHandler = async () => {
   const token = await check_if_key_existed();
   if (token) {
     // token Existed. Let's Get check it on Back End
-    const is_valid = await apiHandler('get', 'keys/connect/phone', {}, token);
-
+    const is_valid = await tryToConnect(token);
     if (is_valid.matched) {
       return 'Matched';
     } else if (!is_valid.matched) {

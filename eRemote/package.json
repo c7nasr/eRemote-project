@@ -24,6 +24,7 @@
     "expo-network": "^3.1.1",
     "expo-notifications": "^0.11.6",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
     "react": "17.0.1",
     "react-native": "0.64.0",
     "react-native-device-info": "^8.1.2",
@@ -41,7 +42,8 @@
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^4.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",

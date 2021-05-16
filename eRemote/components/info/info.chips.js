@@ -1,7 +1,12 @@
 import React from 'react';
 import {Chip, View, Colors} from 'react-native-ui-lib';
 
-export default function InfoChips() {
+export default function InfoChips({
+  is_desktop_locked,
+  battery_percentage,
+  is_have_battery,
+  current_volume,
+}) {
   return (
     <View
       flex
@@ -19,7 +24,7 @@ export default function InfoChips() {
           color: 'white',
         }}
         badgeProps={{
-          label: 'YES',
+          label: `${is_desktop_locked ? 'YES' : 'NO'}`,
           backgroundColor: Colors.purple50,
         }}
         containerStyle={{
@@ -37,7 +42,7 @@ export default function InfoChips() {
           color: 'white',
         }}
         badgeProps={{
-          label: '0%',
+          label: `${is_have_battery ? battery_percentage : '0%'}`,
           backgroundColor: Colors.red10,
         }}
         containerStyle={{
@@ -55,7 +60,7 @@ export default function InfoChips() {
           color: 'white',
         }}
         badgeProps={{
-          label: '0%',
+          label: `${current_volume * 100}%`,
           backgroundColor: Colors.blue10,
         }}
         containerStyle={{

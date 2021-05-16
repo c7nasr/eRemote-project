@@ -3,9 +3,10 @@ import {Image, ScrollView, TouchableOpacity} from 'react-native';
 import {Card, Colors, View} from 'react-native-ui-lib';
 import Slider from '@react-native-community/slider';
 import CardDetails from '../components/control/details';
-
+import {getPCInfo} from './../lib/api';
 function ControlScreen({navigation}) {
   const [currentVolume, setCurrentVolume] = React.useState(57);
+
   return (
     <ScrollView>
       <Card

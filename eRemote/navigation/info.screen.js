@@ -1,32 +1,60 @@
 import {View, Text, Card} from 'react-native-ui-lib';
 import React, {useEffect} from 'react';
-import {StyleSheet, SafeAreaView, ScrollView, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  Dimensions,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import InfoList from '../components/info/info.list';
 import InfoChips from '../components/info/info.chips';
 import MapboxGL from '@react-native-mapbox-gl/maps';
+import {convertToAgo, formatTime} from '../lib/time.lib';
+import {updatePCInfo} from '../redux/actions/PC.Action';
+import {connect} from 'react-redux';
 
-function InfoScreen() {
+function InfoScreen({updatePCInfo, pcInfo, is_loading}) {
+  React.useEffect(async () => {
+    await updatePCInfo();
+  }, []);
   useEffect(() => {
     MapboxGL.setAccessToken(
       'pk.eyJ1IjoiYzduYXNyIiwiYSI6ImNrNG4zOHludTByYzgzbG1pbHMxeWpleGQifQ.aVGDM-f4GZeKtcG2CLT7VA',
     );
   }, []);
+  if (is_loading)
+    return (
+      <ActivityIndicator
+        style={{flex: 1, justifyContent: 'center'}}
+        size="large"
+        color="#00ff00"
+      />
+    );
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={is_loading}
+            onRefresh={async () => await updatePCInfo()}
+          />
+        }>
         <Card.Section
           // Determine According to Online State
           backgroundColor={'#1e6f5c'}
           content={[
-            {text: '{{PC USERNAME}}', text60: true, grey80: true},
+            {text: pcInfo.username, text60: true, grey80: true},
             {
-              text:
-                'Your PC is online and reachable by us you can start controlling it. Last Update: {{Y minutes ago}}.',
+              text: `Your PC is online and reachable by us you can start controlling it. First connect was from: ${convertToAgo(
+                pcInfo.createdAt,
+              )}.`,
               text80: true,
               grey60: true,
             },
             {
-              text: '{{nxxx-xxxx-xxxx}} - XXX.XXX.XXX',
+              text: `${pcInfo.key} - ${pcInfo.ip}`,
               text90: true,
               grey50: true,
             },
@@ -49,25 +77,33 @@ function InfoScreen() {
           }}
         />
 
-        <InfoList icon="windows" info="OS NAME" title="System" />
+        <InfoList icon="windows" info={pcInfo.system} title="System" />
         <InfoList
           icon="gpu"
-          info="We Detected {} GPU and {} CPU. {} Ram"
+          info={`We Detected ${pcInfo.gpu} GPU and ${pcInfo.cpu} CPU. ${pcInfo.ram} GB memory`}
           title="Core"
+          lines={3}
         />
         <InfoList
           lines={2}
           icon="mic"
-          info="We Detected {1} Camera and 1 {Microphone} and {0} Speakers."
+          info={`We Detected ${pcInfo.cam ? '1' : '0'} Camera and ${
+            pcInfo.mic ? '1' : '0'
+          } Microphone and ${pcInfo.is_have_speakers ? '1' : '0'} Speakers.`}
           title="Media"
         />
 
-        <InfoChips />
+        <InfoChips
+          is_desktop_locked={pcInfo.is_locked}
+          battery_percentage={pcInfo.battery_percentage}
+          is_have_battery={pcInfo.battery}
+          current_volume={pcInfo.current_volume}
+        />
 
         <InfoList
           lines={2}
           icon="network"
-          info="Your IP: {} and Mac address: {}"
+          info={`Your IP: ${pcInfo.ip} and Mac address: ${pcInfo.mac_address}`}
           title="Network"
         />
         <View style={{backgroundColor: 'white'}}>
@@ -75,23 +111,31 @@ function InfoScreen() {
             Last Known Location
           </Text>
           <Text text90L grey40 center marginB-8>
-            27 November 2020@09:00am
+            {formatTime(pcInfo.updatedAt)}
           </Text>
         </View>
-        <View style={styles.container}>
-          <MapboxGL.MapView style={styles.map} zoomEnabled={false}>
-            <MapboxGL.Camera
-              zoomLevel={14}
-              centerCoordinate={[29.9490615, 31.2100585]}
-            />
-            <MapboxGL.PointAnnotation
-              key={'9090'}
-              id={'9090'}
-              coordinate={[29.9490615, 31.2100585]}>
-              <MapboxGL.Callout title={'Your PC'} />
-            </MapboxGL.PointAnnotation>
-          </MapboxGL.MapView>
-        </View>
+        {pcInfo.last_location ? (
+          <View style={styles.container}>
+            <MapboxGL.MapView style={styles.map} zoomEnabled={false}>
+              <MapboxGL.Camera
+                zoomLevel={14}
+                centerCoordinate={[
+                  pcInfo?.last_location.split(',')[1],
+                  pcInfo?.last_location.split(',')[0],
+                ]}
+              />
+              <MapboxGL.PointAnnotation
+                key={'9090'}
+                id={'9090'}
+                coordinate={[
+                  pcInfo?.last_location.split(',')[1],
+                  pcInfo?.last_location.split(',')[0],
+                ]}>
+                <MapboxGL.Callout title={'Your PC'} />
+              </MapboxGL.PointAnnotation>
+            </MapboxGL.MapView>
+          </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -106,5 +150,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+const mapStateToProps = state => ({
+  pcInfo: state.PC.pc_info,
+  is_loading: state.PC.is_loading,
+});
 
-export default InfoScreen;
+export default connect(mapStateToProps, {updatePCInfo})(InfoScreen);
