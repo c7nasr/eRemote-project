@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
-  ActivityIndicator,
   RefreshControl,
 } from 'react-native';
 import InfoList from '../components/info/info.list';
@@ -20,6 +19,7 @@ import {
 import {connect} from 'react-redux';
 import {initSocket} from '../lib/socket.handler';
 import {getTempKey} from '../lib/auth.handler';
+import {showNewError} from '../redux/actions/Toast.Action';
 
 function InfoScreen({
   updatePCInfo,
@@ -27,6 +27,7 @@ function InfoScreen({
   is_loading,
   is_connected,
   updatePcConnectionState,
+  showNewError,
 }) {
   React.useEffect(() => {
     try {
@@ -42,7 +43,7 @@ function InfoScreen({
         console.log(`getTempKey: ${key}`);
         if (socket != false) {
           socket.on('connect', function () {
-            console.log(socket.connected);
+            console.log(socket);
           });
           socket.on('turn_on', function (object) {
             updatePcConnectionState(true);
@@ -54,6 +55,13 @@ function InfoScreen({
               updatePcConnectionState(false);
             } else {
               updatePcConnectionState(true);
+            }
+          });
+
+          socket.on('UPDATED_INFO', function ({room}) {
+            if (room === key) {
+              console.log('INFO UPDATED');
+              updatePCInfo();
             }
           });
           socket.emit('isActive', {
@@ -71,21 +79,17 @@ function InfoScreen({
       'pk.eyJ1IjoiYzduYXNyIiwiYSI6ImNrNG4zOHludTByYzgzbG1pbHMxeWpleGQifQ.aVGDM-f4GZeKtcG2CLT7VA',
     );
   }, []);
-  if (is_loading)
-    return (
-      <ActivityIndicator
-        style={{flex: 1, justifyContent: 'center'}}
-        size="large"
-        color="#00ff00"
-      />
-    );
+
   return (
     <SafeAreaView>
       <ScrollView
         refreshControl={
           <RefreshControl
             refreshing={is_loading}
-            onRefresh={async () => await updatePCInfo()}
+            onRefresh={async () => {
+              await updatePCInfo();
+              showNewError('Updating data....', Colors.green20);
+            }}
           />
         }>
         <Card.Section
@@ -93,7 +97,7 @@ function InfoScreen({
           content={[
             {text: pcInfo.username, text60: true, grey80: true},
             {
-              text: getConnectionText(is_connected, pcInfo.createdAt),
+              text: getConnectionText(is_connected, pcInfo.updatedAt),
               text80: true,
               grey60: true,
             },
@@ -138,7 +142,7 @@ function InfoScreen({
         />
 
         <InfoChips
-          is_desktop_locked={pcInfo.is_locked}
+          is_desktop_locked={pcInfo.is_desktop_locked}
           battery_percentage={pcInfo.battery_percentage}
           is_have_battery={pcInfo.battery}
           current_volume={pcInfo.current_volume}
@@ -158,7 +162,7 @@ function InfoScreen({
             {formatTime(pcInfo.updatedAt)}
           </Text>
         </View>
-        {pcInfo.last_location != '' ? (
+        {pcInfo && pcInfo.last_location != undefined && !is_loading ? (
           <View style={styles.container}>
             <MapboxGL.MapView style={styles.map} zoomEnabled={false}>
               <MapboxGL.Camera
@@ -203,4 +207,5 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   updatePCInfo,
   updatePcConnectionState,
+  showNewError,
 })(InfoScreen);

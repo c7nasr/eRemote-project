@@ -27,10 +27,13 @@ import {Provider} from 'react-redux';
 import {setAuthState} from './redux/actions/Auth.Action';
 
 import ToastMessage from './components/toast';
+
+import {PersistGate} from 'redux-persist/integration/react';
+
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-const store = configureStore();
+const {store, persistor} = configureStore();
 function Control() {
   return (
     <Stack.Navigator headerMode={false} initialRouteName={'Control'}>
@@ -92,50 +95,52 @@ const App = () => {
 
 const AuthStack = (
   <Provider store={store}>
-    <NavigationContainer>
-      <StatusBar translucent backgroundColor="transparent" />
-      <ToastMessage />
+    <PersistGate loading={null} persistor={persistor}>
+      <NavigationContainer>
+        <StatusBar translucent backgroundColor="transparent" />
+        <ToastMessage />
 
-      <Tab.Navigator
-        barStyle={{
-          backgroundColor: Colors.grey10,
-          borderTopWidth: 0,
-        }}
-        initialRouteName="Info"
-        activeColor={Colors.grey40}
-        inactiveColor={Colors.grey70}
-        labeled={false}
-        shifting={true}
-        headerMode="none">
-        <Tab.Screen
-          name="Info"
-          component={InfoScreen}
-          options={{
-            tabBarIcon: ({color}) => (
-              <Icon name="infocirlceo" size={24} color={color} />
-            ),
+        <Tab.Navigator
+          barStyle={{
+            backgroundColor: Colors.grey10,
+            borderTopWidth: 0,
           }}
-        />
-        <Tab.Screen
-          name="Control"
-          component={Control}
-          options={{
-            tabBarIcon: ({color}) => (
-              <Icon name="notification" size={24} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={SettingScreen}
-          options={{
-            tabBarIcon: ({color}) => (
-              <Ionicons name="md-settings-outline" size={24} color={color} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+          initialRouteName="Info"
+          activeColor={Colors.grey40}
+          inactiveColor={Colors.grey70}
+          labeled={false}
+          shifting={true}
+          headerMode="none">
+          <Tab.Screen
+            name="Info"
+            component={InfoScreen}
+            options={{
+              tabBarIcon: ({color}) => (
+                <Icon name="infocirlceo" size={24} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Control"
+            component={Control}
+            options={{
+              tabBarIcon: ({color}) => (
+                <Icon name="notification" size={24} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={SettingScreen}
+            options={{
+              tabBarIcon: ({color}) => (
+                <Ionicons name="md-settings-outline" size={24} color={color} />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </PersistGate>
   </Provider>
 );
 
