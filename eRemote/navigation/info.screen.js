@@ -19,6 +19,7 @@ import {
 } from '../redux/actions/PC.Action';
 import {connect} from 'react-redux';
 import {initSocket} from '../lib/socket.handler';
+import {getTempKey} from '../lib/auth.handler';
 
 function InfoScreen({
   updatePCInfo,
@@ -29,8 +30,16 @@ function InfoScreen({
 }) {
   React.useEffect(() => {
     try {
-      updatePCInfo().then(async e => {
+      updatePCInfo();
+      const initSocketAsync = async () => {
         let socket = await initSocket();
+        if (socket) return socket;
+        return false;
+      };
+
+      initSocketAsync().then(async socket => {
+        const key = await getTempKey();
+        console.log(`getTempKey: ${key}`);
         if (socket != false) {
           socket.on('connect', function () {
             console.log(socket.connected);
@@ -39,16 +48,16 @@ function InfoScreen({
             updatePcConnectionState(true);
           });
           socket.on('emitIsActive', async function (data) {
-            if (data.key == pcInfo.key && !data.isActive) {
+            let key = await getTempKey();
+            console.log(`inEmitIsActive: ${JSON.stringify(key)}`);
+            if (data.key == key && !data.isActive) {
               updatePcConnectionState(false);
-              console.log('Offline');
             } else {
               updatePcConnectionState(true);
-              console.log('Online');
             }
           });
           socket.emit('isActive', {
-            key: pcInfo.key,
+            key: key,
             source: 'Mobile',
           });
         }
@@ -149,7 +158,7 @@ function InfoScreen({
             {formatTime(pcInfo.updatedAt)}
           </Text>
         </View>
-        {pcInfo.last_location ? (
+        {pcInfo.last_location != '' ? (
           <View style={styles.container}>
             <MapboxGL.MapView style={styles.map} zoomEnabled={false}>
               <MapboxGL.Camera

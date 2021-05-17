@@ -1,4 +1,3 @@
-import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {tryToConnect} from './api';
 export const check_if_key_existed = async () => {
@@ -35,6 +34,28 @@ export const setToken = async token => {
   try {
     await EncryptedStorage.setItem('user_token', token);
     return token;
+  } catch (error) {
+    return false;
+  }
+};
+export const setTempKey = async key => {
+  try {
+    if (key != '') {
+      await EncryptedStorage.setItem('user_key', key);
+    }
+  } catch (error) {
+    return false;
+  }
+};
+
+export const getTempKey = async () => {
+  try {
+    const key = await EncryptedStorage.getItem('user_key');
+    if (key !== undefined) {
+      return key;
+    } else {
+      return false;
+    }
   } catch (error) {
     return false;
   }
