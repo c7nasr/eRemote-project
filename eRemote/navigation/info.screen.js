@@ -19,7 +19,6 @@ import {
 import {connect} from 'react-redux';
 import {initSocket} from '../lib/socket.handler';
 import {getTempKey} from '../lib/auth.handler';
-import {showNewError} from '../redux/actions/Toast.Action';
 
 function InfoScreen({
   updatePCInfo,
@@ -27,7 +26,6 @@ function InfoScreen({
   is_loading,
   is_connected,
   updatePcConnectionState,
-  showNewError,
 }) {
   React.useEffect(() => {
     try {
@@ -40,7 +38,6 @@ function InfoScreen({
 
       initSocketAsync().then(async socket => {
         const key = await getTempKey();
-        console.log(`getTempKey: ${key}`);
         if (socket != false) {
           socket.on('connect', function () {
             console.log(socket);
@@ -60,7 +57,6 @@ function InfoScreen({
 
           socket.on('UPDATED_INFO', function ({room}) {
             if (room === key) {
-              console.log('INFO UPDATED');
               updatePCInfo();
             }
           });
@@ -88,7 +84,6 @@ function InfoScreen({
             refreshing={is_loading}
             onRefresh={async () => {
               await updatePCInfo();
-              showNewError('Updating data....', Colors.green20);
             }}
           />
         }>
@@ -183,7 +178,9 @@ function InfoScreen({
               </MapboxGL.PointAnnotation>
             </MapboxGL.MapView>
           </View>
-        ) : null}
+        ) : (
+          <Text center>Locating device.....</Text>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -207,5 +204,4 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   updatePCInfo,
   updatePcConnectionState,
-  showNewError,
 })(InfoScreen);
