@@ -6,4 +6,7 @@ export const HIDE_TOAST = 'HIDE_TOAST';
 export const GET_PC_INFO = 'GET_PC_INFO';
 export const UPDATE_PC_CONNECTION = 'UPDATE_PC_CONNECTION';
 
+export const UPDATE_SOCKET = 'UPDATE_SOCKET';
+export const GET_SOCKET = 'GET_SOCKET';
+
 export const UPDATE_LOADING_STATE = 'UPDATE_LOADING_STATE';

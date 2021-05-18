@@ -5,6 +5,7 @@ const initialState = {
   message: '',
   dismissAfter: 5000,
   color: '',
+  pos: 'bottom',
 };
 
 export default (state = initialState, action) => {
@@ -15,6 +16,7 @@ export default (state = initialState, action) => {
         message: action.payload.message,
         dismissAfter: action.payload.dismissAfter,
         color: action.payload.color,
+        pos: action.payload.pos,
       };
     case HIDE_TOAST:
       return {

@@ -3,9 +3,21 @@ import {Image, ScrollView, TouchableOpacity} from 'react-native';
 import {Card, Colors, View} from 'react-native-ui-lib';
 import Slider from '@react-native-community/slider';
 import CardDetails from '../components/control/details';
-import {getPCInfo} from './../lib/api';
-function ControlScreen({navigation}) {
-  const [currentVolume, setCurrentVolume] = React.useState(57);
+import {addSocketToStore} from '../redux/actions/Socket.Action';
+import {connect} from 'react-redux';
+import {getTempKey} from '../lib/auth.handler';
+import {showNewError} from '../redux/actions/Toast.Action';
+import {emitOrder} from '../lib/socket.handler';
+function ControlScreen({
+  navigation,
+  socket_state,
+  is_pc_live,
+  pcInfo,
+  showNewError,
+}) {
+  const [currentVolume, setCurrentVolume] = React.useState(
+    pcInfo ? parseFloat(pcInfo.current_volume * 100).toFixed(0) : 0,
+  );
 
   return (
     <ScrollView>
@@ -109,6 +121,16 @@ function ControlScreen({navigation}) {
             borderRadius: 50,
             padding: 5,
             marginHorizontal: 5,
+          }}
+          onPress={async () => {
+            if (is_pc_live) {
+              await emitOrder(socket_state, 'MEDIA', 'PERVIOUS_MEDIA', '');
+            } else {
+              showNewError(
+                "Your PC is not connected.. you can't trigger an event!",
+                Colors.red20,
+              );
+            }
           }}>
           <Image
             style={{
@@ -126,6 +148,16 @@ function ControlScreen({navigation}) {
             borderRadius: 50,
             padding: 5,
             marginHorizontal: 5,
+          }}
+          onPress={async () => {
+            if (is_pc_live) {
+              await emitOrder(socket_state, 'MEDIA', 'PLAY_PAUSE', '');
+            } else {
+              showNewError(
+                "Your PC is not connected.. you can't trigger an event!",
+                Colors.red20,
+              );
+            }
           }}>
           <Image
             style={{
@@ -143,6 +175,16 @@ function ControlScreen({navigation}) {
             borderRadius: 50,
             padding: 5,
             marginHorizontal: 5,
+          }}
+          onPress={async () => {
+            if (is_pc_live) {
+              await emitOrder(socket_state, 'MEDIA', 'NEXT_MEDIA', '');
+            } else {
+              showNewError(
+                "Your PC is not connected.. you can't trigger an event!",
+                Colors.red20,
+              );
+            }
           }}>
           <Image
             style={{
@@ -155,6 +197,17 @@ function ControlScreen({navigation}) {
         </TouchableOpacity>
 
         <TouchableOpacity
+          onPress={async () => {
+            if (is_pc_live) {
+              await emitOrder(socket_state, 'MUTE_THE_SKY');
+              setCurrentVolume(0);
+            } else {
+              showNewError(
+                "Your PC is not connected.. you can't trigger an event!",
+                Colors.red20,
+              );
+            }
+          }}
           style={{
             backgroundColor: '#fff',
             height: 40,
@@ -176,6 +229,18 @@ function ControlScreen({navigation}) {
           style={{flex: 1, height: 40}}
           minimumValue={0}
           maximumValue={100}
+          onSlidingComplete={async e => {
+            if (is_pc_live) {
+              await emitOrder(socket_state, 'VOICE_THE_SKY', '', e.toFixed(0));
+              setCurrentVolume(e.toFixed(0));
+            } else {
+              showNewError(
+                "Your PC is not connected.. you can't trigger an event!",
+                Colors.red20,
+              );
+            }
+          }}
+          value={parseInt(currentVolume)}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#000000"
         />
@@ -183,5 +248,12 @@ function ControlScreen({navigation}) {
     </ScrollView>
   );
 }
+const mapStateToProps = state => ({
+  socket_state: state.Socket.socket,
+  is_pc_live: state.PC.is_connected,
+  pcInfo: state.PC.pc_info,
+});
 
-export default ControlScreen;
+export default connect(mapStateToProps, {addSocketToStore, showNewError})(
+  ControlScreen,
+);

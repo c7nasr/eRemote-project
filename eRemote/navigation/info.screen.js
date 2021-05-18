@@ -19,9 +19,13 @@ import {
 import {connect} from 'react-redux';
 import {initSocket} from '../lib/socket.handler';
 import {getTempKey} from '../lib/auth.handler';
-
+import {addSocketToStore} from '../redux/actions/Socket.Action';
+import {showNewError} from '../redux/actions/Toast.Action';
+import ToastMessage from '../components/toast';
 function InfoScreen({
   updatePCInfo,
+  addSocketToStore,
+  showNewError,
   pcInfo,
   is_loading,
   is_connected,
@@ -41,17 +45,35 @@ function InfoScreen({
         if (socket != false) {
           socket.on('connect', function () {
             console.log(socket);
+            addSocketToStore(socket);
+            socket.emit('isActive', {
+              key: key,
+              source: 'Mobile',
+            });
           });
           socket.on('turn_on', function (object) {
             updatePcConnectionState(true);
+            showNewError('Your PC is LIVE...', Colors.green10, 5000, 'top');
           });
           socket.on('emitIsActive', async function (data) {
             let key = await getTempKey();
             console.log(`inEmitIsActive: ${JSON.stringify(key)}`);
-            if (data.key == key && !data.isActive) {
+            console.log(data);
+            if (data.key == key && !data.isActive && data.source == 'desktop') {
               updatePcConnectionState(false);
-            } else {
+              showNewError(
+                'Your PC is Disconnected...',
+                Colors.red10,
+                5000,
+                'top',
+              );
+            } else if (
+              data.key == key &&
+              data.isActive &&
+              data.source == 'desktop'
+            ) {
               updatePcConnectionState(true);
+              showNewError('Your PC is LIVE...', Colors.green10, 5000, 'top');
             }
           });
 
@@ -204,4 +226,6 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   updatePCInfo,
   updatePcConnectionState,
+  addSocketToStore,
+  showNewError,
 })(InfoScreen);

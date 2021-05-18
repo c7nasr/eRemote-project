@@ -60,7 +60,7 @@ export default function InfoChips({
           color: 'white',
         }}
         badgeProps={{
-          label: `${current_volume * 100}%`,
+          label: `${(current_volume * 100).toFixed()}%`,
           backgroundColor: Colors.blue10,
         }}
         containerStyle={{

@@ -98,7 +98,6 @@ const AuthStack = (
     <PersistGate loading={null} persistor={persistor}>
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" />
-        <ToastMessage />
 
         <Tab.Navigator
           barStyle={{
@@ -139,6 +138,7 @@ const AuthStack = (
             }}
           />
         </Tab.Navigator>
+        <ToastMessage />
       </NavigationContainer>
     </PersistGate>
   </Provider>

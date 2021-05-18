@@ -1,6 +1,11 @@
 import {CREATE_TOAST, HIDE_TOAST} from '../config';
 
-export const showNewError = (message, color, dismissAfter = 5000) => {
+export const showNewError = (
+  message,
+  color,
+  dismissAfter = 5000,
+  pos = 'bottom',
+) => {
   return dispatch => {
     dispatch({
       type: CREATE_TOAST,
@@ -8,6 +13,7 @@ export const showNewError = (message, color, dismissAfter = 5000) => {
         message,
         dismissAfter,
         color,
+        pos,
       },
     });
   };
