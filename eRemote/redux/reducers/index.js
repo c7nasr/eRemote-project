@@ -4,6 +4,7 @@ import Auth from './Auth';
 import Toast from './Toast';
 import PC from './PC';
 import Socket from './Socket';
+import Reports from './Reports';
 
 export default combineReducers({
   App,
@@ -11,4 +12,5 @@ export default combineReducers({
   Toast,
   PC,
   Socket,
+  Reports,
 });

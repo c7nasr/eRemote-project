@@ -3,12 +3,25 @@ import React from 'react';
 import {useState} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
 import {ActionSheet, Colors, Text} from 'react-native-ui-lib';
+import {connect} from 'react-redux';
+import {createNewOrder} from '../../lib/api';
+import {getUserLocation} from '../../lib/maps.handler';
 import {
   AuthPrompt,
   is_biometric_available,
 } from '../../lib/secuirty.unlock.handler';
+import {emitOrder} from '../../lib/socket.handler';
+import {timestampToDate} from '../../lib/time.lib';
+import {showNewError} from '../../redux/actions/Toast.Action';
 
-export default function SecurityControl({navigation}) {
+function SecurityControl({
+  navigation,
+  reports,
+  socket_state,
+  is_pc_live,
+  showNewError,
+  is_desktop_locked,
+}) {
   const [isELocked, setIsELocked] = useState(false);
   const [isAuth, setIsAuth] = React.useState(false);
   const [unlockModel, setUnlockModel] = React.useState(false);
@@ -92,6 +105,27 @@ export default function SecurityControl({navigation}) {
             shadowColor: 'black',
             shadowOpacity: 1,
             elevation: 3,
+          }}
+          onPress={async () => {
+            if (!is_desktop_locked) {
+              const order = await createNewOrder('INSTANT_LOCK');
+              console.log(order);
+              if (is_pc_live) {
+                emitOrder(
+                  socket_state,
+                  'INSTANT_LOCK',
+                  order.new_order._id,
+                  'Mobile',
+                );
+              } else {
+                showNewError(
+                  'Order Registered. it will be executed with your pc become live',
+                  Colors.green20,
+                );
+              }
+            } else {
+              showNewError('Your Desktop is ALREADY Locked.', Colors.red20);
+            }
           }}>
           <Image
             source={require('../../assets/icons/lock.png')}
@@ -171,12 +205,24 @@ export default function SecurityControl({navigation}) {
           marginBottom: 5,
         }}>
         <Text text50H center grey80>
-          Tracking Logs
+          Security Reports
         </Text>
       </TouchableOpacity>
-      <Text text90L center grey80>
-        Last Update: 27 November 2020
-      </Text>
+      {reports && (
+        <Text text90L center grey80>
+          Last Update:
+          {reports.length > 0 && timestampToDate(reports[0][0].timestamp)}
+        </Text>
+      )}
     </View>
   );
 }
+
+const mapStateToProps = state => ({
+  reports: state.Reports.security,
+  socket_state: state.Socket.socket,
+  is_pc_live: state.PC.is_connected,
+  is_desktop_locked: state.PC.pc_info.is_desktop_locked,
+});
+
+export default connect(mapStateToProps, {showNewError})(SecurityControl);

@@ -50,7 +50,9 @@ const SecurityLogsList = ({
         <ExpandableSection expanded={openCard}>
           <View style={styles.container}>
             <MapboxGL.MapView
-              onPress={() => openInMaps(29.9490615, 31.2100585)}
+              onPress={() =>
+                openInMaps(location.split(',')[1], location.split(',')[0])
+              }
               scrollEnabled={false}
               style={{
                 width: Dimensions.get('screen').width,
@@ -60,12 +62,15 @@ const SecurityLogsList = ({
               zoomEnabled={false}>
               <MapboxGL.Camera
                 zoomLevel={14}
-                centerCoordinate={[29.9490615, 31.2100585]}
+                centerCoordinate={[
+                  location.split(',')[1],
+                  location.split(',')[0],
+                ]}
               />
               <MapboxGL.PointAnnotation
                 key={'9090'}
                 id={'9090'}
-                coordinate={[29.9490615, 31.2100585]}>
+                coordinate={[location.split(',')[1], location.split(',')[0]]}>
                 <MapboxGL.Callout title={'Unlock/Lock Location'} />
               </MapboxGL.PointAnnotation>
             </MapboxGL.MapView>

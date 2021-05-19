@@ -12,6 +12,7 @@ public class BasePackageList {
         new expo.modules.filesystem.FileSystemPackage(),
         new expo.modules.imageloader.ImageLoaderPackage(),
         new expo.modules.localauthentication.LocalAuthenticationPackage(),
+        new expo.modules.location.LocationPackage(),
         new expo.modules.network.NetworkPackage(),
         new expo.modules.notifications.NotificationsPackage(),
         new expo.modules.permissions.PermissionsPackage()
