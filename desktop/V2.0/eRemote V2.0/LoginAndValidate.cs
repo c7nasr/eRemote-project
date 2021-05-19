@@ -15,8 +15,8 @@ namespace eRemote_V2._0
         {
             try
             {
-                Debug.WriteLine($"{API_LINK}users/connect");
-                var client = new RestClient($"{API_LINK}users/connect");
+                Debug.WriteLine($"{API_LINK}keys");
+                var client = new RestClient($"{API_LINK}keys/connect/pc");
                 client.Timeout = -1;
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("Content-Type", "application/json");
@@ -47,4 +47,5 @@ namespace eRemote_V2._0
         }
      
     }
+ 
 }

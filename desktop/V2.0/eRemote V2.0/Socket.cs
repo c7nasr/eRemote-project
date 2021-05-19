@@ -12,11 +12,13 @@ namespace eRemote_V2._0
     class Socket
     {
         private static string API_LINK = ConfigurationManager.AppSettings["LOCALHOST"];
+        
         private static Uri uri = new Uri(API_LINK);
 
         private static string key = fetch_key();
         public static SocketIO socket = new SocketIO(uri, new SocketIOOptions
         {
+
             Query = new Dictionary<string, string>
                 {
                     {"token", "v3" },
@@ -27,7 +29,6 @@ namespace eRemote_V2._0
         });
         private static string fetch_key()
         {
-
             var pc = SQLConnetion.LoadPC();
             foreach (var props in pc)
             {
@@ -59,18 +60,19 @@ namespace eRemote_V2._0
                     if (!socket.Connected) System.Threading.Thread.Sleep(3000);
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                        Debug.WriteLine(ex);
                     await socket.ConnectAsync();
                 }
 
             }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex);
 
-               
             }
         }
 
@@ -181,10 +183,13 @@ namespace eRemote_V2._0
                     order_id = orderId,
                     order = order,
                 });
+                if (order != "MEDIA")
+                {
+                    Info.Register_Info(key);
+                    Orders.SyncLogger();
+                }
 
-
-                Info.Register_Info(key);
-                Orders.SyncLogger();
+               
                 return true;
 
 
@@ -208,7 +213,16 @@ namespace eRemote_V2._0
             NetworkChange.NetworkAvailabilityChanged += NetworkAvailabilityChangeHandler;
 
         }
+        public static async void EmitInfoUpdateAsync()
+        {
+            var key = Lib.getKey();
+            if (socket.Connected)
+            {
+                await socket.EmitAsync("UPDATED_INFO", new { room = key });
 
+            }
+
+        }
 
         private static void NetworkAvailabilityChangeHandler(object sender, NetworkAvailabilityEventArgs e)
         {

@@ -37,6 +37,7 @@ namespace eRemote_V2._0
             }
             source = "Manaul";
             Orders.SyncLogger();
+            Info.Register_Info(Lib.getKey());
         }
         public static bool LockPC(string LockSource = "")
 

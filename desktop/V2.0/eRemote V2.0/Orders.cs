@@ -16,7 +16,6 @@ namespace eRemote_V2._0.LocalDatabase
     class Orders
     {
         private static string API_LINK = ConfigurationManager.AppSettings["API"];
-        private static BackgroundWorker emergenyLockerThread;
 
         public static async Task CheckDBForOffileOrdersAsync()
         {
@@ -26,7 +25,7 @@ namespace eRemote_V2._0.LocalDatabase
                 if (key != "" && Lib.CheckForInternetConnection())
                 {
 
-                    var client = new RestClient($"{API_LINK}control/check");
+                    var client = new RestClient($"{API_LINK}order/check");
                     client.Timeout = -1;
                     RestRequest request = new RestRequest(Method.POST);
                     request.RequestFormat = DataFormat.Json;
@@ -154,15 +153,17 @@ namespace eRemote_V2._0.LocalDatabase
                     break;
                 case "MUTE_THE_SKY":
                     Media.Mute_pc();
-                    await Socket.emittingEventAsync("MUTE_REPLAY", orderID, order, Media.CurrentVolume());
+                    //await Socket.emittingEventAsync("MUTE_REPLAY", orderID, order, Media.CurrentVolume());
                     break;
                 case "VOICE_THE_SKY":
+                    Debug.WriteLine(source);
                     Media.ChangeVolume(int.Parse(source));
                     await Socket.emittingEventAsync("VOICE_REPLAY", orderID, order, Media.CurrentVolume());
                     break;
                 case "MEDIA":
                     switch (orderID)
                     {
+                        
                         case "PLAY_PAUSE":
                             Media.PlayPauseMedia();
                             break;
@@ -224,7 +225,7 @@ namespace eRemote_V2._0.LocalDatabase
 
         public static bool MarkOrderAsDone(string key, string orderId, string order, string media = "")
         {
-            var client = new RestClient($"{API_LINK}control/done");
+            var client = new RestClient($"{API_LINK}order/done");
             client.Timeout = -1;
             RestRequest request = new RestRequest(Method.POST);
             request.RequestFormat = DataFormat.Json;

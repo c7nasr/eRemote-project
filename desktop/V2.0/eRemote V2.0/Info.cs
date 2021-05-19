@@ -214,6 +214,7 @@ namespace eRemote_V2._0
                 if (StatusCode == 200)
                 {
                     Debug.WriteLine($"Updated @{DateTime.Now}");
+                    Socket.EmitInfoUpdateAsync();
                 }
                 else
                 {
