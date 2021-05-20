@@ -1,6 +1,4 @@
 import moment from 'moment-timezone';
-import 'intl';
-import {IntlProvider, FormattedMessage, FormattedNumber} from 'react-intl';
 
 export const convertToAgo = time => {
   return moment(time).fromNow();

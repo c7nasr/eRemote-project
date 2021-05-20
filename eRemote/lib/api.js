@@ -3,7 +3,7 @@ import {check_if_key_existed} from './auth.handler';
 import {getUserLocation} from './maps.handler';
 import {getDeviceInfo} from './phone.info';
 
-export const API_LINK = 'https://e07f73d54012.ngrok.io/api/';
+export const API_LINK = 'https://cc9c9c2d56ae.ngrok.io/api/';
 export const apiHandler = async (type, route, payload, token) => {
   try {
     let config = {
@@ -106,7 +106,6 @@ export const syncPhoneInfo = async () => {
 export const createNewOrder = async order => {
   try {
     const token = await check_if_key_existed();
-    // const location = await getUserLocation();
 
     if (!token) return false;
     let config = {
@@ -115,11 +114,12 @@ export const createNewOrder = async order => {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {e_key: token, order, source_location: 'location'},
+      data: {e_key: token, order},
     };
     const {data, status} = await axios(config);
-
+    console.log(data);
     // To Be fast. Save the new order in redux and start function to UPDATE location of order after emitting. DON'T USE AWAIT to be SYNC
+    updateLocationOrder(data.new_order._id, token);
 
     return data;
   } catch (error) {
@@ -127,7 +127,19 @@ export const createNewOrder = async order => {
     return false;
   }
 };
+const updateLocationOrder = async (order_id, token) => {
+  const location = await getUserLocation();
 
+  let config = {
+    method: 'POST',
+    url: `${API_LINK}order/update-location`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {e_key: token, order_id, location},
+  };
+  axios(config);
+};
 export const getSecurityReports = async () => {
   try {
     const token = await check_if_key_existed();
