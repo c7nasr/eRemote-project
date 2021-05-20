@@ -27,7 +27,7 @@
     "native-base": "^2.15.2",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
+    "react-native": "0.64.0",
     "react-native-elements": "^2.3.2",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-grid-component": "^2.0.1",
