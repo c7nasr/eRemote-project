@@ -2,12 +2,6 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    pcInfo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PC",
-      default:null
-
-    },
     key: {
       type: String,
       required: true,
@@ -15,14 +9,15 @@ const userSchema = new mongoose.Schema(
     },
     matched: {
       type: Boolean,
-      required: true,
       default: false,
     },
-    phoneInfo: {
+    phone: {
       type: mongoose.Schema.ObjectId,
       ref: "Phone",
-      default:null
-
+    },
+    pc: {
+      type: mongoose.Schema.ObjectId,
+      ref: "PC",
     },
   },
   { timestamps: true }

@@ -26,21 +26,6 @@ exports.security = (req, res, next) => {
   }
 };
 
-
 exports.GenerateNewToken = (username) => {
   return jwt.sign({ username }, process.env.JWT_SECRET);
 };
-
-
-// exports.OnlyMe = (req,res,next) =>{
-//   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-//   ip = ip.replace(/^.*:/, '')
-
-//   if (ip == "197.48.251.232"){
-//     next()
-
-//   }else{
-//     res.json({ip})
-//   }
-// }
-

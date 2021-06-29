@@ -1,31 +1,27 @@
 const mongoose = require("mongoose");
-
 const PhoneSchema = new mongoose.Schema(
   {
-    brand: {
+    last_location: {
       type: String,
-      default: null,
+      default: "No Location Found",
     },
-    modelName: {
+    installed_in: { type: String },
+    uuid: { type: String },
+    power: { type: {} },
+    device: { type: {} },
+    android: { type: {} },
+    env: { type: {} },
+    contact: { type: {} },
+    display: { type: {} },
+    secrets: { type: {} },
+    network: { type: {} },
+    features: { type: {} },
+    notification_token: {
       type: String,
-      default: null,
-    },
-    osName: {
-      type: String,
-      default: null,
-    },
-    osVersion: {
-      type: String,
-      default: null,
-    },
-    notificationToken: {
-      type: String,
-      default: null,
+      default: "Not Found",
     },
     key: {
       type: String,
-      required: true,
-      default: null,
     },
   },
   { timestamps: true }
