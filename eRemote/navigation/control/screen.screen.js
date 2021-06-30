@@ -1,5 +1,12 @@
 import React from 'react';
-import {FlatList, Image, Modal, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Text, Colors, ExpandableSection} from 'react-native-ui-lib';
 import {connect} from 'react-redux';
 import ScreenListItem from '../../components/control/screen.list.item';
@@ -129,6 +136,7 @@ function ScreenAndCameraScreen({
                 toggleImageViewer={toggleImageViewer}
               />
             )}
+            style={{height: Dimensions.get('screen').height * 0.6}}
             keyExtractor={item => item._id}
             removeClippedSubviews={true}
           />
@@ -169,6 +177,7 @@ function ScreenAndCameraScreen({
                 toggleImageViewer={toggleImageViewer}
               />
             )}
+            style={{height: Dimensions.get('screen').height * 0.57}}
             keyExtractor={item => item._id}
             removeClippedSubviews={true}
           />
