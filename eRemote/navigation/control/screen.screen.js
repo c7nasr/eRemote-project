@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Image,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, Image, Modal, TouchableOpacity, View} from 'react-native';
 import {Text, Colors, ExpandableSection} from 'react-native-ui-lib';
 import {connect} from 'react-redux';
 import ScreenListItem from '../../components/control/screen.list.item';
