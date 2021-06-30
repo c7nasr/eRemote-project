@@ -53,3 +53,21 @@ exports.getScreenshotsReports = async (req, res) => {
     return res.sendStatus(500);
   }
 };
+
+exports.getCameraReports = async (req, res) => {
+  try {
+    const { e_key } = req.body;
+
+    const camera = await Order.find({
+      key: unSignKey(e_key).key,
+      order: "EYE_ON_THE_SKY",
+      active: false,
+      media: { $ne: null },
+    }).sort("-createdAt");
+
+    return res.json({ camera });
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};

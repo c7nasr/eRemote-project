@@ -107,8 +107,6 @@ io.on("connection", (socket) => {
   socket.on("SCREENSHOT_REPLAY", ({ room, data, order_id, order }) => {
     let base64String = data.toString("base64");
 
-    // console.log(base64String);
-
     io.emit("SCREENSHOT_IMAGE", {
       room,
       data: base64String,
@@ -117,7 +115,9 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("CAMERA_REPLAY", ({ room, data, order_id, order }) => {
-    io.emit("CAMERA_IMAGE", { room, data, order_id, order });
+    let base64String = data.toString("base64");
+
+    io.emit("CAMERA_IMAGE", { room, data: base64String, order_id, order });
   });
   socket.on("LOCKER_REPLAY", ({ room, data, order_id, order }) => {
     io.emit("DESKTOP_LOCKED", { room, data, order_id, order });
