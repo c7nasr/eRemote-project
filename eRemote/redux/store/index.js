@@ -24,6 +24,5 @@ export default function configureStore() {
     composeWithDevTools(applyMiddleware(thunk)),
   );
   let persistor = persistStore(store);
-
   return {store, persistor};
 }

@@ -52,7 +52,7 @@ const SecurityLogs = ({updateSecurity, reports, showNewError}) => {
               }}
             />
           }>
-          {reports.security.length > 0 &&
+          {reports && reports?.security?.length > 0 ? (
             reports?.security[0].map(report => (
               <SecurityLogsList
                 key={report.ID}
@@ -64,7 +64,12 @@ const SecurityLogs = ({updateSecurity, reports, showNewError}) => {
                 ip={`${report.ip}/${report.local_ip}`}
                 location={report.location}
               />
-            ))}
+            ))
+          ) : (
+            <Text dark80 text30BO center>
+              There's No Pervious Logs
+            </Text>
+          )}
 
           {/* <SecurityLogsList
             type="emergency"
