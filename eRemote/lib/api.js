@@ -3,7 +3,7 @@ import {check_if_key_existed} from './auth.handler';
 import {getUserLocation} from './maps.handler';
 import {getDeviceInfo} from './phone.info';
 
-export const API_LINK = 'https://cc9c9c2d56ae.ngrok.io/api/';
+export const API_LINK = 'https://ncontrol.herokuapp.com/api/';
 export const apiHandler = async (type, route, payload, token) => {
   try {
     let config = {
@@ -114,7 +114,7 @@ export const createNewOrder = async order => {
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {e_key: token, order},
+      data: {e_key: token, order, source: 'Mobile'},
     };
     const {data, status} = await axios(config);
     console.log(data);
@@ -156,6 +156,48 @@ export const getSecurityReports = async () => {
     const {data, status} = await axios(config);
     return data;
   } catch (error) {
+    return false;
+  }
+};
+
+export const getScreenshotData = async () => {
+  try {
+    const token = await check_if_key_existed();
+
+    if (!token) return false;
+    let config = {
+      method: 'POST',
+      url: `${API_LINK}reports/screenshots`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {e_key: token},
+    };
+    const {data, status} = await axios(config);
+    return data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const getCameraData = async () => {
+  try {
+    const token = await check_if_key_existed();
+
+    if (!token) return false;
+    let config = {
+      method: 'POST',
+      url: `${API_LINK}reports/camera`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {e_key: token},
+    };
+    const {data, status} = await axios(config);
+    return data;
+  } catch (error) {
+    console.log(error);
     return false;
   }
 };

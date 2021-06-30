@@ -1,55 +1,49 @@
 import React from 'react';
-import {View, Image, Dimensions} from 'react-native';
-import {Text, ListItem} from 'react-native-ui-lib';
+import {
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  Modal,
+  ActivityIndicator,
+} from 'react-native';
+import {Text, ListItem, Card} from 'react-native-ui-lib';
+import ImageOverlay from 'react-native-image-overlay';
+import {convertToAgo} from '../../lib/time.lib';
 
-const ScreenListItem = ({image, date, source}) => {
+const ScreenListItem = ({item, setImageViewerImage, toggleImageViewer}) => {
   return (
-    <ListItem
-      containerStyle={{
-        borderRadius: 5,
-        marginHorizontal: 5,
-        backgroundColor: 'white',
-        flex: 1,
-      }}>
-      <ListItem.Part
-        column
-        containerStyle={{backgroundColor: 'white', borderRadius: 50}}>
-        <ListItem.Part
-          containerStyle={{backgroundColor: 'white', borderRadius: 50}}>
-          <Image
-            resizeMode="cover"
-            style={{
-              width: Dimensions.get('screen').width - 30,
-              height: 300,
-              backgroundColor: 'white',
-              borderRadius: 5,
-            }}
-            source={{uri: image}}
-          />
-        </ListItem.Part>
-        <ListItem.Part
-          containerStyle={{
-            backgroundColor: 'white',
-            paddingHorizontal: 10,
-          }}>
-          <Text center dark10>
-            {date}
-          </Text>
-        </ListItem.Part>
+    <View style={{marginBottom: 10}}>
+      {!item.media || !item.base_url ? (
+        <TouchableOpacity
+          onPress={() => {
+            if (item.media) {
+              setImageViewerImage(item.media);
+            } else if (item.base_url) {
+              setImageViewerImage(item.base_url);
+            }
 
-        <ListItem.Part
-          containerStyle={{
-            backgroundColor: 'white',
-            paddingHorizontal: 10,
-            borderBottomRightRadius: 10,
-            borderBottomLeftRadius: 10,
+            toggleImageViewer(true);
           }}>
-          <Text dark10 text90L style={{marginBottom: 5}}>
-            {`From ${source}`}
-          </Text>
-        </ListItem.Part>
-      </ListItem.Part>
-    </ListItem>
+          <ImageOverlay
+            height={250}
+            source={{uri: item.media || item.base_url}}
+            contentPosition="center">
+            <View>
+              <Text grey80>
+                {convertToAgo(item.updatedAt || item.data.updatedAt)}
+              </Text>
+              <Text grey80>
+                Requested From {item.source || item.data.source} application
+              </Text>
+              <Text grey80 center>
+                Click to see full image
+              </Text>
+            </View>
+          </ImageOverlay>
+        </TouchableOpacity>
+      ) : null}
+    </View>
   );
 };
 
