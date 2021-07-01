@@ -201,3 +201,24 @@ export const getCameraData = async () => {
     return false;
   }
 };
+
+export const getPowerData = async () => {
+  try {
+    const token = await check_if_key_existed();
+
+    if (!token) return false;
+    let config = {
+      method: 'POST',
+      url: `${API_LINK}reports/power`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {e_key: token},
+    };
+    const {data, status} = await axios(config);
+    return data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
