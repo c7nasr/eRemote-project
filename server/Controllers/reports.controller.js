@@ -71,3 +71,21 @@ exports.getCameraReports = async (req, res) => {
     return res.sendStatus(500);
   }
 };
+
+exports.getPowerReports = async (req, res) => {
+  try {
+    const { e_key } = req.body;
+
+    const power = await Order.find({
+      key: unSignKey(e_key).key,
+      order: ["SHUTDOWN_THE_SKY", "RESTART_THE_SKY"],
+      active: false,
+      media: { $ne: null },
+    }).sort("-createdAt");
+
+    return res.json({ power });
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+};

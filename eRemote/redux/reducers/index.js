@@ -8,6 +8,7 @@ import Reports from './Reports';
 import {persistReducer} from 'redux-persist';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import ScreenAndCamera from './ScreenAndCamera';
+import Power from './Power';
 
 const AppPersistConfig = {
   key: 'App',
@@ -36,6 +37,7 @@ const persistedReducer = persistReducer(
     Socket,
     Reports,
     ScreenAndCamera,
+    Power,
   }),
 );
 
