@@ -29,6 +29,7 @@ import {setAuthState} from './redux/actions/Auth.Action';
 import ToastMessage from './components/toast';
 
 import {PersistGate} from 'redux-persist/integration/react';
+import MicrophoneScreen from './navigation/control/microphone.screen';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -41,6 +42,9 @@ function Control() {
       <Stack.Screen name="Security" component={SecurityControl}></Stack.Screen>
       <Stack.Screen name="Power" component={PowerScreen}></Stack.Screen>
       <Stack.Screen name="SLogs" component={SecurityLogs}></Stack.Screen>
+      <Stack.Screen
+        name="Microphone"
+        component={MicrophoneScreen}></Stack.Screen>
       <Stack.Screen
         name="ScreenAndCamera"
         component={ScreenAndCameraScreen}></Stack.Screen>
