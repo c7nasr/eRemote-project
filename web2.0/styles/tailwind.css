@@ -19,6 +19,19 @@ rounded-lg cursor-pointer;
 @apply p-3 w-full mt-2 shadow-sm rounded bg-green-600 text-white font-semibold text-xl;
 
 }
+.desktop_locked {
+@apply bg-red-600 p-3 h-auto md:ml-4 flex flex-row items-center rounded w-full md:w-1/4 text-white mb-2
+}
+
+.desktop_unlocked {
+@apply bg-green-600 p-3 h-auto md:ml-4 flex flex-row items-center rounded w-full md:w-1/4 text-white mb-2
+}
+.offline_pc {
+@apply bg-red-800 p-3 h-auto md:ml-4 rounded w-full text-white mb-2;
+}
+.online_pc {
+@apply bg-green-800 p-3 h-auto md:ml-4 rounded w-full text-white mb-2;
+}
 }
 
 @tailwind utilities;

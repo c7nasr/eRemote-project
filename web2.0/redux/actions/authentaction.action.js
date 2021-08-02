@@ -1,8 +1,10 @@
 import authenticationService from "../../services/authentication.service";
 import {
+  LOAD_USER,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
+  LOAD_USER_FAILS,
   REGISTER_SUCCESS,
 } from "./../types";
 
@@ -46,5 +48,12 @@ export const logout = () => (dispatch) => {
 
   dispatch({
     type: LOGOUT,
+  });
+};
+
+export const loadUser = (userData) => (dispatch) => {
+  return dispatch({
+    type: LOAD_USER,
+    payload: { user: userData },
   });
 };

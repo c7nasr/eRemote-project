@@ -4,6 +4,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  LOAD_USER,
+  LOAD_USER_FAILS,
 } from "../types";
 
 const user = "";
@@ -39,6 +41,18 @@ export default function (state = initialState, action) {
         user: null,
       };
     case LOGOUT:
+      return {
+        ...state,
+        isLoggedIn: false,
+        user: null,
+      };
+    case LOAD_USER:
+      return {
+        ...state,
+        isLoggedIn: true,
+        user: payload.user,
+      };
+    case LOAD_USER_FAILS:
       return {
         ...state,
         isLoggedIn: false,

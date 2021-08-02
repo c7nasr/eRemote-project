@@ -11,10 +11,8 @@ import { useRouter } from "next/router";
 import { useCookies } from "react-cookie";
 import { parseCookies } from "./../../services/cookies.service";
 import Cookies from "cookies";
-
 function Login({ login_action, sessionExpired }) {
   const [cookie, setCookie, removeCookie] = useCookies(["user"]);
-
   const router = useRouter();
 
   const {
