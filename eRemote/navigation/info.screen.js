@@ -21,7 +21,6 @@ import {initSocket} from '../lib/socket.handler';
 import {getTempKey} from '../lib/auth.handler';
 import {addSocketToStore} from '../redux/actions/Socket.Action';
 import {showNewError} from '../redux/actions/Toast.Action';
-import ToastMessage from '../components/toast';
 function InfoScreen({
   updatePCInfo,
   addSocketToStore,
@@ -34,6 +33,8 @@ function InfoScreen({
   React.useEffect(() => {
     try {
       updatePCInfo();
+      // Reset Connection State:
+      updatePcConnectionState(false);
       const initSocketAsync = async () => {
         let socket = await initSocket();
         if (socket) return socket;
@@ -57,8 +58,6 @@ function InfoScreen({
           });
           socket.on('emitIsActive', async function (data) {
             let key = await getTempKey();
-            console.log(`inEmitIsActive: ${JSON.stringify(key)}`);
-            console.log(data);
             if (data.key == key && !data.isActive && data.source == 'desktop') {
               updatePcConnectionState(false);
               showNewError(

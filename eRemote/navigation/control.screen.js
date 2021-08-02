@@ -89,7 +89,26 @@ function ControlScreen({
           imageStyle={{marginTop: 35, marginRight: 5}}
         />
       </Card>
-
+      <Card
+        onPress={() => navigation.navigate('Microphone')}
+        row
+        style={{
+          backgroundColor: Colors.cyan10,
+          borderRadius: 0,
+          paddingTop: 5,
+          flex: 1,
+        }}>
+        <CardDetails
+          title="Microphone Control"
+          text={
+            'Listen to what surround your pc. You may curious who uses your pc? this tool is for you!'
+          }
+        />
+        <Card.Section
+          imageSource={require('../assets/icons/microphone.png')}
+          imageStyle={{marginTop: 35, marginRight: 5}}
+        />
+      </Card>
       <Card
         row
         style={{
@@ -107,6 +126,7 @@ function ControlScreen({
           imageStyle={{marginTop: 35, marginRight: 5}}
         />
       </Card>
+
       <View
         style={{
           flexDirection: 'row',

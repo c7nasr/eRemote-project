@@ -86,6 +86,7 @@ function HomeScreen({auth, setAuthState, showNewError, navigation}) {
                   'Key is Matched... we logging you in now',
                   Colors.green10,
                 );
+                navigation.navigate('Control', {screen: 'Control'});
                 break;
               case false:
                 showNewError(

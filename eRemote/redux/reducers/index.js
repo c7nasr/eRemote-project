@@ -8,6 +8,7 @@ import Reports from './Reports';
 import {persistReducer} from 'redux-persist';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import ScreenAndCamera from './ScreenAndCamera';
+import Microphone from './Microphone';
 import Power from './Power';
 
 const AppPersistConfig = {
@@ -38,6 +39,7 @@ const persistedReducer = persistReducer(
     Reports,
     ScreenAndCamera,
     Power,
+    Microphone,
   }),
 );
 
