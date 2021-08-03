@@ -21,15 +21,15 @@ export const useConnectSocket = (userData) => {
     console.timeEnd();
   }, [userData]);
 
-  return [key];
+  return [socket_state.socket.connected];
 };
-export function addSocketListener(token) {
+export const addSocketListener = (token) => {
   const socket_state = useSelector((state) => state.socket);
   const user_state = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (socket_state.is_connected === true) {
+    if (socket_state.is_connected === true && !socket_state.is_pc_connected) {
       socket_state.socket.on("turn_on", function () {
         dispatch(updatePcConnectionState(true));
       });
@@ -41,7 +41,7 @@ export function addSocketListener(token) {
         ) {
           dispatch(updatePcConnectionState(false));
         } else if (
-          data.key == key &&
+          data.key == user_state.key &&
           data.isActive &&
           data.source == "desktop"
         ) {
@@ -60,4 +60,4 @@ export function addSocketListener(token) {
       });
     }
   }, [socket_state.is_connected]);
-}
+};

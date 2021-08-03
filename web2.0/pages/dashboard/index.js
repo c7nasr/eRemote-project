@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import Sidebar from "./../../components/sidebar";
 import LastActivity from "./../../components/LastActivity";
-import { parseCookies } from "./../../services/cookies.service";
 import authenticationService from "../../services/authentication.service";
 import { formatTime, formatTimeAgo } from "../../services/time.service";
 import { useSelector } from "react-redux";
 
-import { Cookies } from "cookies";
 import {
   useConnectSocket,
   addSocketListener,
@@ -153,47 +151,5 @@ function Dashboard({ userData, token }) {
 
 export default Dashboard;
 export async function getServerSideProps(ctx) {
-  const cookies = parseCookies(ctx.req);
-  try {
-    const userData = await authenticationService.getUserData(cookies.token);
-    return {
-      props: { userData, token: cookies.token },
-    };
-  } catch (error) {
-    console.log(error);
-    // Try to Get new Token
-
-    try {
-      const res = await authenticationService.refresh_token(
-        cookies.refresh_token
-      );
-
-      if (res.token) {
-        const cookies = new Cookies(ctx.req, ctx.res);
-        cookies.set("token", res.token);
-        return {
-          redirect: {
-            permanent: false,
-            destination: "/login",
-          },
-          props: {},
-        };
-      }
-    } catch (error) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: "/login",
-        },
-        props: {},
-      };
-    }
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
-      },
-      props: {},
-    };
-  }
+  return authenticationService.authenticationProtocol(ctx);
 }

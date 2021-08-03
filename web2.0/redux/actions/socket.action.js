@@ -9,8 +9,6 @@ import { toast } from "react-toastify";
 export const connect_action = (key) => async (dispatch) => {
   try {
     const connect = connect_socket(key);
-
-    console.log(connect);
     if (connect) {
       dispatch({
         type: SOCKET_CONNECT,
@@ -26,14 +24,6 @@ export const connect_action = (key) => async (dispatch) => {
     console.log(error);
     toast.error("Can't reach our server!");
   }
-};
-export const emitOrder = async (key, socket, order, orderId, source) => {
-  socket.emit("order", {
-    room: key,
-    order: order,
-    source: source,
-    orderid: orderId,
-  });
 };
 
 export const updatePcConnectionState = (state) => async (dispatch) => {

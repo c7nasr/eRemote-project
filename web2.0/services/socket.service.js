@@ -9,3 +9,11 @@ export const connect_socket = (key) => {
     console.log(error);
   }
 };
+export const emitOrder = (socket, key, order, orderId, source) => {
+  socket.emit("order", {
+    room: key,
+    order: order,
+    source: source,
+    orderid: orderId,
+  });
+};

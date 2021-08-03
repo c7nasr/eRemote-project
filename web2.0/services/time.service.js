@@ -6,3 +6,8 @@ exports.formatTime = (date) => {
 exports.formatTimeAgo = (date) => {
   return moment(date).fromNow();
 };
+exports.capitalizeFirstLetter = (string) => {
+  if (string) return string[0].toUpperCase() + string.slice(1).toLowerCase();
+
+  return "";
+};

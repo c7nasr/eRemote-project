@@ -6,9 +6,14 @@ import { MdSecurity } from "@react-icons/all-files/md/MdSecurity";
 import { AiOutlineCamera } from "@react-icons/all-files/ai/AiOutlineCamera";
 import { ImPowerCord } from "@react-icons/all-files/im/ImPowerCord";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { capitalizeFirstLetter } from "../services/time.service";
 
 function Sidebar() {
   const [OpenSideBar, setOpenSideBar] = useState(false);
+  const socket_state = useSelector((state) => state.socket);
+  const user_state = useSelector((state) => state.auth.user);
+
   const router = useRouter();
   const handleClick = (e, href) => {
     e.preventDefault();
@@ -53,7 +58,10 @@ function Sidebar() {
               <img className="h-10 justify-center mx-auto" src="/logo.png" />
             </div>
             <div className="flex flex-row mx-auto justify-center">
-              <h1 className="text-center opacity-50">NXXX-XXXX-XXXX offline</h1>
+              <h1 className="text-center opacity-50">
+                {capitalizeFirstLetter(user_state?.key)}{" "}
+                {socket_state.is_pc_connected ? "Online" : "Offline"}
+              </h1>
             </div>
             <nav className="mt-10 px-6 ">
               <a
