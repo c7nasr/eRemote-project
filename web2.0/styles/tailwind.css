@@ -33,6 +33,19 @@ rounded-lg cursor-pointer;
 @apply bg-green-800 p-3 h-auto md:ml-4 rounded w-full text-white mb-2;
 }
 
+.desktop-lock-btn{
+@apply w-3/4 mx-auto rounded shadow-md font-semibold mt-5 bg-yellow-700 p-2
+}
+.desktop-disabled-btn{
+@apply w-3/4 mx-auto rounded font-semibold mt-5 bg-yellow-500 p-2 cursor-not-allowed
+}
+.emergency-disabled-btn{
+@apply w-3/4 mx-auto rounded shadow-md font-semibold mt-5 bg-red-400 p-2 cursor-not-allowed
+}
+
+.emergency-btn{
+@apply w-3/4 mx-auto rounded shadow-md font-semibold mt-5 bg-red-700 p-2 cursor-not-allowed
+}
 
 }
 

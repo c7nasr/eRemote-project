@@ -8,7 +8,6 @@ import { updatePcConnectionState } from "./../redux/actions/socket.action";
 export const useConnectSocket = (userData) => {
   const dispatch = useDispatch();
 
-  const key = userData.user.key;
   const socket_state = useSelector((state) => state.socket);
 
   React.useEffect(() => {

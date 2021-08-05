@@ -11,6 +11,12 @@ import {
   useFilters,
   useGlobalFilter,
 } from "react-table";
+import { formatTime, formatTimestamp } from "../services/time.service";
+import {
+  handleLockStatus,
+  handleLockType,
+  handleRetries,
+} from "../services/security.service";
 
 function SelectColumnFilter({
   column: { filterValue, setFilter, preFilteredRows, id },
@@ -200,41 +206,78 @@ function Table({ columns, data }) {
   );
 }
 
-function SecurityActivity() {
-  const data = React.useMemo(() => makeData(7), []);
+function SecurityActivity({ history }) {
+  const data = React.useMemo(() => history, [history]);
+  const filterCaseInsensitive = (filter, row) => {
+    const id = filter.pivotId || filter.id;
+    const content = row[id];
+    if (typeof content !== "undefined") {
+      if (typeof content === "object" && content !== null && content.key) {
+        return String(content.key)
+          .toLowerCase()
+          .includes(filter.value.toLowerCase());
+      } else {
+        return String(content)
+          .toLowerCase()
+          .includes(filter.value.toLowerCase());
+      }
+    }
 
+    return true;
+  };
   return (
     <>
       <Table
+        defaultFilterMethod={filterCaseInsensitive}
         columns={[
           {
             Header: "Security Logs",
             columns: [
               {
                 Header: "Date",
-                accessor: "date",
+                accessor: (o, i) => {
+                  return formatTimestamp(history[i].timestamp, "DD MMMM YYYY");
+                },
                 filterable: true,
               },
               {
                 Header: "Time",
-                accessor: "time",
-
-                // Use our custom `fuzzyText` filter on this column
+                accessor: (o, i) => {
+                  return formatTimestamp(history[i].timestamp, "h:mm:ssa");
+                },
+                filterable: true,
               },
               {
-                Header: "Category",
-                accessor: "category",
+                Header: "Source",
+                accessor: "source",
               },
               {
                 Header: "Type",
-                accessor: "type",
+                accessor: (o, i) => {
+                  return handleLockStatus(history[i].type);
+                },
+                filter: "equals",
+              },
+              {
+                Header: "IP",
+                accessor: (o, i) => {
+                  return `${history[i].ip}/${history[i].local_ip}`;
+                },
+              },
+              {
+                Header: "Category",
+                accessor: (o, i) => {
+                  return handleLockType(history[i].g_id);
+                },
 
                 Filter: SelectColumnFilter,
                 filter: "includes",
               },
               {
                 Header: "Retries",
-                accessor: "retries",
+                accessor: (o, i) => {
+                  return handleRetries(history[i].tries_count);
+                },
               },
             ],
           },
