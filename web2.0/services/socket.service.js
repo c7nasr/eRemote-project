@@ -1,4 +1,5 @@
 import io from "socket.io-client";
+import { toast } from "react-toastify";
 
 export const connect_socket = (key) => {
   try {
@@ -10,10 +11,18 @@ export const connect_socket = (key) => {
   }
 };
 export const emitOrder = (socket, key, order, orderId, source) => {
-  socket.emit("order", {
+  return socket.emit("order", {
     room: key,
     order: order,
     source: source,
     orderid: orderId,
   });
+};
+export const handleConnectionState = (socket_state) => {
+  if (!socket_state.is_connected)
+    return toast.error("We can't reach our servers. try refresh the page");
+  if (!socket_state.is_pc_connected)
+    return toast.error("Your PC is Unreachable.");
+
+  return false;
 };
