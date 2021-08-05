@@ -21,17 +21,17 @@ function Sidebar() {
   };
   return (
     <>
-      <div class="bg-gray-800 text-gray-100 flex justify-between md:hidden">
-        <a href="#" class="block p-4 text-white font-bold">
+      <div className="bg-gray-800 text-gray-100 flex justify-between md:hidden">
+        <a href="#" className="block p-4 text-white font-bold">
           Remotena
         </a>
 
         <button
-          class="mobile-menu-button p-4 focus:outline-none focus:bg-gray-700"
+          className="mobile-menu-button p-4 focus:outline-none focus:bg-gray-700"
           onClick={() => setOpenSideBar(!OpenSideBar)}
         >
           <svg
-            class="h-5 w-5"
+            className="h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

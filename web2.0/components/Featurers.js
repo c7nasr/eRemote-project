@@ -8,7 +8,7 @@ export default function Features() {
         A lot of features are waiting for you
       </h1>
 
-      <div class="grid grid-cols-1 text-center pt-3 sm:grid-cols-3 gap-4  text-gray-900 w-full md:w-3/4 px-5 py-5 items-center mx-auto">
+      <div className="grid grid-cols-1 text-center pt-3 sm:grid-cols-3 gap-4  text-gray-900 w-full md:w-3/4 px-5 py-5 items-center mx-auto">
         <FCard
           icon="/icons/lock.png"
           title="Windows Lock"

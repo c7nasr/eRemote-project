@@ -40,8 +40,8 @@ export default function Security({ token, userData }) {
             <h1 className="text-2xl font-bold antialiased">Security Center</h1>
             <p className="text-lg ">Control your pc security in a few clicks</p>
 
-            <div class="flex flex-col md:flex-row w-full text-white">
-              <div class="grid flex-grow h-auto card bg-gray-700 rounded-box py-8 rounded-t md:rounded-l">
+            <div className="flex flex-col md:flex-row w-full text-white">
+              <div className="grid flex-grow h-auto card bg-gray-700 rounded-box py-8 rounded-t md:rounded-l">
                 <h1 className="font-extrabold text-2xl text-center">
                   🔐 Desktop Locker
                 </h1>
@@ -81,7 +81,7 @@ export default function Security({ token, userData }) {
                     : "Lock my Desktop"}
                 </button>
               </div>
-              <div class="grid flex-grow h-auto card bg-gray-700 rounded-box py-8 rounded-b md:rounded-r">
+              <div className="grid flex-grow h-auto card bg-gray-700 rounded-box py-8 rounded-b md:rounded-r">
                 <h1 className="font-extrabold text-2xl text-center">
                   🚨 Emergency Locker
                 </h1>
