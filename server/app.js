@@ -1,12 +1,11 @@
 const express = require("express");
-const User = require("./Routes/userRoute");
+const User = require("./Routes/user.routes");
 const Orders = require("./Routes/order.routes");
 const Config = require("./Routes/configRoute");
 const Emergency = require("./Routes/emergency.routes");
 const Reports = require("./Routes/reports.routes");
 const Key = require("./Routes/keys.routes");
 const { getConnectionSchema, getSKey } = require("./funcations/socket.handler");
-const blob = require("node-fetch");
 
 const app = express();
 var server = require("http").createServer(app);
@@ -57,7 +56,7 @@ io.on("connection", (socket) => {
     )
   );
   ACTIVE_USERS.push({
-    key: getSKey(socket.handshake.query.source, socket.handshake.query.key),
+    key: socket.handshake.query.key,
     socket_id: socket.id,
     source: socket.handshake.query.source,
   });
@@ -97,9 +96,8 @@ io.on("connection", (socket) => {
       isActive: false,
       source: socket.handshake.query.source,
       id: socket.id,
-      key: getSKey(socket.handshake.query.source, socket.handshake.query.key),
+      key: socket.handshake.query.key,
     });
-    console.log(socket.handshake.query.source, socket.handshake.query.key);
 
     console.log(`disconnect: ${reason}`);
     console.log(ACTIVE_USERS);
