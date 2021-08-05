@@ -24,13 +24,17 @@ namespace eRemote_V2._0
             LockLogger.location = Lib.GetLocation();
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
+                Socket.EmitDesktopLockStatus(true);
+
                 LockLogger.type = 1;
                 SQLConnetion.RegisterLockUnlockEvents(LockLogger);
-              
+
+
 
             }
             else if (e.Reason == SessionSwitchReason.SessionUnlock)
             {
+                Socket.EmitDesktopLockStatus(false);
                 LockLogger.type = 0;
                 SQLConnetion.RegisterLockUnlockEvents(LockLogger);
             

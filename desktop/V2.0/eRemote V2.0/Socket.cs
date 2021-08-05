@@ -92,6 +92,7 @@ namespace eRemote_V2._0
         {
             try
             {
+                // send notification when socket connecte
                 Debug.WriteLine("Socket Connected");
                 var socket = sender as SocketIO;
                 await socket.EmitAsync("turn_on", key);
@@ -223,6 +224,27 @@ namespace eRemote_V2._0
             }
 
         }
+
+        public static async void EmitDesktopLockStatus(bool status)
+        {
+            var key = Lib.getKey();
+            if (socket.Connected)
+            {
+                if (status)
+                {
+                    await socket.EmitAsync("LOCKER_REPLAY", new { room = key });
+
+                }
+                else
+                {
+                    await socket.EmitAsync("DESKTOP_UNLOCKED", new { room = key });
+
+                }
+
+            }
+
+        }
+
 
         private static void NetworkAvailabilityChangeHandler(object sender, NetworkAvailabilityEventArgs e)
         {
