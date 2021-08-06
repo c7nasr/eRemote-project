@@ -30,7 +30,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "react": "17.0.1",
-    "react-native": "0.64.0",
+    "react-native": "0.64.1",
     "react-native-device-info": "^8.1.2",
     "react-native-encrypted-storage": "^4.0.2",
     "react-native-gesture-handler": "^1.10.3",
