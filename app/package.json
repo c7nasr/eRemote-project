@@ -33,7 +33,7 @@
     "react-native-grid-component": "^2.0.1",
     "react-native-reanimated": "~1.9.0",
     "react-native-safe-area-context": "~3.0.7",
-    "react-native-screens": "~2.9.0",
+    "react-native-screens": "~2.18.1",
     "react-native-shimmer-placeholder": "git+https://github.com/tomzaku/react-native-shimmer-placeholder.git#expo",
     "react-native-snackbar-component": "^1.1.11",
     "react-native-web": "^0.15.5",
